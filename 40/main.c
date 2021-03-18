@@ -147,7 +147,7 @@ int main()
         operatorStack *operatorStack = createOperatorStack();      
         char temp;
 
-        char integerStr[10] ="";
+        char integerStr[10];
         char *integerStrPtr = integerStr;
 
         double Y[MAX_LEN];
@@ -167,7 +167,7 @@ int main()
                 {
                     *integerStrPtr = '\0';
                     integerStrPtr = integerStr;
-                    Y[lenOfY] = atoi(integerStr);
+                    Y[lenOfY] = atof(integerStr);
                     lenOfY++;
   
                 }
@@ -190,16 +190,8 @@ int main()
             }
             else  // an operator
             {
-                // '''
-                // Repeatedly pop from Stack and 
-                // add to Y each operator (on the top of Stack) 
-                // which has the same precedence as or higher precedence than operator.
-                // 壓不住就pop出來
-                // '''
-                // char topOperator[2] = "\0"; /* gives {\0, \0} */
                 while (peekOperatorStack(operatorStack) != '(')
                 {
-                    // topOperator[0] = peekOperatorStack(operatorStack);
                     if(!isPriorTO(temp, peekOperatorStack(operatorStack)))  //壓不住
                     {
                         Y[lenOfY] = encode(peekOperatorStack(operatorStack));
@@ -229,7 +221,7 @@ int main()
                 push(Stack, calculate(left, right, decode(Y[i])));
             }
         }
-        printf("%f\n", peek(Stack));
+        printf("%lf\n", peek(Stack));
     }
    
     return 0;

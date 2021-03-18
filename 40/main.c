@@ -109,23 +109,36 @@ double right, left;
 
 int main()
 {
+    // printf("%d", 100000000);
     char instr[MAX_LEN];
     // scanf("%s", &instr);
     while (scanf("%s", &instr)!=EOF)
-    {   operatorStack *operatorStack = createOperatorStack();
+    {   
+        operatorStack *operatorStack = createOperatorStack();
         Stack *Stack = createStack();
         char temp;
-        // double ans = 0.0;
-        // scanf("%c", &temp);
-        // printf("%c\n", temp);
-        // push(Stack, 0.9);
-        // printf("%f\n", peek(Stack));
         char* ptr = instr;
+        // char* prev = instr;
+        char integerStr[10];
+        char *integerStrPtr = integerStr;
         while (*ptr != '\0')
         {   
             temp = *ptr;
             // printf("%c ", temp);   
-            if (temp < 48 || temp > 57)  // temp is an operator; 48~57 is the ASCII code of digits 0~9
+            
+            if (!(temp < 48 || temp > 57))  // temp is a digit; 48~57 is the ASCII code of digits 0~9
+            {
+                // push(Stack, (double)(temp-48));
+                *integerStrPtr = temp;
+                ++integerStrPtr;
+                if (*(ptr+1) < 48 || *(ptr+1) > 57 )
+                {
+                    *integerStrPtr = '\0';
+                    integerStrPtr = integerStr;
+                    push(Stack, atof(integerStr));
+                }
+            }
+            else
             {
                 if (isEmptyOperatorStack(operatorStack))
                     pushOperatorStack(operatorStack, temp);
@@ -144,7 +157,7 @@ int main()
                         pop(Stack);
                         left = peek(Stack);
                         pop(Stack);
-                        // printf("%f and %f\n", left, right);
+                        printf("%f and %f\n", left, right);
 
                         push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
                         // printf("%f\n",peek(Stack));
@@ -153,9 +166,6 @@ int main()
                     }
                 }
             }
-            else
-                push(Stack, (double)(temp-48));     
-
             ++ptr;   
         }
 

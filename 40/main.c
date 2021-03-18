@@ -55,6 +55,9 @@ bool isEmpty(struct Stack *S){
     return (S->top == -1)? true : false;
 }
 
+void clear(struct Stack *S){
+    S->top = -1;
+}
 ///////////////////////////////////////////////
 
 struct operatorStack {
@@ -100,6 +103,10 @@ bool isEmptyOperatorStack(struct operatorStack *S){
     return (S->top == -1)? true : false;
 }
 
+void clearOperatorStack(struct operatorStack *S){
+    S->top = -1;
+}
+
 bool isPriorTO(char operator1,  char operator2);
 double calculate(double left, double right, char op);
 double right, left;
@@ -142,9 +149,10 @@ char decode(const double d){
 int main()
 {
     char instr[MAX_LEN];
+    operatorStack *operatorStack = createOperatorStack();      
+    Stack *Stack = createStack();
     while (scanf("%s", &instr)!=EOF)
     {   
-        operatorStack *operatorStack = createOperatorStack();      
         char temp;
 
         char integerStr[10];
@@ -205,7 +213,6 @@ int main()
             }
             ++ptr;   
         }
-        Stack *Stack = createStack();
         for(int i = 0; i < lenOfY; ++i)
         {
             if (Y[i] >= 0)
@@ -222,6 +229,8 @@ int main()
             }
         }
         printf("%lf\n", peek(Stack));
+        clearOperatorStack(operatorStack);
+        clear(Stack);
     }
    
     return 0;

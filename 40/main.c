@@ -5,9 +5,7 @@
 #include <math.h>
 
 #define MAX_LEN 100000
-#define false 0  
-#define true  1 
-typedef int bool;  
+ 
 
 typedef struct Stack Stack;
 typedef struct operatorStack operatorStack;
@@ -26,7 +24,7 @@ struct Stack *createStack() {
     S->arr = (double*)malloc(S->capacity * sizeof(double));
     return S;
 };
-inline bool isFullStack(struct Stack *S);
+inline int isFullStack(struct Stack *S);
 
 
 
@@ -36,7 +34,7 @@ inline void pop(struct Stack *S);
 
 inline double peek(struct Stack *S);
 
-inline bool isEmpty(struct Stack *S);
+inline int isEmpty(struct Stack *S);
 
 inline void clear(struct Stack *S);
 ///////////////////////////////////////////////
@@ -69,11 +67,11 @@ inline void pushOperatorStack(struct operatorStack *S, char data);
 inline void popOperatorStack(struct operatorStack *S);
 inline char peekOperatorStack(struct operatorStack *S);
 
-inline bool isEmptyOperatorStack(struct operatorStack *S);
+inline int isEmptyOperatorStack(struct operatorStack *S);
 
 inline void clearOperatorStack(struct operatorStack *S);
 
-inline bool isPriorTO(char operator1,  char operator2);
+inline int isPriorTO(char operator1,  char operator2);
 inline double calculate(double left, double right, char op);
 
 // void print(char* str){
@@ -204,24 +202,24 @@ double calculate(double left, double right, char op) {
 }
 
 
-bool isPriorTO(char operator1,  char operator2)  //operator1 絕對優先於 operator2 的話回傳 true 否則 false
+int isPriorTO(char operator1,  char operator2)  //operator1 絕對優先於 operator2 的話回傳 1 否則 0
 {
     if (operator1 == '^')
     {
         if (operator2 != '^')
-            return true;
+            return 1;
         else
-            return false;
+            return 0;
     }
     else if (operator1 == '*' || operator1 == '/')
     {
         if (operator2 == '+' || operator2 == '-')
-            return true;
+            return 1;
         else
-            return false;
+            return 0;
     }
     else
-        return false;
+        return 0;
 }
 
 
@@ -285,12 +283,12 @@ char decode(const double d){
         return '^';
 }
 
-bool isFullStack(struct Stack *S) {
+int isFullStack(struct Stack *S) {
     return (S->top == S->capacity-1);
 };
 
-bool isEmptyOperatorStack(struct operatorStack *S){
-    return (S->top == -1)? true : false;
+int isEmptyOperatorStack(struct operatorStack *S){
+    return (S->top == -1)? 1 : 0;
 }
 
 int isFullOperatorStack(struct operatorStack *S) {
@@ -301,8 +299,8 @@ void clearOperatorStack(struct operatorStack *S){
     S->top = -1;
 }
 
-bool isEmpty(struct Stack *S){
-    return (S->top == -1)? true : false;
+int isEmpty(struct Stack *S){
+    return (S->top == -1)? 1 : 0;
 }
 
 void clear(struct Stack *S){

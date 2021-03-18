@@ -234,7 +234,7 @@ void pushOperatorStack(struct operatorStack *S, char data) {
 void popOperatorStack(struct operatorStack *S){
     --S->top;
 }
-
+ 
 char peekOperatorStack(struct operatorStack *S){
     return S->arr[S->top];
 }

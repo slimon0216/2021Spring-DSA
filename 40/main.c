@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-
+#include <math.h>
 
 #define MAX_LEN 100000
 #define false 0  
@@ -118,7 +118,8 @@ double encode(const char c){
         return -3.0;
     if (c =='/')
         return -4.0;
-
+    if (c =='^')
+        return -5.0;
     
 }
 
@@ -132,32 +133,28 @@ char decode(const double d){
         return '*';
     if (d == -4.0)
         return '/';
+    if (d == -5.0)
+        return '^';
+    
     
 }
 
 int main()
 {
-    // printf("%d", 100000000);
     char instr[MAX_LEN];
-    // scanf("%s", &instr);
     while (scanf("%s", &instr)!=EOF)
     {   
-        operatorStack *operatorStack = createOperatorStack();
-        
+        operatorStack *operatorStack = createOperatorStack();      
         char temp;
-        // char* prev = instr;
+
         char integerStr[10] ="";
         char *integerStrPtr = integerStr;
-        // char Y[MAX_LEN];
+
         double Y[MAX_LEN];
         int lenOfY = 0;
-        ////postfix algorithm///////
         pushOperatorStack(operatorStack, '(');
         *(instr + strlen(instr) + 1) = '\0';
         *(instr + strlen(instr) ) = ')';
-        // print(instr);
-        // printf("x: %s\n", instr);
-
         char* ptr = instr;
         while (*ptr != '\0')
         {   
@@ -170,32 +167,24 @@ int main()
                 {
                     *integerStrPtr = '\0';
                     integerStrPtr = integerStr;
-                    // print(integerStr);
-
-                    //''' add intergerStr to Y '''
-                    // strcat(Y, integerStr);
                     Y[lenOfY] = atoi(integerStr);
                     lenOfY++;
-                    // push(Stack, atof(integerStr)); 
-                    // print(Y);
+  
                 }
             }
             else if (temp == '(')
             {
                 pushOperatorStack(operatorStack, '(');
-                // printf("successfully push %c\n", temp);    
             }
             else if(temp == ')')
             {
                 while(peekOperatorStack(operatorStack) != '(')
                 {   
-                    // char topOperator[2] = "\0"; /* gives {\0, \0} */
-                    // topOperator[0] = peekOperatorStack(operatorStack);
-                    // strcat(Y, topOperator);
+ 
                     Y[lenOfY] = encode(peekOperatorStack(operatorStack));
                     lenOfY++;
                     popOperatorStack(operatorStack);
-                    // print(Y);
+
                 }
                 popOperatorStack(operatorStack);
             }
@@ -222,32 +211,6 @@ int main()
                 pushOperatorStack(operatorStack, temp);
 
             }
-
-            // if (isEmptyOperatorStack(operatorStack))
-            //     pushOperatorStack(operatorStack, temp);
-            // else
-            // {
-            //     if (isPriorTO(temp, peekOperatorStack(operatorStack)))
-            //     {
-            //         // printf("%c > %c, push '%c' into operatorStack\n", temp, peekOperatorStack(operatorStack), temp);
-            //         pushOperatorStack(operatorStack, temp);
-            //         // printf("%c\n",peekOperatorStack(operatorStack));
-            //     }
-            //     else   //壓不住
-            //     {
-            //         // printf("not\n");
-            //         right = peek(Stack);
-            //         pop(Stack);
-            //         left = peek(Stack);
-            //         pop(Stack);
-            //         // printf("%f and %f\n", left, right);
-
-            //         push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
-            //         // printf("%f\n",peek(Stack));
-            //         popOperatorStack(operatorStack);
-            //         pushOperatorStack(operatorStack, temp);
-            //     }
-            // }
             ++ptr;   
         }
         Stack *Stack = createStack();
@@ -268,19 +231,7 @@ int main()
         }
         printf("%f\n", peek(Stack));
     }
-
-        // while (!isEmptyOperatorStack(operatorStack))
-        // {
-        //     right = peek(Stack);
-        //     pop(Stack);
-        //     left = peek(Stack);
-        //     pop(Stack);
-
-        //     push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
-        //     popOperatorStack(operatorStack);
-        // }
-        // printf("%f\n", peek(Stack));
-    
+   
     return 0;
 }
 
@@ -300,9 +251,9 @@ double calculate(double left, double right, char op) {
     case '/':
         answer = left / right;
         break;
-    // case '^':
-    //     answer = pow(left, right);
-    //     break;
+    case '^':
+        answer = pow(left, right);
+        break;
     default:
         break;
     }

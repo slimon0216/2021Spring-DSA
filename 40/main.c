@@ -153,7 +153,7 @@ int main()
         }
         for(int i = 0; i < lenOfY; ++i)
         {
-            if (Y[i])
+            if (Y[i] >= 0)
             {
                 push(Stack, Y[i]);
             }

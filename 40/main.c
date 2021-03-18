@@ -192,9 +192,9 @@ double calculate(double left, double right, char op) {
     case '/':
         answer = left / right;
         break;
-    case '^':
-        answer = pow(left, right);
-        break;
+    // case '^':
+    //     answer = pow(left, right);
+    //     break;
     default:
         break;
     }
@@ -204,14 +204,14 @@ double calculate(double left, double right, char op) {
 
 int isPriorTO(char operator1,  char operator2)  //operator1 絕對優先於 operator2 的話回傳 1 否則 0
 {
-    if (operator1 == '^')
-    {
-        if (operator2 != '^')
-            return 1;
-        else
-            return 0;
-    }
-    else if (operator1 == '*' || operator1 == '/')
+    // if (operator1 == '^')
+    // {
+    //     if (operator2 != '^')
+    //         return 1;
+    //     else
+    //         return 0;
+    // }
+    if (operator1 == '*' || operator1 == '/')
     {
         if (operator2 == '+' || operator2 == '-')
             return 1;
@@ -264,8 +264,8 @@ double encode(const char c){
         return -3.0;
     if (c =='/')
         return -4.0;
-    if (c =='^')
-        return -5.0;
+    // if (c =='^')
+    //     return -5.0;
     
 }
 
@@ -279,8 +279,8 @@ char decode(const double d){
         return '*';
     if (d == -4.0)
         return '/';
-    if (d == -5.0)
-        return '^';
+    // if (d == -5.0)
+    //     return '^';
 }
 
 int isFullStack(struct Stack *S) {

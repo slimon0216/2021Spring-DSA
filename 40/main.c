@@ -157,7 +157,7 @@ int main()
                         pop(Stack);
                         left = peek(Stack);
                         pop(Stack);
-                        printf("%f and %f\n", left, right);
+                        // printf("%f and %f\n", left, right);
 
                         push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
                         // printf("%f\n",peek(Stack));

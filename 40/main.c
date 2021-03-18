@@ -104,8 +104,36 @@ bool isPriorTO(char operator1,  char operator2);
 double calculate(double left, double right, char op);
 double right, left;
 
+void print(char* str){
+    printf("%s\n", str);
+}
 
+double encode(const char c){
 
+    if (c =='+')
+        return -1.0;
+    if (c =='-')
+        return -2.0;
+    if (c =='*')
+        return -3.0;
+    if (c =='/')
+        return -4.0;
+
+    
+}
+
+char decode(const double d){
+
+    if (d == -1.0)
+        return '+';
+    if (d == -2.0)
+        return '-';
+    if (d == -3.0)
+        return '*';
+    if (d == -4.0)
+        return '/';
+    
+}
 
 int main()
 {
@@ -115,72 +143,144 @@ int main()
     while (scanf("%s", &instr)!=EOF)
     {   
         operatorStack *operatorStack = createOperatorStack();
-        Stack *Stack = createStack();
+        
         char temp;
-        char* ptr = instr;
         // char* prev = instr;
-        char integerStr[10];
+        char integerStr[10] ="";
         char *integerStrPtr = integerStr;
+        // char Y[MAX_LEN];
+        double Y[MAX_LEN];
+        int lenOfY = 0;
+        ////postfix algorithm///////
+        pushOperatorStack(operatorStack, '(');
+        *(instr + strlen(instr) + 1) = '\0';
+        *(instr + strlen(instr) ) = ')';
+        // print(instr);
+        // printf("x: %s\n", instr);
+
+        char* ptr = instr;
         while (*ptr != '\0')
         {   
-            temp = *ptr;
-            // printf("%c ", temp);   
-            
+            temp = *ptr;  
             if (!(temp < 48 || temp > 57))  // temp is a digit; 48~57 is the ASCII code of digits 0~9
             {
-                // push(Stack, (double)(temp-48));
                 *integerStrPtr = temp;
                 ++integerStrPtr;
                 if (*(ptr+1) < 48 || *(ptr+1) > 57 )
                 {
                     *integerStrPtr = '\0';
                     integerStrPtr = integerStr;
-                    push(Stack, atof(integerStr));
+                    // print(integerStr);
+
+                    //''' add intergerStr to Y '''
+                    // strcat(Y, integerStr);
+                    Y[lenOfY] = atoi(integerStr);
+                    lenOfY++;
+                    // push(Stack, atof(integerStr)); 
+                    // print(Y);
                 }
+            }
+            else if (temp == '(')
+            {
+                pushOperatorStack(operatorStack, '(');
+                // printf("successfully push %c\n", temp);    
+            }
+            else if(temp == ')')
+            {
+                while(peekOperatorStack(operatorStack) != '(')
+                {   
+                    // char topOperator[2] = "\0"; /* gives {\0, \0} */
+                    // topOperator[0] = peekOperatorStack(operatorStack);
+                    // strcat(Y, topOperator);
+                    Y[lenOfY] = encode(peekOperatorStack(operatorStack));
+                    lenOfY++;
+                    popOperatorStack(operatorStack);
+                    // print(Y);
+                }
+                popOperatorStack(operatorStack);
+            }
+            else  // an operator
+            {
+                // '''
+                // Repeatedly pop from Stack and 
+                // add to Y each operator (on the top of Stack) 
+                // which has the same precedence as or higher precedence than operator.
+                // 壓不住就pop出來
+                // '''
+                // char topOperator[2] = "\0"; /* gives {\0, \0} */
+                while (peekOperatorStack(operatorStack) != '(')
+                {
+                    // topOperator[0] = peekOperatorStack(operatorStack);
+                    if(!isPriorTO(temp, peekOperatorStack(operatorStack)))  //壓不住
+                    {
+                        Y[lenOfY] = encode(peekOperatorStack(operatorStack));
+                        lenOfY++;
+                        popOperatorStack(operatorStack);
+                    }
+                    else break;
+                }
+                pushOperatorStack(operatorStack, temp);
+
+            }
+
+            // if (isEmptyOperatorStack(operatorStack))
+            //     pushOperatorStack(operatorStack, temp);
+            // else
+            // {
+            //     if (isPriorTO(temp, peekOperatorStack(operatorStack)))
+            //     {
+            //         // printf("%c > %c, push '%c' into operatorStack\n", temp, peekOperatorStack(operatorStack), temp);
+            //         pushOperatorStack(operatorStack, temp);
+            //         // printf("%c\n",peekOperatorStack(operatorStack));
+            //     }
+            //     else   //壓不住
+            //     {
+            //         // printf("not\n");
+            //         right = peek(Stack);
+            //         pop(Stack);
+            //         left = peek(Stack);
+            //         pop(Stack);
+            //         // printf("%f and %f\n", left, right);
+
+            //         push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
+            //         // printf("%f\n",peek(Stack));
+            //         popOperatorStack(operatorStack);
+            //         pushOperatorStack(operatorStack, temp);
+            //     }
+            // }
+            ++ptr;   
+        }
+        Stack *Stack = createStack();
+        for(int i = 0; i < lenOfY; ++i)
+        {
+            if (Y[i] >= 0)
+            {
+                push(Stack, Y[i]);
             }
             else
             {
-                if (isEmptyOperatorStack(operatorStack))
-                    pushOperatorStack(operatorStack, temp);
-                else
-                {
-                    if (isPriorTO(temp, peekOperatorStack(operatorStack)))
-                    {
-                        // printf("%c > %c, push '%c' into operatorStack\n", temp, peekOperatorStack(operatorStack), temp);
-                        pushOperatorStack(operatorStack, temp);
-                        // printf("%c\n",peekOperatorStack(operatorStack));
-                    }
-                    else   //壓不住
-                    {
-                        // printf("not\n");
-                        right = peek(Stack);
-                        pop(Stack);
-                        left = peek(Stack);
-                        pop(Stack);
-                        // printf("%f and %f\n", left, right);
-
-                        push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
-                        // printf("%f\n",peek(Stack));
-                        popOperatorStack(operatorStack);
-                        pushOperatorStack(operatorStack, temp);
-                    }
-                }
+                right = peek(Stack);
+                pop(Stack);
+                left = peek(Stack);
+                pop(Stack);
+                push(Stack, calculate(left, right, decode(Y[i])));
             }
-            ++ptr;   
-        }
-
-        while (!isEmptyOperatorStack(operatorStack))
-        {
-            right = peek(Stack);
-            pop(Stack);
-            left = peek(Stack);
-            pop(Stack);
-
-            push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
-            popOperatorStack(operatorStack);
         }
         printf("%f\n", peek(Stack));
     }
+
+        // while (!isEmptyOperatorStack(operatorStack))
+        // {
+        //     right = peek(Stack);
+        //     pop(Stack);
+        //     left = peek(Stack);
+        //     pop(Stack);
+
+        //     push(Stack, calculate(left, right, peekOperatorStack(operatorStack)));
+        //     popOperatorStack(operatorStack);
+        // }
+        // printf("%f\n", peek(Stack));
+    
     return 0;
 }
 
@@ -208,6 +308,7 @@ double calculate(double left, double right, char op) {
     }
     return answer;
 }
+
 
 bool isPriorTO(char operator1,  char operator2)  //operator1 絕對優先於 operator2 的話回傳 true 否則 false
 {

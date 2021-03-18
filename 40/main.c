@@ -228,7 +228,7 @@ int main()
                 push(Stack, calculate(left, right, decode(Y[i])));
             }
         }
-        printf("%lf\n", peek(Stack));
+        printf("%.15f\n", peek(Stack));
         clearOperatorStack(operatorStack);
         clear(Stack);
     }

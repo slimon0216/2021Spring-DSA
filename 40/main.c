@@ -37,19 +37,11 @@ bool isFullStack(struct Stack *S) {
 //     S->arr = (int*)realloc(S->arr, new_capacity * sizeof(int));
 // };
 
-void push(struct Stack *S, double data) {
-    S->arr[++S->top] = data;
-    // if (isFullStack(S))
-    // enlarge(S);
-};
+inline void push(struct Stack *S, double data);
 
-void pop(struct Stack *S){
-    --S->top;
-}
+inline void pop(struct Stack *S);
 
-double peek(struct Stack *S){
-    return S->arr[S->top];
-}
+inline double peek(struct Stack *S);
 
 bool isEmpty(struct Stack *S){
     return (S->top == -1)? true : false;
@@ -85,19 +77,9 @@ int isFullOperatorStack(struct operatorStack *S) {
 //     S->arr = (int*)realloc(S->arr, new_capacity * sizeof(int));
 // };
 
-void pushOperatorStack(struct operatorStack *S, char data) {
-    S->arr[++S->top] = data;
-    // if (isFullStack(S))
-    // enlarge(S);
-};
-
-void popOperatorStack(struct operatorStack *S){
-    --S->top;
-}
-
-char peekOperatorStack(struct operatorStack *S){
-    return S->arr[S->top];
-}
+inline void pushOperatorStack(struct operatorStack *S, char data);
+inline void popOperatorStack(struct operatorStack *S);
+inline char peekOperatorStack(struct operatorStack *S);
 
 bool isEmptyOperatorStack(struct operatorStack *S){
     return (S->top == -1)? true : false;
@@ -107,8 +89,8 @@ void clearOperatorStack(struct operatorStack *S){
     S->top = -1;
 }
 
-bool isPriorTO(char operator1,  char operator2);
-double calculate(double left, double right, char op);
+inline bool isPriorTO(char operator1,  char operator2);
+inline double calculate(double left, double right, char op);
 double right, left;
 
 void print(char* str){
@@ -280,4 +262,35 @@ bool isPriorTO(char operator1,  char operator2)  //operator1 絕對優先於 ope
     }
     else
         return false;
+}
+
+
+void pushOperatorStack(struct operatorStack *S, char data) {
+    S->arr[++S->top] = data;
+    // if (isFullStack(S))
+    // enlarge(S);
+};
+
+void popOperatorStack(struct operatorStack *S){
+    --S->top;
+}
+
+char peekOperatorStack(struct operatorStack *S){
+    return S->arr[S->top];
+}
+
+
+
+void push(struct Stack *S, double data) {
+    S->arr[++S->top] = data;
+    // if (isFullStack(S))
+    // enlarge(S);
+};
+
+void pop(struct Stack *S){
+    --S->top;
+}
+
+double peek(struct Stack *S){
+    return S->arr[S->top];
 }

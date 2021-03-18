@@ -83,25 +83,27 @@ inline double calculate(double left, double right, char op);
 inline double encode(const char c);
 inline char decode(const double d);
 
+char instr[MAX_LEN];
+char integerStr[10];
+double Y[MAX_LEN];
+int lenOfY;
 double right, left;
+char temp;
+char *integerStrPtr;
+char* ptr ;
 int main()
 {
-    char instr[MAX_LEN];
     operatorStack *operatorStack = createOperatorStack();      
     Stack *Stack = createStack();
     while (scanf("%s", &instr)!=EOF)
     {   
-        char temp;
 
-        char integerStr[10];
-        char *integerStrPtr = integerStr;
-
-        double Y[MAX_LEN];
-        int lenOfY = 0;
+        integerStrPtr = integerStr;
+        lenOfY = 0;
         pushOperatorStack(operatorStack, '(');
         *(instr + strlen(instr) + 1) = '\0';
         *(instr + strlen(instr) ) = ')';
-        char* ptr = instr;
+        ptr = instr;
         while (*ptr != '\0')
         {   
             temp = *ptr;  
@@ -113,8 +115,8 @@ int main()
                 {
                     *integerStrPtr = '\0';
                     integerStrPtr = integerStr;
-                    Y[lenOfY] = atof(integerStr);
-                    lenOfY++;
+                    Y[lenOfY++] = atof(integerStr);
+                    // lenOfY++;
   
                 }
             }
@@ -127,8 +129,8 @@ int main()
                 while(peekOperatorStack(operatorStack) != '(')
                 {   
  
-                    Y[lenOfY] = encode(peekOperatorStack(operatorStack));
-                    lenOfY++;
+                    Y[lenOfY++] = encode(peekOperatorStack(operatorStack));
+                    // lenOfY++;
                     popOperatorStack(operatorStack);
 
                 }
@@ -140,11 +142,12 @@ int main()
                 {
                     if(!isPriorTO(temp, peekOperatorStack(operatorStack)))  //壓不住
                     {
-                        Y[lenOfY] = encode(peekOperatorStack(operatorStack));
-                        lenOfY++;
+                        Y[lenOfY++] = encode(peekOperatorStack(operatorStack));
+                        // lenOfY++;
                         popOperatorStack(operatorStack);
                     }
-                    else break;
+                    else 
+                        break;
                 }
                 pushOperatorStack(operatorStack, temp);
 
@@ -153,6 +156,7 @@ int main()
         }
         for(int i = 0; i < lenOfY; ++i)
         {
+            
             if (Y[i] >= 0)
             {
                 push(Stack, Y[i]);

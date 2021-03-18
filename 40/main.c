@@ -26,16 +26,9 @@ struct Stack *createStack() {
     S->arr = (double*)malloc(S->capacity * sizeof(double));
     return S;
 };
+inline bool isFullStack(struct Stack *S);
 
-bool isFullStack(struct Stack *S) {
-    return (S->top == S->capacity-1);
-};
 
-// void enlarge(struct Stack *S) {
-//     int new_capacity = (S->capacity * 3);
-//     S->capacity = new_capacity;
-//     S->arr = (int*)realloc(S->arr, new_capacity * sizeof(int));
-// };
 
 inline void push(struct Stack *S, double data);
 
@@ -43,13 +36,9 @@ inline void pop(struct Stack *S);
 
 inline double peek(struct Stack *S);
 
-bool isEmpty(struct Stack *S){
-    return (S->top == -1)? true : false;
-}
+inline bool isEmpty(struct Stack *S);
 
-void clear(struct Stack *S){
-    S->top = -1;
-}
+inline void clear(struct Stack *S);
 ///////////////////////////////////////////////
 
 struct operatorStack {
@@ -67,9 +56,8 @@ struct operatorStack *createOperatorStack() {
     return S;
 };
 
-int isFullOperatorStack(struct operatorStack *S) {
-    return (S->top == S->capacity-1);
-};
+inline int isFullOperatorStack(struct operatorStack *S);
+
 
 // void enlarge(struct Stack *S) {
 //     int new_capacity = (S->capacity * 3);
@@ -81,53 +69,21 @@ inline void pushOperatorStack(struct operatorStack *S, char data);
 inline void popOperatorStack(struct operatorStack *S);
 inline char peekOperatorStack(struct operatorStack *S);
 
-bool isEmptyOperatorStack(struct operatorStack *S){
-    return (S->top == -1)? true : false;
-}
+inline bool isEmptyOperatorStack(struct operatorStack *S);
 
-void clearOperatorStack(struct operatorStack *S){
-    S->top = -1;
-}
+inline void clearOperatorStack(struct operatorStack *S);
 
 inline bool isPriorTO(char operator1,  char operator2);
 inline double calculate(double left, double right, char op);
+
+// void print(char* str){
+//     printf("%s\n", str);
+// }
+
+inline double encode(const char c);
+inline char decode(const double d);
+
 double right, left;
-
-void print(char* str){
-    printf("%s\n", str);
-}
-
-double encode(const char c){
-
-    if (c =='+')
-        return -1.0;
-    if (c =='-')
-        return -2.0;
-    if (c =='*')
-        return -3.0;
-    if (c =='/')
-        return -4.0;
-    if (c =='^')
-        return -5.0;
-    
-}
-
-char decode(const double d){
-
-    if (d == -1.0)
-        return '+';
-    if (d == -2.0)
-        return '-';
-    if (d == -3.0)
-        return '*';
-    if (d == -4.0)
-        return '/';
-    if (d == -5.0)
-        return '^';
-    
-    
-}
-
 int main()
 {
     char instr[MAX_LEN];
@@ -197,7 +153,7 @@ int main()
         }
         for(int i = 0; i < lenOfY; ++i)
         {
-            if (Y[i] >= 0)
+            if (Y[i])
             {
                 push(Stack, Y[i]);
             }
@@ -293,4 +249,58 @@ void pop(struct Stack *S){
 
 double peek(struct Stack *S){
     return S->arr[S->top];
+}
+
+
+double encode(const char c){
+
+    if (c =='+')
+        return -1.0;
+    if (c =='-')
+        return -2.0;
+    if (c =='*')
+        return -3.0;
+    if (c =='/')
+        return -4.0;
+    if (c =='^')
+        return -5.0;
+    
+}
+
+char decode(const double d){
+
+    if (d == -1.0)
+        return '+';
+    if (d == -2.0)
+        return '-';
+    if (d == -3.0)
+        return '*';
+    if (d == -4.0)
+        return '/';
+    if (d == -5.0)
+        return '^';
+}
+
+bool isFullStack(struct Stack *S) {
+    return (S->top == S->capacity-1);
+};
+
+bool isEmptyOperatorStack(struct operatorStack *S){
+    return (S->top == -1)? true : false;
+}
+
+int isFullOperatorStack(struct operatorStack *S) {
+    return (S->top == S->capacity-1);
+}
+
+void clearOperatorStack(struct operatorStack *S){
+    S->top = -1;
+}
+
+bool isEmpty(struct Stack *S){
+    return (S->top == -1)? true : false;
+}
+
+void clear(struct Stack *S){
+    S->top = -1;
 }

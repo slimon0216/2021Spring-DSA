@@ -83,7 +83,7 @@ inline char decode(const double d);
 
 char instr[MAX_LEN];
 char integerStr[10];
-double Y[MAX_LEN];
+double postfix[MAX_LEN];
 int lenOfY;
 double right, left;
 char temp;
@@ -91,16 +91,21 @@ char *integerStrPtr;
 char* ptr ;
 int main()
 {
+    // setvbuf(stdin, calloc(1 << 20, sizeof(char)), _IOFBF, 1 << 20);
+    // setvbuf(stdout, calloc(1 << 20, sizeof(char)), _IOFBF, 1 << 20);
     operatorStack *operatorStack = createOperatorStack();      
     Stack *Stack = createStack();
-    while (scanf("%s", &instr)!=EOF)
+    // while (scanf("%s", &instr)!=EOF)
+    while (gets(instr))
     {   
 
         integerStrPtr = integerStr;
         lenOfY = 0;
         pushOperatorStack(operatorStack, '(');
-        *(instr + strlen(instr) + 1) = '\0';
-        *(instr + strlen(instr) ) = ')';
+        int len = strlen(instr);
+        *(instr + len + 1) = '\0';
+        *(instr + len ) = ')';
+
         ptr = instr;
         while (*ptr != '\0')
         {   
@@ -113,7 +118,7 @@ int main()
                 {
                     *integerStrPtr = '\0';
                     integerStrPtr = integerStr;
-                    Y[lenOfY++] = atof(integerStr);
+                    postfix[lenOfY++] = atof(integerStr);
                     // lenOfY++;
   
                 }
@@ -127,7 +132,7 @@ int main()
                 while(peekOperatorStack(operatorStack) != '(')
                 {   
  
-                    Y[lenOfY++] = encode(peekOperatorStack(operatorStack));
+                    postfix[lenOfY++] = encode(peekOperatorStack(operatorStack));
                     // lenOfY++;
                     popOperatorStack(operatorStack);
 
@@ -140,7 +145,7 @@ int main()
                 {
                     if(!isPriorTO(temp, peekOperatorStack(operatorStack)))  //壓不住
                     {
-                        Y[lenOfY++] = encode(peekOperatorStack(operatorStack));
+                        postfix[lenOfY++] = encode(peekOperatorStack(operatorStack));
                         // lenOfY++;
                         popOperatorStack(operatorStack);
                     }
@@ -155,9 +160,9 @@ int main()
         for(int i = 0; i < lenOfY; ++i)
         {
             
-            if (Y[i] >= 0)
+            if (postfix[i] >= 0)
             {
-                push(Stack, Y[i]);
+                push(Stack, postfix[i]);
             }
             else
             {
@@ -165,7 +170,7 @@ int main()
                 pop(Stack);
                 left = peek(Stack);
                 pop(Stack);
-                push(Stack, calculate(left, right, decode(Y[i])));
+                push(Stack, calculate(left, right, decode(postfix[i])));
             }
         }
         printf("%.15f\n", peek(Stack));
@@ -305,4 +310,91 @@ int isEmpty(struct Stack *S){
 
 void clear(struct Stack *S){
     S->top = -1;
+}
+
+
+//////////////////////////////
+typedef struct Node {
+    int val;
+    struct Node *prev, *next;
+
+}Node;
+
+typedef struct DList{
+    Node *head;
+    Node *tail;
+    // int size;
+}DList;
+
+DList* createDList(){
+    DList *D = (DList*)malloc(sizeof(DList));
+    D->head = D->tail = NULL;
+    // D->size = 0;
+    return D;
+}
+
+void insert(DList* D, int val){
+    Node *node = malloc(sizeof(Node));
+    node->val = val;
+    node->prev = node->next = NULL;
+
+    if (D->head == NULL) 
+        D->head = D->tail = node;
+    else{
+        D->tail->next = node;
+        node->prev = D->tail;
+        D->tail = node; 
+    }
+}
+
+void print(DList* D){
+    Node *ptr = D->head;
+    while (ptr != D->tail)
+    {
+        printf("%d ", ptr->val);
+        ptr = ptr->next;
+    }
+    printf("%d\n", ptr->val);
+}
+
+void message(char* message){
+    printf("%s\n", message);
+}
+
+
+void reverse(DList* D){
+    Node* ptr = D->head;
+    // turn head into tail
+    ptr->prev = ptr->next;
+    ptr->next = NULL;
+    ptr = ptr->prev;
+    Node *temp;
+    while (ptr != D->tail)
+    {
+        temp = ptr->prev;
+        ptr->prev = ptr->next;
+        ptr->next = temp;
+        ptr = ptr->prev;
+    }
+    //now ptr is tail
+    ptr->next = ptr->prev;
+    ptr->prev = NULL;
+    
+    temp = D->head;
+    D->head = D->tail;
+    D->tail = temp;
+}
+
+void pop_back(DList* D){
+    Node *ptr = D->tail;
+    ptr = ptr->prev;
+    ptr->next = NULL;
+    free(D->tail);
+    D->tail = ptr;
+}
+
+void migrate(DList* a, DList* b) // head of a and tail of b
+{
+    a->tail->next = b->head;
+    a->tail = b->tail;
 }

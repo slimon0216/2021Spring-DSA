@@ -29,20 +29,7 @@ inline int peek(struct Stack *S);
 inline int isEmpty(struct Stack *S);
 inline void clear(struct Stack *S);
 
-void print(Stack *s){
-    if (isEmpty(s))
-    {
-        printf("\n");
-        return;
-    }
-    for (int i = 0; i < s->size; ++i)
-    {
-        printf("%d ", s->arr[i]);
-        if (i == s->size-1)
-            printf("\n");
-    }
-    // printf("\n");
-}
+inline void print(Stack *s);
 
 char cmd[10];
 int r, l, ra, rb;
@@ -54,7 +41,7 @@ int main()
     Stack **stack_arr = malloc(sizeof(Stack*) * numOfRail_k);
     for(int i = 0; i < numOfRail_k; ++i)
     {    
-        int temp;
+        // int temp;
         stack_arr[i] = createStack();
     }
  
@@ -63,17 +50,17 @@ int main()
         --numOfRec_n;
         scanf("%s", cmd);
         // message(cmd);
-        if (strcmp(cmd, "enter") == 0)
+        if (cmd[0] == 'e')  //enter
         {
             scanf("%d %d", &r, &l);
             push(stack_arr[r], l);
         }
-        else if (strcmp(cmd, "leave") == 0)
+        else if (cmd[0] == 'l') //leave
         {
             scanf("%d", &r);
             pop(stack_arr[r]);
         }
-        else if (strcmp(cmd, "migrate") == 0)
+        else  //migrate
         {
             scanf("%d %d", &ra, &rb);
             while(!isEmpty(stack_arr[ra]))
@@ -134,4 +121,20 @@ int isEmpty(struct Stack *S){
 void clear(struct Stack *S){
     S->top = -1;
     S->size = 0;
+}
+
+void print(Stack *s){
+    if (isEmpty(s))
+    {
+        printf("\n");
+        return;
+    }
+    int len = s->size;
+    for (int i = 0; i < len; ++i)
+    {
+        printf("%d ", s->arr[i]);
+        if (i == len-1)
+            printf("\n");
+    }
+    // printf("\n");
 }

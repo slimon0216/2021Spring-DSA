@@ -187,8 +187,9 @@ int main()
         int temp;
         dl[i] = createDList();
     }
-    while(numOfRec_n > 0){
-        --numOfRec_n;
+    int cnt = numOfRec_n;
+    while(cnt > 0){
+        --cnt;
         scanf("%s", cmd);
         // message(cmd);
         if (strcmp(cmd, "enter") == 0){
@@ -205,22 +206,23 @@ int main()
         }
         else if (strcmp(cmd, "migrate") == 0){
             scanf("%d %d", &ra, &rb);
+            // printf("num %d\n", numOfRec_n);
             if (ra >= numOfRec_n || rb >= numOfRec_n)
                 continue;
             migrate(dl[ra], dl[rb]);
             // message("test");
         }
-        for(int i = 0; i < numOfRail_k; ++i)
-        {    
-            printf("rail %d , size = %d: ", i, dl[i]->size);
-            print(dl[i]);
-        // message("tes");
-            if (dl[i]->size > 1 ){
-            assert((dl[i]->head->next != NULL) || (dl[i]->head->prev != NULL));
-            assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
-            }
-        }
-            printf("\n");
+        // for(int i = 0; i < numOfRail_k; ++i)
+        // {    
+        //     printf("rail %d , size = %d: ", i, dl[i]->size);
+        //     print(dl[i]);
+        // // message("tes");
+        //     if (dl[i]->size > 1 ){
+        //     assert((dl[i]->head->next != NULL) || (dl[i]->head->prev != NULL));
+        //     assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
+        //     }
+        // }
+        //     printf("\n");
     }
     for(int i = 0; i < numOfRail_k; ++i)
     {    

@@ -55,6 +55,7 @@ void message(char* message){
 
 
 void pop_back(DList* D){
+
     if (D->size == 0)
         return;
     else if (D->size == 1)  //only one node
@@ -68,15 +69,24 @@ void pop_back(DList* D){
         Node *ptr = D->tail;
         if (D->tail->next == NULL){
             ptr = ptr->prev;
-            ptr->next = NULL;
+            if (ptr->next == D->tail)
+                ptr->next = NULL;
+            else
+                ptr->prev = NULL;
             free(D->tail);
             D->tail = ptr;
+            // message("not reverse");
         }
         else if (D->tail->prev == NULL){
             ptr = ptr->next;
-            ptr->prev = NULL;
+            if (ptr->prev == D->tail)
+                ptr->prev = NULL;
+            else
+                ptr->next = NULL;
+
             free(D->tail);
             D->tail = ptr;
+            // message("reverse");
         }
         --D->size;
     }
@@ -158,7 +168,7 @@ void print(DList* D){
         else if (curNode->next == NULL){  //不然如果curnode的next是NULL，prev就是下一個
             nextNode = curNode->prev;
         }
-        else if (curNode->next == prevNode){   //不然如果curnode的next是上一個node,prev就是下一個
+        else if (curNode->next == prevNode){   //不然(prev, next都不是NULL)如果curnode的next是上一個node,prev就是下一個
             nextNode = curNode->prev;
         }
         else if (curNode->prev == prevNode){  //不然如果curnode的prev是上一個node,next就是下一個
@@ -166,8 +176,15 @@ void print(DList* D){
         }
 
         // now nextNode is the True nextNode
-
         printf("%d ", curNode->val);
+        // assert(nextNode!=NULL);
+        // if(curNode->next!=NULL && curNode->prev!=NULL)
+        // if (curNode->val ==459)
+        //     printf("\n prev:%d , next:%d\n", curNode->prev->val, curNode->next->val);
+        // if (nextNode == NULL)
+        // {
+        //     printf("\n%d - %d\n - %d\n", curNode->prev->val, curNode->next->val, prevNode->val);
+        // }
         prevNode = curNode;
         curNode = nextNode;
     }
@@ -226,7 +243,7 @@ int main()
         //     assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
         //     }
         // }
-        //     printf("\n");
+        // printf("\n");
     }
     for(int i = 0; i < numOfRail_k; ++i)
     {    

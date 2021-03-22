@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+// #include <string.h>
+// #include <assert.h>
 
 typedef struct Node {
     int val;
@@ -40,8 +40,7 @@ int numOfRail_k, numOfRec_n;
 int main()
 {
     scanf("%d %d", &numOfRail_k, &numOfRec_n);
-    // printf("%d %d", numOfRail_k, numOfRec_n);
-    // DList **dl = malloc(sizeof(DList*) * numOfRail_k);
+
     for(int i = 0; i < numOfRail_k; ++i){    
         dl[i] = createDList();
     }
@@ -52,25 +51,16 @@ int main()
         // message(cmd);
         if (cmd[0] == 'e'){
             scanf("%d %d", &r, &l);
-            // if (r >= numOfRail_k)
-            //     continue;
+
             insert(dl[r], l);
         }
         else if (cmd[0] == 'l'){
             scanf("%d", &r);
-            // if (r >= numOfRail_k)
-            //     continue;
+
             pop_back(dl[r]);
         }
         else{
             scanf("%d %d", &ra, &rb);
-            // printf("num %d\n", numOfRec_n);
-            // if (ra >= numOfRec_n || rb >= numOfRec_n)
-            //     continue;
-            // assert(ra != rb);
-
-            // if (ra == rb)
-            //     continue;
             migrate(dl[ra], dl[rb]);
             // message("test");
         }

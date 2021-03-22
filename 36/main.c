@@ -282,8 +282,9 @@ int main()
     {    
         // reverse(dl[i]);
         print(dl[i]);
+        free(dl[i]);
     }
-
+    free(dl);
     return 0;
 }
 

@@ -121,7 +121,7 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
         return ;
         // message("text");
     
-    reverse(a);
+    
     if (b->size == 0)   // b has no node
     {
         b->head = a->tail;
@@ -129,9 +129,11 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
         a->tail = a->head = NULL;
         b->size = a->size;
         a->size = 0;
+        // assert(2 == 3);
     }
     else  //  b has at least one node
     {
+        reverse(a);
         if (b->tail->neighbor[b->tail->next] == NULL){
             b->tail->neighbor[b->tail->next] = a->head;
             if (a->head->neighbor[a->head->prev] == NULL){
@@ -140,8 +142,9 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
             else if (a->head->neighbor[a->head->next] == NULL){
                 a->head->neighbor[a->head->next] = b->tail;
             }
+            // else
+            //     assert(3 == 4);
             b->tail = a->tail;
-            
             a->head = a->tail = NULL;
             b->size += a->size;
             a->size = 0;
@@ -156,6 +159,9 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
                 a->head->neighbor[a->head->prev] = b->tail;
             }
         }
+        // else{
+        //     assert(2 == 3);
+        // }
             a->head = a->tail = NULL;
             b->size += a->size;
             a->size = 0;
@@ -174,30 +180,35 @@ void print(DList* D){
     Node *prevNode = D->head;
     while (true)
     {   
-        if (curNode == NULL)
-            assert(1==2);
+        // if (curNode == NULL)
+        //     assert(1==2);
         if (curNode == D->tail){
             printf("%d\n", curNode->val);
             // printf("end\n");
             break;
         }
         // printf("sdf ");
-        Node *nextNode;   //你確定 next 真的是next?
-        if (curNode->neighbor[curNode->prev] == NULL){
+        Node *nextNode = NULL;   //你確定 next 真的是next?
+        if (curNode->neighbor[curNode->prev] == NULL){  //如果curnode的prev是NULL，next就是下一個
             nextNode = curNode->neighbor[curNode->next];
         }
-        else if (curNode->neighbor[curNode->next] == NULL){
+        else if (curNode->neighbor[curNode->next] == NULL){  //不然如果curnode的next是NULL，prev就是下一個
             nextNode = curNode->neighbor[curNode->prev];
         }
-        else if (curNode->neighbor[curNode->next] == prevNode){   //如果會折返
+        else if (curNode->neighbor[curNode->next] == prevNode){   //不然如果curnode的next是上一個node,prev就是下一個
             nextNode = curNode->neighbor[curNode->prev];
         }
-        else if (curNode->neighbor[curNode->prev] == prevNode){
+        else if (curNode->neighbor[curNode->prev] == prevNode){  //不然如果curnode的prev是上一個node,next就是下一個
             nextNode = curNode->neighbor[curNode->next];
         }
+        // else
+        //     assert(1==2);
+        else
+            printf("next node is %d  ",curNode->neighbor[curNode->next]->val);
         // now nextNode is the True nextNode
 
         printf("%d ", curNode->val);
+        assert(nextNode!=NULL);
         prevNode = curNode;
         curNode = nextNode;
 
@@ -263,6 +274,10 @@ int main()
             printf("rail %d , size = %d: ", i, dl[i]->size);
             print(dl[i]);
         // message("tes");
+            if (dl[i]->size > 1 ){
+            assert((dl[i]->head->neighbor[dl[i]->head->next] != NULL) || (dl[i]->head->neighbor[dl[i]->head->prev]!= NULL));
+            assert((dl[i]->tail->neighbor[dl[i]->tail->next] != NULL) || (dl[i]->tail->neighbor[dl[i]->tail->prev] != NULL));
+            }
         }
             printf("\n");
     }

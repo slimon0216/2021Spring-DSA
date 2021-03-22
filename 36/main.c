@@ -23,11 +23,6 @@ DList* createDList(){
 
 inline void insert(DList *D, int val);
 
-
-// void message(char* message){
-//     printf("%s\n", message);
-// }
-
 inline void pop_back(DList *D);
 inline void reverse(DList *D);
 inline void migrate(DList *a, DList *b);
@@ -37,32 +32,38 @@ char cmd[10];
 int r, l, ra, rb;
 DList *dl[1000];
 int numOfRail_k, numOfRec_n;
+int i;
 int main()
 {
     scanf("%d %d", &numOfRail_k, &numOfRec_n);
-
-    for(int i = 0; i < numOfRail_k; ++i){    
+    // for(i = 0; i < numOfRail_k; ++i){    
+    //     dl[i] = createDList();
+    // }
+    i = numOfRail_k;
+    while (--i){
         dl[i] = createDList();
     }
+    dl[0] = createDList();
+
     int cnt = numOfRec_n;
+    char flag;
     while(cnt){
         --cnt;
         scanf("%s", cmd);
-        // message(cmd);
-        if (cmd[0] == 'e'){
+        flag = cmd[0];
+        switch(flag) {
+        case 'e':
             scanf("%d %d", &r, &l);
-
             insert(dl[r], l);
-        }
-        else if (cmd[0] == 'l'){
+            break;
+        case 'l':
             scanf("%d", &r);
-
             pop_back(dl[r]);
-        }
-        else{
+            break;
+        case 'm':
             scanf("%d %d", &ra, &rb);
             migrate(dl[ra], dl[rb]);
-            // message("test");
+            break;
         }
         // for(int i = 0; i < numOfRail_k; ++i)
         // {    
@@ -76,13 +77,8 @@ int main()
         // }
         // printf("\n");
     }
-    for(int i = 0; i < numOfRail_k; ++i)
-    {    
-        // reverse(dl[i]);
+    for(i = 0; i < numOfRail_k; ++i)
         print(dl[i]);
-        // free(dl[i]);
-    }
-    // free(dl);
     return 0;
 }
 
@@ -91,15 +87,15 @@ void insert(DList* D, int val){
     node->val = val;
     node->prev = node->next = NULL;
 
-    if (D->size == 0) 
+    if (!D->size) 
         D->head = D->tail = node;
     else{
-        if (D->tail->next == NULL){
+        if (!D->tail->next){
             D->tail->next = node;   //'''next 不一定是下一個'''
             node->prev = D->tail;
             D->tail = node;
         }
-        else if ( D->tail->prev == NULL){
+        else if (!D->tail->prev){
             D->tail->prev = node;
             node->next = D->tail;
             D->tail = node;
@@ -109,7 +105,7 @@ void insert(DList* D, int val){
 }
 
 void print(DList* D){
-    if (D->size == 0)
+    if (!D->size)
     {
         printf("\n");
         return;
@@ -124,10 +120,10 @@ void print(DList* D){
         }
         // printf("sdf ");
         Node *nextNode = NULL;   //你確定 next 真的是next?
-        if (curNode->prev == NULL){  //如果curnode的prev是NULL，next就是下一個
+        if (!curNode->prev ){  //如果curnode的prev是NULL，next就是下一個
             nextNode = curNode->next;
         }
-        else if (curNode->next == NULL){  //不然如果curnode的next是NULL，prev就是下一個
+        else if (!curNode->next){  //不然如果curnode的next是NULL，prev就是下一個
             nextNode = curNode->prev;
         }
         else if (curNode->next == prevNode){   //不然(prev, next都不是NULL)如果curnode的next是上一個node,prev就是下一個
@@ -162,21 +158,21 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
     else  //  b has at least one node
     {
         reverse(a);
-        if (b->tail->next == NULL){
+        if (!b->tail->next ){
             b->tail->next = a->head;
-            if (a->head->prev == NULL){
+            if (!a->head->prev ){
                 a->head->prev = b->tail;
             }
-            else if (a->head->next == NULL){
+            else if (!a->head->next ){
                 a->head->next = b->tail;
             }
         }
-        else if (b->tail->prev == NULL){
+        else if (!b->tail->prev ){
             b->tail->prev = a->head;
-            if (a->head->next == NULL){
+            if (!a->head->next ){
                 a->head->next = b->tail;
             }
-            else if (a->head->prev == NULL){
+            else if (!a->head->prev ){
                 a->head->prev = b->tail;
             }
         }
@@ -200,31 +196,31 @@ void pop_back(DList* D){
         return;
     else if (D->size == 1)  //only one node
     {
-        free(D->tail);
+        // free(D->tail);
         D->tail = D->head = NULL;
         D->size = 0;
     }
     else
     {
         Node *ptr = D->tail;
-        if (D->tail->next == NULL){
+        if (!D->tail->next ){
             ptr = ptr->prev;
             if (ptr->next == D->tail)
                 ptr->next = NULL;
             else
                 ptr->prev = NULL;
-            free(D->tail);
+            // free(D->tail);
             D->tail = ptr;
             // message("not reverse");
         }
-        else if (D->tail->prev == NULL){
+        else if (!D->tail->prev ){
             ptr = ptr->next;
             if (ptr->prev == D->tail)
                 ptr->prev = NULL;
             else
                 ptr->next = NULL;
 
-            free(D->tail);
+            // free(D->tail);
             D->tail = ptr;
             // message("reverse");
         }

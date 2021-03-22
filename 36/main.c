@@ -10,34 +10,23 @@
 #define false 0
 typedef int bool;
 
+
 typedef struct Node {
     int val;
     struct Node *prev, *next;
-
+    bool isReverse;
 }Node;
-
-Node* createNode(){
-    Node *node = malloc(sizeof(Node));
-    node ->val = 0;
-    node ->prev = NULL;
-    node ->next = NULL;
-    return node;
-}
 
 typedef struct DList{
     Node *head;
     Node *tail;
     int size;
-    bool isReverse;
 }DList;
-
-
 
 DList* createDList(){
     DList *D = (DList*)malloc(sizeof(DList));
     D->head = D->tail = NULL;
     D->size = 0;
-    D->isReverse = false;
     return D;
 }
 
@@ -45,14 +34,27 @@ void insert(DList* D, int val){
     Node *node = malloc(sizeof(Node));
     node->val = val;
     node->prev = node->next = NULL;
+    node->isReverse = false;
 
     if (D->size == 0) 
+    {
         D->head = D->tail = node;
+    }
     else
     {
-        D->tail->next = node;
-        node->prev = D->tail;
-        D->tail = node; 
+        if (D->tail->next == NULL){
+            D->tail->next = node;   //'''next 不一定是下一個'''
+            node->prev = D->tail;
+            // D->tail->isEdge = false;
+            D->tail = node;
+            // node->isEdge = true;
+        }
+        else if ( D->tail->prev == NULL){
+            D->tail->prev = node;
+            node->next = D->tail;
+            D->tail = node;
+        }
+        // assert(1 == 2);
     }
     ++D->size;
 }
@@ -61,35 +63,13 @@ void insert(DList* D, int val){
 void message(char* message){
     printf("%s\n", message);
 }
-void print(DList* D){
-    if (D->size == 0)
-    {
-        printf("\n");
-        return;
-    }
-    Node *ptr = D->head;
-    while (ptr != D->tail)
-    {
-        printf("%d ", ptr->val);
-        ptr = ptr->next;
-        // message("test");
-    }
-    assert(ptr != NULL);
-    // if (ptr != NULL)
-        printf("%d\n", ptr->val);
-    // else printf("\n");
-    
-    // for (int i = 0; i < D->size; ++i)
-    // {
-    //     printf("%d ", ptr->val);
-    //     ptr = ptr->next;
-    //     assert(ptr != NULL);
-    //     if (i == D->size-1)
-    //         printf("\n");
-    // }
-}
 
-
+// void swap(Node *node){
+//     int temp = node->prev;
+//     node->prev = node->next;
+//     node->next = temp;
+//     message("swap");
+// }
 
 void pop_back(DList* D){
     if (D->size == 0)
@@ -97,89 +77,141 @@ void pop_back(DList* D){
     else if (D->size == 1)  //only one node
     {
         free(D->tail);
-    // message("'test'");
         D->tail = D->head = NULL;
         D->size = 0;
-        // return;
     }
-    else    //size > 2
+    else
     {
         Node *ptr = D->tail;
-        ptr = ptr->prev;    '''prev真的是prev嗎???'''
-
-        ptr->next = NULL;
-        free(D->tail);
-        D->tail = ptr;
+        if (D->tail->next == NULL){
+            ptr = ptr->prev;
+            ptr->next = NULL;
+            free(D->tail);
+            D->tail = ptr;
+        }
+        else if (D->tail->prev == NULL){
+            ptr = ptr->next;
+            ptr->prev = NULL;
+            free(D->tail);
+            D->tail = ptr;
+        }
         --D->size;
     }
 }
 
+
+
 void reverse(DList* D){
-    // printf("%d\n", D->size);
-    if (D->size <= 1) // # of node <= 1 do nothing
-        return;
-
-    Node* ptr = D->head;
-    // turn head into tail
-        // printf("%d\n", ptr->val);
-    ptr->prev = ptr->next;
-    ptr->next = NULL;
-    ptr = ptr->prev;
-    Node *temp;
-    // print(D);
-    // message("test");
-    while (ptr != D->tail)
-    {
-        // printf("%d\n", ptr->val);
-        temp = ptr->prev;
-        ptr->prev = ptr->next;
-        ptr->next = temp;
-        ptr = ptr->prev;
-    }
-    //now ptr is tail
-    // printf("sdf %d\n", D->tail);
-
-    // ptr is tail
-    if (ptr != NULL)
-    {
-        ptr->next = ptr->prev;
-        ptr->prev = NULL;
-    }
-    
-    temp = D->head;
+    Node *temp = D->head;
     D->head = D->tail;
     D->tail = temp;
-    // print(D);
+
+    D->head->isReverse = true;
+    D->tail->isReverse = true;
 }
+
+
 void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins is migrated into the rb-th
 {
     if (a->size == 0)  //a has no node
         return ;
         // message("text");
     
-    else if (b->size == 0)   // b has no node
+    
+    if (b->size == 0)   // b has no node
     {
-        reverse(a);
-        b->head = a->head;
-        b->tail = a->tail;
+        b->head = a->tail;
+        b->tail = a->head;
         a->tail = a->head = NULL;
         b->size = a->size;
         a->size = 0;
+        // assert(2 == 3);
     }
-    else
+    else  //  b has at least one node
     {
         reverse(a);
-        // print(a);
-        b->tail->next = a->head;
-        b->tail = a->tail;
-        a->head = a->tail = NULL;
-        b->size += a->size;
-        // printf("tail %d\n", b->tail->val);
-        a->size = 0;
+        if (b->tail->next == NULL){
+            b->tail->next = a->head;
+            if (a->head->prev == NULL){
+                a->head->prev = b->tail;
+            }
+            else if (a->head->next == NULL){
+                a->head->next = b->tail;
+            }
+            // else
+            //     assert(3 == 4);
+            b->tail = a->tail;
+            a->head = a->tail = NULL;
+            b->size += a->size;
+            a->size = 0;
+        }
+        else if (b->tail->prev == NULL){
+            // printf("asd\n");
+            b->tail->prev = a->head;
+            if (a->head->next == NULL){
+                a->head->next = b->tail;
+            }
+            else if (a->head->prev == NULL){
+                a->head->prev = b->tail;
+            }
+            b->tail = a->tail;
+        }
+        // else{
+        //     assert(2 == 3);
+        // }
+            a->head = a->tail = NULL;
+            b->size += a->size;
+            a->size = 0;
     }
-    assert(b->tail != NULL);
+    // assert(b->tail != NULL);
 }
 
+
+void print(DList* D){
+    if (D->size == 0)
+    {
+        printf("\n");
+        return;
+    }
+    Node *curNode = D->head;
+    Node *prevNode = D->head;
+    while (true)
+    {   
+        // if (curNode == NULL)
+        //     assert(1==2);
+        if (curNode == D->tail){
+            printf("%d\n", curNode->val);
+            // printf("end\n");
+            break;
+        }
+        // printf("sdf ");
+        Node *nextNode = NULL;   //你確定 next 真的是next?
+        if (curNode->prev == NULL){  //如果curnode的prev是NULL，next就是下一個
+            nextNode = curNode->next;
+        }
+        else if (curNode->next == NULL){  //不然如果curnode的next是NULL，prev就是下一個
+            nextNode = curNode->prev;
+        }
+        else if (curNode->next == prevNode){   //不然如果curnode的next是上一個node,prev就是下一個
+            nextNode = curNode->prev;
+        }
+        else if (curNode->prev == prevNode){  //不然如果curnode的prev是上一個node,next就是下一個
+            nextNode = curNode->next;
+        }
+        // else
+        //     assert(1==2);
+        // else
+        //     printf("prev node is %d  ",curNode->prev->val);
+        // now nextNode is the True nextNode
+
+        printf("%d ", curNode->val);
+        assert(nextNode!=NULL);
+        prevNode = curNode;
+        curNode = nextNode;
+
+    }
+
+}
 
 char cmd[10];
 int r, l, ra, rb;
@@ -231,15 +263,18 @@ int main()
             scanf("%d %d", &ra, &rb);
             // printf("%d %d\n", ra, rb);
             // reverse(dl[ra]);
-            // migrate(dl[ra], dl[rb]);
+            migrate(dl[ra], dl[rb]);
             // message("test");
         }
         // for(int i = 0; i < numOfRail_k; ++i)
         // {    
-        //     // reverse(dl[i]);
-        //     // printf("rail %d , size = %d: ", i, dl[i]->size);
+        //     printf("rail %d , size = %d: ", i, dl[i]->size);
         //     print(dl[i]);
         // // message("tes");
+        //     if (dl[i]->size > 1 ){
+        //     assert((dl[i]->head->next != NULL) || (dl[i]->head->prev != NULL));
+        //     assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
+        //     }
         // }
         //     printf("\n");
     }
@@ -251,34 +286,4 @@ int main()
 
     return 0;
 }
-
-
-void push(struct Stack *S, int data) {
-    S->arr[++S->top] = data;
-    // if (isFullStack(S))
-    // enlarge(S);
-};
-
-void pop(struct Stack *S){
-    --S->top;
-}
-
-int peek(struct Stack *S){
-    return S->arr[S->top];
-}
-
-
-
-int isFullStack(struct Stack *S) {
-    return (S->top == S->capacity-1);
-};
-
-int isEmpty(struct Stack *S){
-    return (S->top == -1)? 1 : 0;
-}
-
-void clear(struct Stack *S){
-    S->top = -1;
-}
-
 

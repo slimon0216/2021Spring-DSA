@@ -21,7 +21,7 @@ DList* createDList(){
     return D;
 }
 
-inline void insert(DList *D, int val);
+inline void insert(DList *D, int *val);
 
 inline void pop_back(DList *D);
 inline void reverse(DList *D);
@@ -54,7 +54,7 @@ int main()
         switch(flag) {
         case 'e':
             scanf("%d %d", &r, &l);
-            insert(dl[r], l);
+            insert(dl[r], &l);
             break;
         case 'l':
             scanf("%d", &r);
@@ -82,9 +82,9 @@ int main()
     return 0;
 }
 
-void insert(DList* D, int val){
+void insert(DList* D, int *val){
     Node *node = malloc(sizeof(Node));
-    node->val = val;
+    node->val = *val;
     node->prev = node->next = NULL;
 
     if (!D->size) 
@@ -143,10 +143,10 @@ void print(DList* D){
 
 void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins is migrated into the rb-th
 {
-    if (a->size == 0)  //a has no node
+    if (!a->size)  //a has no node
         return ;
     
-    else if (b->size == 0)   // b has no node
+    else if (!b->size)   // b has no node
     {
         b->head = a->tail;
         b->tail = a->head;
@@ -192,7 +192,7 @@ void reverse(DList* D){
 
 void pop_back(DList* D){
 
-    if (D->size == 0)
+    if (!D->size)
         return;
     else if (D->size == 1)  //only one node
     {

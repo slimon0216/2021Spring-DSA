@@ -4,14 +4,14 @@
 // #include <assert.h>
 
 typedef struct Node {
-    int val;
+    unsigned int val;
     struct Node *prev, *next;
 }Node;
 
 typedef struct DList{
     Node *head;
     Node *tail;
-    int size;
+    unsigned int size;
 }DList;
 
 DList* createDList(){
@@ -21,14 +21,16 @@ DList* createDList(){
     return D;
 }
 
+inline int Read();
 
 char cmd[10];
-int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt;
+unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt;
 DList *dl[1000], *D, *a, *b;
 Node *temp, *curNode, *prevNode, *nextNode;
 char flag;
-int main()
+unsigned int main()
 {
+    
     scanf("%d %d", &numOfRail_k, &numOfRec_n);
     // for(i = 0; i < numOfRail_k; ++i){    
     //     dl[i] = createDList();
@@ -47,7 +49,9 @@ int main()
         flag = cmd[0];
         switch(flag) {
         case 'e':
-            scanf("%d %d", &r, &l);
+            // scanf("%d %d", &r, &l);
+            r = Read();
+            l = Read();
             // insert(dl[r], &l);
             D = dl[r];
             {
@@ -76,7 +80,8 @@ int main()
             break;
 
         case 'l':
-            scanf("%d", &r);
+            // scanf("%d", &r);
+            r = Read();
             // pop_back(dl[r]);
             D = dl[r];
             if (D->size)
@@ -115,7 +120,9 @@ int main()
             }
             break;
         case 'm':
-            scanf("%d %d", &ra, &rb);
+            // scanf("%d %d", &ra, &rb);
+            ra = Read();
+            rb = Read();
             // migrate(dl[ra], dl[rb]);
             a = dl[ra];
             b = dl[rb];
@@ -164,7 +171,7 @@ int main()
             }
             break;
         }
-        // for(int i = 0; i < numOfRail_k; ++i)
+        // for(unsigned int i = 0; i < numOfRail_k; ++i)
         // {    
         //     printf("rail %d , size = %d: ", i, dl[i]->size);
         //     print(dl[i]);
@@ -217,4 +224,13 @@ int main()
     return 0;
 }
 
+int Read()
+{
+	int p=0;
+	char c=getchar();
+	while(c<'0' || c>'9') c=getchar();
+	while(c>='0' && c<='9')
+		p=p*10+(c-'0'),c=getchar();
+	return p;
+}
 

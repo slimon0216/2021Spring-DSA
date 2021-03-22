@@ -3,11 +3,6 @@
 #include <string.h>
 #include <assert.h>
 
-#define true 1
-#define false 0
-typedef int bool;
-
-
 typedef struct Node {
     int val;
     struct Node *prev, *next;
@@ -24,6 +19,81 @@ DList* createDList(){
     D->head = D->tail = NULL;
     D->size = 0;
     return D;
+}
+
+inline void insert(DList *D, int val);
+
+
+// void message(char* message){
+//     printf("%s\n", message);
+// }
+
+inline void pop_back(DList *D);
+inline void reverse(DList *D);
+inline void migrate(DList *a, DList *b);
+inline void print(DList *D);
+
+char cmd[10];
+int r, l, ra, rb;
+DList *dl[1000];
+int numOfRail_k, numOfRec_n;
+int main()
+{
+    scanf("%d %d", &numOfRail_k, &numOfRec_n);
+    // printf("%d %d", numOfRail_k, numOfRec_n);
+    // DList **dl = malloc(sizeof(DList*) * numOfRail_k);
+    for(int i = 0; i < numOfRail_k; ++i){    
+        dl[i] = createDList();
+    }
+    int cnt = numOfRec_n;
+    while(cnt){
+        --cnt;
+        scanf("%s", cmd);
+        // message(cmd);
+        if (cmd[0] == 'e'){
+            scanf("%d %d", &r, &l);
+            if (r >= numOfRail_k)
+                continue;
+            insert(dl[r], l);
+        }
+        else if (cmd[0] == 'l'){
+            scanf("%d", &r);
+            if (r >= numOfRail_k)
+                continue;
+            pop_back(dl[r]);
+        }
+        else{
+            scanf("%d %d", &ra, &rb);
+            // printf("num %d\n", numOfRec_n);
+            if (ra >= numOfRec_n || rb >= numOfRec_n)
+                continue;
+            // assert(ra != rb);
+
+            if (ra == rb)
+                continue;
+            migrate(dl[ra], dl[rb]);
+            // message("test");
+        }
+        // for(int i = 0; i < numOfRail_k; ++i)
+        // {    
+        //     printf("rail %d , size = %d: ", i, dl[i]->size);
+        //     print(dl[i]);
+        // // message("tes");
+        //     if (dl[i]->size > 1 ){
+        //     assert((dl[i]->head->next != NULL) || (dl[i]->head->prev != NULL));
+        //     assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
+        //     }
+        // }
+        // printf("\n");
+    }
+    for(int i = 0; i < numOfRail_k; ++i)
+    {    
+        // reverse(dl[i]);
+        print(dl[i]);
+        // free(dl[i]);
+    }
+    // free(dl);
+    return 0;
 }
 
 void insert(DList* D, int val){
@@ -48,56 +118,40 @@ void insert(DList* D, int val){
     ++D->size;
 }
 
-
-void message(char* message){
-    printf("%s\n", message);
-}
-
-
-void pop_back(DList* D){
-
+void print(DList* D){
     if (D->size == 0)
+    {
+        printf("\n");
         return;
-    else if (D->size == 1)  //only one node
-    {
-        free(D->tail);
-        D->tail = D->head = NULL;
-        D->size = 0;
     }
-    else
-    {
-        Node *ptr = D->tail;
-        if (D->tail->next == NULL){
-            ptr = ptr->prev;
-            if (ptr->next == D->tail)
-                ptr->next = NULL;
-            else
-                ptr->prev = NULL;
-            free(D->tail);
-            D->tail = ptr;
-            // message("not reverse");
+    Node *curNode = D->head;
+    Node *prevNode = D->head;
+    while (1)
+    {   
+        if (curNode == D->tail){
+            printf("%d\n", curNode->val);
+            break;
         }
-        else if (D->tail->prev == NULL){
-            ptr = ptr->next;
-            if (ptr->prev == D->tail)
-                ptr->prev = NULL;
-            else
-                ptr->next = NULL;
+        // printf("sdf ");
+        Node *nextNode = NULL;   //你確定 next 真的是next?
+        if (curNode->prev == NULL){  //如果curnode的prev是NULL，next就是下一個
+            nextNode = curNode->next;
+        }
+        else if (curNode->next == NULL){  //不然如果curnode的next是NULL，prev就是下一個
+            nextNode = curNode->prev;
+        }
+        else if (curNode->next == prevNode){   //不然(prev, next都不是NULL)如果curnode的next是上一個node,prev就是下一個
+            nextNode = curNode->prev;
+        }
+        else if (curNode->prev == prevNode){  //不然如果curnode的prev是上一個node,next就是下一個
+            nextNode = curNode->next;
+        }
 
-            free(D->tail);
-            D->tail = ptr;
-            // message("reverse");
-        }
-        --D->size;
+        // now nextNode is the True nextNode
+        printf("%d ", curNode->val);
+        prevNode = curNode;
+        curNode = nextNode;
     }
-}
-
-
-
-void reverse(DList* D){
-    Node *temp = D->head;
-    D->head = D->tail;
-    D->tail = temp;
 }
 
 
@@ -141,117 +195,49 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
         b->size += a->size;
         a->size = 0;
     }
-    // assert(b->tail != NULL);
+}
+
+void reverse(DList* D){
+    Node *temp = D->head;
+    D->head = D->tail;
+    D->tail = temp;
 }
 
 
-void print(DList* D){
+void pop_back(DList* D){
+
     if (D->size == 0)
-    {
-        printf("\n");
         return;
+    else if (D->size == 1)  //only one node
+    {
+        free(D->tail);
+        D->tail = D->head = NULL;
+        D->size = 0;
     }
-    Node *curNode = D->head;
-    Node *prevNode = D->head;
-    while (true)
-    {   
+    else
+    {
+        Node *ptr = D->tail;
+        if (D->tail->next == NULL){
+            ptr = ptr->prev;
+            if (ptr->next == D->tail)
+                ptr->next = NULL;
+            else
+                ptr->prev = NULL;
+            free(D->tail);
+            D->tail = ptr;
+            // message("not reverse");
+        }
+        else if (D->tail->prev == NULL){
+            ptr = ptr->next;
+            if (ptr->prev == D->tail)
+                ptr->prev = NULL;
+            else
+                ptr->next = NULL;
 
-        if (curNode == D->tail){
-            printf("%d\n", curNode->val);
-            break;
+            free(D->tail);
+            D->tail = ptr;
+            // message("reverse");
         }
-        // printf("sdf ");
-        Node *nextNode = NULL;   //你確定 next 真的是next?
-        if (curNode->prev == NULL){  //如果curnode的prev是NULL，next就是下一個
-            nextNode = curNode->next;
-        }
-        else if (curNode->next == NULL){  //不然如果curnode的next是NULL，prev就是下一個
-            nextNode = curNode->prev;
-        }
-        else if (curNode->next == prevNode){   //不然(prev, next都不是NULL)如果curnode的next是上一個node,prev就是下一個
-            nextNode = curNode->prev;
-        }
-        else if (curNode->prev == prevNode){  //不然如果curnode的prev是上一個node,next就是下一個
-            nextNode = curNode->next;
-        }
-
-        // now nextNode is the True nextNode
-        printf("%d ", curNode->val);
-        // assert(nextNode!=NULL);
-        // if(curNode->next!=NULL && curNode->prev!=NULL)
-        // if (curNode->val ==459)
-        //     printf("\n prev:%d , next:%d\n", curNode->prev->val, curNode->next->val);
-        // if (nextNode == NULL)
-        // {
-        //     printf("\n%d - %d\n - %d\n", curNode->prev->val, curNode->next->val, prevNode->val);
-        // }
-        prevNode = curNode;
-        curNode = nextNode;
+        --D->size;
     }
-
 }
-
-char cmd[10];
-int r, l, ra, rb;
-DList *dl[1000];
-int main()
-{
-    int numOfRail_k, numOfRec_n;
-    scanf("%d %d", &numOfRail_k, &numOfRec_n);
-    // printf("%d %d", numOfRail_k, numOfRec_n);
-    // DList **dl = malloc(sizeof(DList*) * numOfRail_k);
-    for(int i = 0; i < numOfRail_k; ++i){    
-        int temp;
-        dl[i] = createDList();
-    }
-    int cnt = numOfRec_n;
-    while(cnt > 0){
-        --cnt;
-        scanf("%s", cmd);
-        // message(cmd);
-        if (strcmp(cmd, "enter") == 0){
-            scanf("%d %d", &r, &l);
-            if (r >= numOfRail_k)
-                continue;
-            insert(dl[r], l);
-        }
-        else if (strcmp(cmd, "leave") == 0){
-            scanf("%d", &r);
-            if (r >= numOfRail_k)
-                continue;
-            pop_back(dl[r]);
-        }
-        else if (strcmp(cmd, "migrate") == 0){
-            scanf("%d %d", &ra, &rb);
-            // printf("num %d\n", numOfRec_n);
-            if (ra >= numOfRec_n || rb >= numOfRec_n)
-                continue;
-            // assert(ra != rb);
-
-            if (ra == rb)
-                continue;
-            migrate(dl[ra], dl[rb]);
-            // message("test");
-        }
-        // for(int i = 0; i < numOfRail_k; ++i)
-        // {    
-        //     printf("rail %d , size = %d: ", i, dl[i]->size);
-        //     print(dl[i]);
-        // // message("tes");
-        //     if (dl[i]->size > 1 ){
-        //     assert((dl[i]->head->next != NULL) || (dl[i]->head->prev != NULL));
-        //     assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
-        //     }
-        // }
-        // printf("\n");
-    }
-    for(int i = 0; i < numOfRail_k; ++i)
-    {    
-        // reverse(dl[i]);
-        print(dl[i]);
-        free(dl[i]);
-    }
-    // free(dl);
-    return 0;
-}
-

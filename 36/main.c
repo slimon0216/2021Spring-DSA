@@ -9,7 +9,7 @@ typedef int bool;
 
 
 typedef struct Node {
-    int val;
+    short val;
     struct Node *prev, *next;
 }Node;
 
@@ -26,7 +26,7 @@ DList* createDList(){
     return D;
 }
 
-void insert(DList* D, int val){
+void insert(DList* D, short val){
     Node *node = malloc(sizeof(Node));
     node->val = val;
     node->prev = node->next = NULL;
@@ -177,12 +177,13 @@ void print(DList* D){
 
 char cmd[10];
 int r, l, ra, rb;
+DList *dl[1000];
 int main()
 {
     int numOfRail_k, numOfRec_n;
     scanf("%d %d", &numOfRail_k, &numOfRec_n);
     // printf("%d %d", numOfRail_k, numOfRec_n);
-    DList **dl = malloc(sizeof(DList*) * numOfRail_k);
+    // DList **dl = malloc(sizeof(DList*) * numOfRail_k);
     for(int i = 0; i < numOfRail_k; ++i){    
         int temp;
         dl[i] = createDList();
@@ -230,7 +231,7 @@ int main()
         print(dl[i]);
         free(dl[i]);
     }
-    free(dl);
+    // free(dl);
     return 0;
 }
 

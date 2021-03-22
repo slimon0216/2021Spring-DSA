@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <string.h>
-#include <math.h>
 #include <assert.h>
-#define MAX_LEN 100000
 
 #define true 1
 #define false 0
@@ -14,7 +11,6 @@ typedef int bool;
 typedef struct Node {
     int val;
     struct Node *prev, *next;
-    bool isReverse;
 }Node;
 
 typedef struct DList{
@@ -34,27 +30,20 @@ void insert(DList* D, int val){
     Node *node = malloc(sizeof(Node));
     node->val = val;
     node->prev = node->next = NULL;
-    node->isReverse = false;
 
     if (D->size == 0) 
-    {
         D->head = D->tail = node;
-    }
-    else
-    {
+    else{
         if (D->tail->next == NULL){
             D->tail->next = node;   //'''next 不一定是下一個'''
             node->prev = D->tail;
-            // D->tail->isEdge = false;
             D->tail = node;
-            // node->isEdge = true;
         }
         else if ( D->tail->prev == NULL){
             D->tail->prev = node;
             node->next = D->tail;
             D->tail = node;
         }
-        // assert(1 == 2);
     }
     ++D->size;
 }
@@ -64,12 +53,6 @@ void message(char* message){
     printf("%s\n", message);
 }
 
-// void swap(Node *node){
-//     int temp = node->prev;
-//     node->prev = node->next;
-//     node->next = temp;
-//     message("swap");
-// }
 
 void pop_back(DList* D){
     if (D->size == 0)
@@ -105,9 +88,6 @@ void reverse(DList* D){
     Node *temp = D->head;
     D->head = D->tail;
     D->tail = temp;
-
-    D->head->isReverse = true;
-    D->tail->isReverse = true;
 }
 
 
@@ -115,10 +95,8 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
 {
     if (a->size == 0)  //a has no node
         return ;
-        // message("text");
     
-    
-    if (b->size == 0)   // b has no node
+    else if (b->size == 0)   // b has no node
     {
         b->head = a->tail;
         b->tail = a->head;
@@ -138,15 +116,8 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
             else if (a->head->next == NULL){
                 a->head->next = b->tail;
             }
-            // else
-            //     assert(3 == 4);
-            b->tail = a->tail;
-            a->head = a->tail = NULL;
-            b->size += a->size;
-            a->size = 0;
         }
         else if (b->tail->prev == NULL){
-            // printf("asd\n");
             b->tail->prev = a->head;
             if (a->head->next == NULL){
                 a->head->next = b->tail;
@@ -154,14 +125,11 @@ void migrate(DList* a, DList* b) // ra-th rail is shut down, and all its cabins 
             else if (a->head->prev == NULL){
                 a->head->prev = b->tail;
             }
-            b->tail = a->tail;
         }
-        // else{
-        //     assert(2 == 3);
-        // }
-            a->head = a->tail = NULL;
-            b->size += a->size;
-            a->size = 0;
+        b->tail = a->tail;
+        a->head = a->tail = NULL;
+        b->size += a->size;
+        a->size = 0;
     }
     // assert(b->tail != NULL);
 }
@@ -177,11 +145,9 @@ void print(DList* D){
     Node *prevNode = D->head;
     while (true)
     {   
-        // if (curNode == NULL)
-        //     assert(1==2);
+
         if (curNode == D->tail){
             printf("%d\n", curNode->val);
-            // printf("end\n");
             break;
         }
         // printf("sdf ");
@@ -198,14 +164,11 @@ void print(DList* D){
         else if (curNode->prev == prevNode){  //不然如果curnode的prev是上一個node,next就是下一個
             nextNode = curNode->next;
         }
-        // else
-        //     assert(1==2);
-        // else
-        //     printf("prev node is %d  ",curNode->prev->val);
+
         // now nextNode is the True nextNode
 
         printf("%d ", curNode->val);
-        assert(nextNode!=NULL);
+        // assert(nextNode!=NULL);
         prevNode = curNode;
         curNode = nextNode;
 

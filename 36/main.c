@@ -9,7 +9,7 @@ typedef int bool;
 
 
 typedef struct Node {
-    short val;
+    int val;
     struct Node *prev, *next;
 }Node;
 
@@ -26,7 +26,7 @@ DList* createDList(){
     return D;
 }
 
-void insert(DList* D, short val){
+void insert(DList* D, int val){
     Node *node = malloc(sizeof(Node));
     node->val = val;
     node->prev = node->next = NULL;
@@ -170,7 +170,6 @@ void print(DList* D){
         printf("%d ", curNode->val);
         prevNode = curNode;
         curNode = nextNode;
-
     }
 
 }
@@ -209,6 +208,10 @@ int main()
             scanf("%d %d", &ra, &rb);
             // printf("num %d\n", numOfRec_n);
             if (ra >= numOfRec_n || rb >= numOfRec_n)
+                continue;
+            // assert(ra != rb);
+
+            if (ra == rb)
                 continue;
             migrate(dl[ra], dl[rb]);
             // message("test");

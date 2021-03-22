@@ -168,7 +168,6 @@ void print(DList* D){
         // now nextNode is the True nextNode
 
         printf("%d ", curNode->val);
-        // assert(nextNode!=NULL);
         prevNode = curNode;
         curNode = nextNode;
 
@@ -184,62 +183,44 @@ int main()
     scanf("%d %d", &numOfRail_k, &numOfRec_n);
     // printf("%d %d", numOfRail_k, numOfRec_n);
     DList **dl = malloc(sizeof(DList*) * numOfRail_k);
-    for(int i = 0; i < numOfRail_k; ++i)
-    {    
+    for(int i = 0; i < numOfRail_k; ++i){    
         int temp;
         dl[i] = createDList();
-        // while (scanf("%d", &temp) != EOF)
-        //     insert(dl[i], temp);
     }
-    // for(int i = 0; i < numOfRail_k; ++i)
-    // {    
-    //     reverse(dl[i]);
-    //     print(dl[i]);
-    // }
-    // reverse(dl[0]);
-    // migrate(dl[1], dl[0]);    
-    // // print(dl[0]);
-    // print(dl[1]);
-    // pop_back(dl[1]);
-    // // print(dl[0]);
-    // print(dl[1]);
-
-    while(numOfRec_n > 0)
-    {
+    while(numOfRec_n > 0){
         --numOfRec_n;
         scanf("%s", cmd);
         // message(cmd);
-        if (strcmp(cmd, "enter") == 0)
-        {
+        if (strcmp(cmd, "enter") == 0){
             scanf("%d %d", &r, &l);
-            // printf("%d %d\n", r, l);
+            if (r >= numOfRail_k)
+                continue;
             insert(dl[r], l);
         }
-        else if (strcmp(cmd, "leave") == 0)
-        {
+        else if (strcmp(cmd, "leave") == 0){
             scanf("%d", &r);
-            // printf("%d\n", r);
+            if (r >= numOfRail_k)
+                continue;
             pop_back(dl[r]);
         }
-        else if (strcmp(cmd, "migrate") == 0)
-        {
+        else if (strcmp(cmd, "migrate") == 0){
             scanf("%d %d", &ra, &rb);
-            // printf("%d %d\n", ra, rb);
-            // reverse(dl[ra]);
+            if (ra >= numOfRec_n || rb >= numOfRec_n)
+                continue;
             migrate(dl[ra], dl[rb]);
             // message("test");
         }
-        // for(int i = 0; i < numOfRail_k; ++i)
-        // {    
-        //     printf("rail %d , size = %d: ", i, dl[i]->size);
-        //     print(dl[i]);
-        // // message("tes");
-        //     if (dl[i]->size > 1 ){
-        //     assert((dl[i]->head->next != NULL) || (dl[i]->head->prev != NULL));
-        //     assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
-        //     }
-        // }
-        //     printf("\n");
+        for(int i = 0; i < numOfRail_k; ++i)
+        {    
+            printf("rail %d , size = %d: ", i, dl[i]->size);
+            print(dl[i]);
+        // message("tes");
+            if (dl[i]->size > 1 ){
+            assert((dl[i]->head->next != NULL) || (dl[i]->head->prev != NULL));
+            assert((dl[i]->tail->next != NULL) || (dl[i]->tail->prev != NULL));
+            }
+        }
+            printf("\n");
     }
     for(int i = 0; i < numOfRail_k; ++i)
     {    

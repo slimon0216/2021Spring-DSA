@@ -52,25 +52,25 @@ int main()
         // message(cmd);
         if (cmd[0] == 'e'){
             scanf("%d %d", &r, &l);
-            if (r >= numOfRail_k)
-                continue;
+            // if (r >= numOfRail_k)
+            //     continue;
             insert(dl[r], l);
         }
         else if (cmd[0] == 'l'){
             scanf("%d", &r);
-            if (r >= numOfRail_k)
-                continue;
+            // if (r >= numOfRail_k)
+            //     continue;
             pop_back(dl[r]);
         }
         else{
             scanf("%d %d", &ra, &rb);
             // printf("num %d\n", numOfRec_n);
-            if (ra >= numOfRec_n || rb >= numOfRec_n)
-                continue;
+            // if (ra >= numOfRec_n || rb >= numOfRec_n)
+            //     continue;
             // assert(ra != rb);
 
-            if (ra == rb)
-                continue;
+            // if (ra == rb)
+            //     continue;
             migrate(dl[ra], dl[rb]);
             // message("test");
         }

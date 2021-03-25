@@ -24,7 +24,7 @@ DList* createDList(){
 inline int ReadInt();
 
 char cmd[10];
-unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt;
+unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt, num;
 DList *dl[1000], *D, *a, *b;
 Node *temp, *curNode, *prevNode, *nextNode;
 char flag;
@@ -226,11 +226,12 @@ unsigned int main()
 
 int ReadInt()
 {
-	int p=0;
-	char c=getchar();
-	while(c<'0' || c>'9') c=getchar();
-	while(c>='0' && c<='9')
-		p=p*10+(c-'0'),c=getchar();
-	return p;
+	num = 0;
+	char c = getchar();
+	while(c <'0' || c > '9') 
+        c=getchar();
+	while(c>('0'-1) && c <('9'+1))
+		num = num*10 + (c -'0'),c = getchar();
+	return num;
 }
 

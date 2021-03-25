@@ -21,7 +21,7 @@ DList* createDList(){
     return D;
 }
 
-inline int Read();
+inline int ReadInt();
 
 char cmd[10];
 unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt;
@@ -50,8 +50,8 @@ unsigned int main()
         switch(flag) {
         case 'e':
             // scanf("%d %d", &r, &l);
-            r = Read();
-            l = Read();
+            r = ReadInt();
+            l = ReadInt();
             // insert(dl[r], &l);
             D = dl[r];
             {
@@ -81,7 +81,7 @@ unsigned int main()
 
         case 'l':
             // scanf("%d", &r);
-            r = Read();
+            r = ReadInt();
             // pop_back(dl[r]);
             D = dl[r];
             if (D->size)
@@ -121,8 +121,8 @@ unsigned int main()
             break;
         case 'm':
             // scanf("%d %d", &ra, &rb);
-            ra = Read();
-            rb = Read();
+            ra = ReadInt();
+            rb = ReadInt();
             // migrate(dl[ra], dl[rb]);
             a = dl[ra];
             b = dl[rb];
@@ -224,7 +224,7 @@ unsigned int main()
     return 0;
 }
 
-int Read()
+int ReadInt()
 {
 	int p=0;
 	char c=getchar();

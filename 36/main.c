@@ -28,13 +28,9 @@ unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt, num;
 DList *dl[1000], *D, *a, *b;
 Node *temp, *curNode, *prevNode, *nextNode;
 char flag;
-unsigned int main()
+int main()
 {
-    
     scanf("%d %d", &numOfRail_k, &numOfRec_n);
-    // for(i = 0; i < numOfRail_k; ++i){    
-    //     dl[i] = createDList();
-    // }
     i = numOfRail_k;
     while (--i){
         dl[i] = createDList();
@@ -49,7 +45,6 @@ unsigned int main()
         flag = cmd[0];
         switch(flag) {
         case 'e':
-            // scanf("%d %d", &r, &l);
             r = ReadInt();
             l = ReadInt();
             // insert(dl[r], &l);

@@ -23,6 +23,10 @@ DList* createDList(){
 
 inline int ReadInt();
 
+void message(char *s){
+    printf("%s\n");
+}
+
 char cmd[10];
 unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt, num;
 DList *dl[1000], *D, *a, *b;
@@ -30,7 +34,9 @@ Node *temp, *curNode, *prevNode, *nextNode;
 char flag, c;
 int main()
 {
-    scanf("%d %d", &numOfRail_k, &numOfRec_n);
+    // scanf("%d %d", &numOfRail_k, &numOfRec_n);
+    numOfRail_k = ReadInt();
+    numOfRec_n = ReadInt();
     i = numOfRail_k;
     while (--i){
         dl[i] = createDList();
@@ -43,6 +49,7 @@ int main()
         --cnt;
         // scanf("%s", cmd);
         c = getchar();
+        // printf("%c ", c);
         // flag = cmd[0];
         switch(c) {
         case 'e':
@@ -90,6 +97,7 @@ int main()
             // scanf("%d", &r);
             r = ReadInt();
             // pop_back(dl[r]);
+            // message("1");
             D = dl[r];
             if (D->size)
             {
@@ -128,6 +136,7 @@ int main()
             break;
         case 'm':
             // scanf("%d %d", &ra, &rb);
+            // message("hi");
             ra = ReadInt();
             rb = ReadInt();
             // migrate(dl[ra], dl[rb]);

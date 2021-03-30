@@ -16,16 +16,17 @@ typedef struct DList{
 
 DList* createDList(){
     DList *D = (DList*)malloc(sizeof(DList));
-    D->head = D->tail = NULL;
+    D->head = NULL;
+    D->tail = NULL;
     D->size = 0;
     return D;
 }
 
 inline int ReadInt();
 
-void message(char *s){
-    printf("%s\n");
-}
+// void message(char *s){
+//     printf("%s\n");
+// }
 
 char cmd[10];
 unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt, num;
@@ -50,9 +51,17 @@ int main()
 
     i = numOfRail_k;
     while (--i){
-        dl[i] = createDList();
+        DList *D = (DList*)malloc(sizeof(DList));
+        D->head = NULL;
+        D->tail = NULL;
+        D->size = 0;
+        dl[i] = D;
     }
-    dl[0] = createDList();
+    DList *D = (DList*)malloc(sizeof(DList));
+    D->head = NULL;
+    D->tail = NULL;
+    D->size = 0;
+    dl[0] = D;
 
     cnt = numOfRec_n;
     
@@ -82,7 +91,8 @@ int main()
             {
                 Node *node = malloc(sizeof(Node));
                 node->val = l;
-                node->prev = node->next = NULL;
+                node->prev = NULL;
+                node->next = NULL;
 
                 if (!D->size) 
                     D->head = D->tail = node;
@@ -119,7 +129,8 @@ int main()
             {
                 if (D->size == 1)  //only one node
                 {
-                    D->tail = D->head = NULL;
+                    D->tail = NULL;
+                    D->head = NULL;
                     D->size = 0;
                     // return;
                 }
@@ -174,7 +185,8 @@ int main()
             {
                 b->head = a->tail;
                 b->tail = a->head;
-                a->tail = a->head = NULL;
+                a->tail = NULL;
+                a->head = NULL;
                 b->size = a->size;
                 a->size = 0;
                 // assert(2 == 3);
@@ -207,7 +219,8 @@ int main()
                     }
                 }
                 b->tail = a->tail;
-                a->head = a->tail = NULL;
+                a->head = NULL;
+                a->tail = NULL;
                 b->size += a->size;
                 a->size = 0;
             }
@@ -234,8 +247,8 @@ int main()
             printf("\n");
             continue;
         }
-        curNode = D->head;
-        prevNode = D->head;
+        curNode = prevNode = D->head;
+
         while (1)
         {   
             if (curNode == D->tail){

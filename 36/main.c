@@ -27,7 +27,7 @@ char cmd[10];
 unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt, num;
 DList *dl[1000], *D, *a, *b;
 Node *temp, *curNode, *prevNode, *nextNode;
-char flag;
+char flag, c;
 int main()
 {
     scanf("%d %d", &numOfRail_k, &numOfRec_n);
@@ -41,12 +41,24 @@ int main()
     
     while(cnt){
         --cnt;
-        scanf("%s", cmd);
-        flag = cmd[0];
-        switch(flag) {
+        // scanf("%s", cmd);
+        c = getchar();
+        // flag = cmd[0];
+        switch(c) {
         case 'e':
-            r = ReadInt();
-            l = ReadInt();
+            r = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                r = r*10 + (c -'0'),c = getchar();
+
+            l = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                l = l*10 + (c -'0'),c = getchar();
             // insert(dl[r], &l);
             D = dl[r];
             {

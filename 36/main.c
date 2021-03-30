@@ -16,43 +16,83 @@ typedef struct DList{
 
 DList* createDList(){
     DList *D = (DList*)malloc(sizeof(DList));
-    D->head = D->tail = NULL;
+    D->head = NULL;
+    D->tail = NULL;
     D->size = 0;
     return D;
 }
 
 inline int ReadInt();
 
+// void message(char *s){
+//     printf("%s\n");
+// }
+
 char cmd[10];
 unsigned int r, l, ra, rb, i, numOfRail_k, numOfRec_n, cnt, num;
 DList *dl[1000], *D, *a, *b;
 Node *temp, *curNode, *prevNode, *nextNode;
-char flag;
+char flag, c;
 int main()
 {
-    scanf("%d %d", &numOfRail_k, &numOfRec_n);
+    // scanf("%d %d", &numOfRail_k, &numOfRec_n);
+    numOfRail_k = 0;
+    c = getchar();
+    while(c <'0' || c > '9') 
+        c = getchar();
+    while(c>('0'-1) && c <('9'+1))
+        numOfRail_k = numOfRail_k*10 + (c -'0'),c = getchar();
+    numOfRec_n = 0;
+    c = getchar();
+    while(c <'0' || c > '9') 
+        c = getchar();
+    while(c>('0'-1) && c <('9'+1))
+        numOfRec_n = numOfRec_n*10 + (c -'0'),c = getchar();
+
     i = numOfRail_k;
     while (--i){
-        dl[i] = createDList();
+        D = (DList*)malloc(sizeof(DList));
+        D->head = NULL;
+        D->tail = NULL;
+        D->size = 0;
+        dl[i] = D;
     }
-    dl[0] = createDList();
+    D = (DList*)malloc(sizeof(DList));
+    D->head = NULL;
+    D->tail = NULL;
+    D->size = 0;
+    dl[0] = D;
 
     cnt = numOfRec_n;
     
-    while(cnt){
-        --cnt;
-        scanf("%s", cmd);
-        flag = cmd[0];
-        switch(flag) {
+    while(cnt--){
+        // --cnt;
+        // scanf("%s", cmd);
+        c = getchar();
+        // printf("%c ", c);
+        // flag = cmd[0];
+        switch(c) {
         case 'e':
-            r = ReadInt();
-            l = ReadInt();
+            r = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                r = r*10 + (c -'0'),c = getchar();
+
+            l = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                l = l*10 + (c -'0'),c = getchar();
             // insert(dl[r], &l);
             D = dl[r];
             {
                 Node *node = malloc(sizeof(Node));
                 node->val = l;
-                node->prev = node->next = NULL;
+                node->prev = NULL;
+                node->next = NULL;
 
                 if (!D->size) 
                     D->head = D->tail = node;
@@ -76,14 +116,21 @@ int main()
 
         case 'l':
             // scanf("%d", &r);
-            r = ReadInt();
+            r = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                r = r*10 + (c -'0'),c = getchar();
             // pop_back(dl[r]);
+            // message("1");
             D = dl[r];
             if (D->size)
             {
                 if (D->size == 1)  //only one node
                 {
-                    D->tail = D->head = NULL;
+                    D->tail = NULL;
+                    D->head = NULL;
                     D->size = 0;
                     // return;
                 }
@@ -116,8 +163,19 @@ int main()
             break;
         case 'm':
             // scanf("%d %d", &ra, &rb);
-            ra = ReadInt();
-            rb = ReadInt();
+            // message("hi");
+            ra = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                ra = ra*10 + (c -'0'),c = getchar();
+            rb = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                rb = rb*10 + (c -'0'),c = getchar();
             // migrate(dl[ra], dl[rb]);
             a = dl[ra];
             b = dl[rb];
@@ -127,7 +185,8 @@ int main()
             {
                 b->head = a->tail;
                 b->tail = a->head;
-                a->tail = a->head = NULL;
+                a->tail = NULL;
+                a->head = NULL;
                 b->size = a->size;
                 a->size = 0;
                 // assert(2 == 3);
@@ -160,7 +219,8 @@ int main()
                     }
                 }
                 b->tail = a->tail;
-                a->head = a->tail = NULL;
+                a->head = NULL;
+                a->tail = NULL;
                 b->size += a->size;
                 a->size = 0;
             }
@@ -187,8 +247,8 @@ int main()
             printf("\n");
             continue;
         }
-        curNode = D->head;
-        prevNode = D->head;
+        curNode = prevNode = D->head;
+
         while (1)
         {   
             if (curNode == D->tail){

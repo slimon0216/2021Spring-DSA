@@ -51,13 +51,13 @@ int main()
 
     i = numOfRail_k;
     while (--i){
-        DList *D = (DList*)malloc(sizeof(DList));
+        D = (DList*)malloc(sizeof(DList));
         D->head = NULL;
         D->tail = NULL;
         D->size = 0;
         dl[i] = D;
     }
-    DList *D = (DList*)malloc(sizeof(DList));
+    D = (DList*)malloc(sizeof(DList));
     D->head = NULL;
     D->tail = NULL;
     D->size = 0;

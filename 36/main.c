@@ -35,8 +35,19 @@ char flag, c;
 int main()
 {
     // scanf("%d %d", &numOfRail_k, &numOfRec_n);
-    numOfRail_k = ReadInt();
-    numOfRec_n = ReadInt();
+    numOfRail_k = 0;
+    c = getchar();
+    while(c <'0' || c > '9') 
+        c = getchar();
+    while(c>('0'-1) && c <('9'+1))
+        numOfRail_k = numOfRail_k*10 + (c -'0'),c = getchar();
+    numOfRec_n = 0;
+    c = getchar();
+    while(c <'0' || c > '9') 
+        c = getchar();
+    while(c>('0'-1) && c <('9'+1))
+        numOfRec_n = numOfRec_n*10 + (c -'0'),c = getchar();
+
     i = numOfRail_k;
     while (--i){
         dl[i] = createDList();
@@ -45,8 +56,8 @@ int main()
 
     cnt = numOfRec_n;
     
-    while(cnt){
-        --cnt;
+    while(cnt--){
+        // --cnt;
         // scanf("%s", cmd);
         c = getchar();
         // printf("%c ", c);
@@ -95,7 +106,12 @@ int main()
 
         case 'l':
             // scanf("%d", &r);
-            r = ReadInt();
+            r = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                r = r*10 + (c -'0'),c = getchar();
             // pop_back(dl[r]);
             // message("1");
             D = dl[r];
@@ -137,8 +153,18 @@ int main()
         case 'm':
             // scanf("%d %d", &ra, &rb);
             // message("hi");
-            ra = ReadInt();
-            rb = ReadInt();
+            ra = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                ra = ra*10 + (c -'0'),c = getchar();
+            rb = 0;
+            c = getchar();
+            while(c <'0' || c > '9') 
+                c = getchar();
+            while(c>('0'-1) && c <('9'+1))
+                rb = rb*10 + (c -'0'),c = getchar();
             // migrate(dl[ra], dl[rb]);
             a = dl[ra];
             b = dl[rb];

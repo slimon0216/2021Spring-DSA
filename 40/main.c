@@ -105,7 +105,7 @@ int main()
         int len = strlen(instr);
         *(instr + len + 1) = '\0';
         *(instr + len ) = ')';
-
+  
         ptr = instr;
         while (*ptr != '\0')
         {   

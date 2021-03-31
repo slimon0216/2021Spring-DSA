@@ -99,7 +99,7 @@ int main()
         }
         curnode->array[curnode->array_size++] = temp;
     }
-    print(list);
+    // print(list);
     // curnode = list->head;
     // while (curnode != NULL){
     //     for (int i = 0; i < curnode->array_size; ++i)
@@ -162,7 +162,7 @@ int main()
                 curnode->array[i-temp-1] = x;
                 curnode->array_size++;  
             }
-            print(list);
+            // print(list);
 
 
             break;

@@ -2,11 +2,16 @@
 #include <stdlib.h>
 #include <math.h>
 int MAX_LEN = 4;
+
+#define isReverse 0
+#define isNotReverse 1
+
 typedef struct Node
 {
     struct Node *prev, *next;
     int *array;
     int array_size;
+    int tag;
 } Node;
 
 typedef struct DList
@@ -36,12 +41,18 @@ Node *createNode()
     node->next = node->prev = NULL;
     node->array_size = 0;
     node->array = malloc(sizeof(int) * MAX_LEN);
+    node->tag = isNotReverse;
     return node;
 }
 
 // void insert(int val){
 
 // }
+
+void changeTag(Node *node)
+{
+    node->tag = (node->tag == isReverse) ? isNotReverse : isReverse;
+}
 
 int readInt()
 {
@@ -64,20 +75,20 @@ int readInt()
 
 void print(DList *list)
 {
-    Node *curnode = list->head;
-    while (curnode != NULL)
+    Node *curNode = list->head;
+    while (curNode != NULL)
     {
-        for (int i = 0; i < curnode->array_size; ++i)
-            printf("%d ", curnode->array[i]);
+        for (int i = 0; i < curNode->array_size; ++i)
+            printf("%d ", curNode->array[i]);
         printf(" || ");
-        curnode = curnode->next;
+        curNode = curNode->next;
     }
     printf("\n");
 }
 
 int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k;
 char cmd[10], c;
-Node *curnode;
+Node *curNode;
 
 int main()
 {
@@ -90,29 +101,29 @@ int main()
     DList *list = createDList();
     list->tail = list->head = createNode();
     ++list->list_size;
-    curnode = list->head;
+    curNode = list->head;
     for (i = 0; i < n_len_int_seq; ++i)
     {
         temp = readInt();
 
-        if (!(curnode->array_size < MAX_LEN / 2))
+        if (!(curNode->array_size < MAX_LEN / 2))
         {
             Node *newNode = createNode();
             list->tail = newNode;
-            curnode->next = newNode;
-            newNode->prev = curnode;
-            curnode = curnode->next;
+            curNode->next = newNode;
+            newNode->prev = curNode;
+            curNode = curNode->next;
             ++list->list_size;
         }
-        curnode->array[curnode->array_size++] = temp;
+        curNode->array[curNode->array_size++] = temp;
         ++list->total_element;
     }
     // print(list);
-    // curnode = list->head;
-    // while (curnode != NULL){
-    //     for (int i = 0; i < curnode->array_size; ++i)
-    //         printf("%d ", curnode->array[i]);
-    //     curnode = curnode->next;
+    // curNode = list->head;
+    // while (curNode != NULL){
+    //     for (int i = 0; i < curNode->array_size; ++i)
+    //         printf("%d ", curNode->array[i]);
+    //     curNode = curNode->next;
     // }
     // printf("\n");
 
@@ -121,6 +132,7 @@ int main()
         if (c == '\n')
             continue;
 
+        Node *curNode = list->head;
         switch (c)
         {
         case 'I':
@@ -128,7 +140,6 @@ int main()
             // If i − 1 equals the length of the sequence, then insert x at the end of it.
             i = readInt();
             x = readInt();
-            Node *curnode = list->head;
             if (i == 1)
             {
                 Node *newNode = createNode();
@@ -163,30 +174,30 @@ int main()
             else
             {
                 temp = 0;
-                while (temp + curnode->array_size < i)
+                while (temp + curNode->array_size < i)
                 {
                     // if (x-temp)
-                    temp += curnode->array_size;
-                    if (curnode->next == NULL)
+                    temp += curNode->array_size;
+                    if (curNode->next == NULL)
                     {
                         Node *newNode = createNode();
-                        newNode->prev = curnode;
-                        curnode->next = newNode;
+                        newNode->prev = curNode;
+                        curNode->next = newNode;
                     }
-                    curnode = curnode->next;
+                    curNode = curNode->next;
                 }
 
                 //現在到了理論上要可以插入的點
                 //但如果滿了，就新增一個newNode在後面
                 //把要插入的地方的後面都放進newNode
-                if (curnode->array_size == MAX_LEN)
+                if (curNode->array_size == MAX_LEN)
                 {
                     if (i - temp == 1)
                     { //滿了又要插在這個array的頭
-                        if (curnode->prev->array_size < MAX_LEN)
+                        if (curNode->prev->array_size < MAX_LEN)
                         {
-                            curnode = curnode->prev;
-                            curnode->array[curnode->array_size++] = x;
+                            curNode = curNode->prev;
+                            curNode->array[curNode->array_size++] = x;
                             ++list->total_element;
                         }
                         else
@@ -195,27 +206,27 @@ int main()
                             newNode->array[newNode->array_size++] = x;
                             ++list->total_element;
                             // ++newNode->array_size;
-                            newNode->next = curnode;
-                            newNode->prev = curnode->prev;
-                            curnode->prev->next = newNode;
-                            curnode->prev = newNode;
+                            newNode->next = curNode;
+                            newNode->prev = curNode->prev;
+                            curNode->prev->next = newNode;
+                            curNode->prev = newNode;
                             ++list->list_size;
                         }
                     }
                     else
                     {
                         Node *newNode = createNode();
-                        newNode->next = curnode->next;
-                        curnode->next->prev = newNode;
-                        newNode->prev = curnode;
-                        curnode->next = newNode;
+                        newNode->next = curNode->next;
+                        curNode->next->prev = newNode;
+                        newNode->prev = curNode;
+                        curNode->next = newNode;
                         for (int index = 0; index <= MAX_LEN - (i - temp); ++index)
                         {
-                            newNode->array[newNode->array_size++] = curnode->array[index + i - temp - 1];
-                            --curnode->array_size;
+                            newNode->array[newNode->array_size++] = curNode->array[index + i - temp - 1];
+                            --curNode->array_size;
                         }
-                        curnode->array[i - temp - 1] = x;
-                        ++curnode->array_size;
+                        curNode->array[i - temp - 1] = x;
+                        ++curNode->array_size;
                         ++list->total_element;
                         ++list->list_size;
                     }
@@ -223,21 +234,21 @@ int main()
                 //沒滿還能放
                 else
                 {
-                    if (i - temp == 1 && (curnode->prev->array_size < MAX_LEN))
+                    if (i - temp == 1 && (curNode->prev->array_size < MAX_LEN))
                     { //滿了又要插在這個array的頭
                         {
-                            curnode = curnode->prev;
-                            curnode->array[curnode->array_size++] = x;
+                            curNode = curNode->prev;
+                            curNode->array[curNode->array_size++] = x;
                             ++list->total_element;
                         }
                     }
                     else
                     {
-                        for (int index = curnode->array_size; index > (i - temp - 1); index--)
-                            curnode->array[index] = curnode->array[index - 1];
-                        curnode->array[i - temp - 1] = x;
+                        for (int index = curNode->array_size; index > (i - temp - 1); index--)
+                            curNode->array[index] = curNode->array[index - 1];
+                        curNode->array[i - temp - 1] = x;
                         ++list->total_element;
-                        curnode->array_size++;
+                        curNode->array_size++;
                     }
                 }
             }
@@ -251,6 +262,40 @@ int main()
         case 'R':
             l = readInt();
             r = readInt();
+            temp = 0;
+            // while (temp + curNode->array_size < l)
+            // {
+            //     // if (x-temp)
+            //     temp += curNode->array_size;
+            //     if (curNode->next == NULL)
+            //     {
+            //         Node *newNode = createNode();
+            //         newNode->prev = curNode;
+            //         curNode->next = newNode;
+            //     }
+            //     curNode = curNode->next;
+            // }
+            // //curNode 在l那個node
+            // if (i - temp == i) //array[0]
+            // {
+            //     changeTag(curNode);
+            // }
+            // else
+            // {
+            //     Node *newNode = createNode();  //for reverse array
+            //     newNode->prev = curNode;
+            //     newNode->next = curNode->next;
+            //     for (int index = i - temp - 1; index < curNode->array_size; ++index)
+            //     {
+
+            //     }
+            // }
+
+            // for (int i = 0; i < curNode->array_size; ++i)
+            //     printf("%d ", curNode->array[i]);
+            // curNode = curNode->next;
+            // printf("%d\n", l - r);
+
             break;
         case 'Q':
             text("query");
@@ -260,12 +305,13 @@ int main()
             break;
         }
     }
-    Node *curnode = list->head;
-    while (curnode != NULL)
-    {
-        for (int i = 0; i < curnode->array_size; ++i)
-            printf("%d ", curnode->array[i]);
-        curnode = curnode->next;
-    }
-    return 0;
+    // Node *curNode = list->head;
+    // while (curNode != NULL)
+    // {
+    //     for (int i = 0; i < curNode->array_size; ++i)
+    //         printf("%d ", curNode->array[i]);
+    //     curNode = curNode->next;
+    // }
+    // return 0;
+    print(list);
 }

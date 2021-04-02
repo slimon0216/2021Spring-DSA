@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 int MAX_LEN = 4;
 
 #define isReverse 0
@@ -73,16 +74,29 @@ int readInt()
         return num * (-1);
 }
 
-void print(DList *list)
+void print(DList *list, int sep)
 {
     Node *curNode = list->head;
-    while (curNode != NULL)
-    {
-        for (int i = 0; i < curNode->array_size; ++i)
-            printf("%d ", curNode->array[i]);
-        printf(" || ");
-        curNode = curNode->next;
-    }
+    if (sep == 1)
+        while (curNode != NULL)
+        {
+            if (curNode->tag == isNotReverse)
+                for (int i = 0; i < curNode->array_size; ++i)
+                    printf("%d ", curNode->array[i]);
+            else
+                for (int i = curNode->array_size - 1; i >= 0; --i)
+                    printf("%d ", curNode->array[i]);
+            printf(" || ");
+            curNode = curNode->next;
+        }
+    else
+        while (curNode != NULL)
+        {
+            for (int i = 0; i < curNode->array_size; ++i)
+                printf("%d ", curNode->array[i]);
+            // printf(" || ");
+            curNode = curNode->next;
+        }
     printf("\n");
 }
 
@@ -96,7 +110,7 @@ int main()
     // scanf("%d %d", &n_len_int_seq, &q_num_query);
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)sqrt(n_len_int_seq);
+    // MAX_LEN = (int)sqrt(n_len_int_seq);
     // printf("hello");
     DList *list = createDList();
     list->tail = list->head = createNode();
@@ -118,7 +132,7 @@ int main()
         curNode->array[curNode->array_size++] = temp;
         ++list->total_element;
     }
-    // print(list);
+    print(list, 1);
     // curNode = list->head;
     // while (curNode != NULL){
     //     for (int i = 0; i < curNode->array_size; ++i)
@@ -262,39 +276,209 @@ int main()
         case 'R':
             l = readInt();
             r = readInt();
-            temp = 0;
-            // while (temp + curNode->array_size < l)
+            if (l == r)
+                break;
+            int temp_left = 0;
+            Node *leftNode = list->head;
+            while (temp_left + leftNode->array_size < l)
+            {
+                temp_left += leftNode->array_size;
+                leftNode = leftNode->next;
+                // if (leftNode->array_size == 1)
+                //     leftNode->tag = isNotReverse;
+            }
+            int temp_right = temp_left;
+            Node *rightNode = leftNode;
+            while (temp_right + rightNode->array_size < r)
+            {
+                temp_right += rightNode->array_size;
+                rightNode = rightNode->next;
+                // if (rightNode->array_size == 1)
+                //     rightNode->tag = isNotReverse;
+            }
+
+            if (leftNode == rightNode) //reverse的區間都再同一個node
+            {
+                int temp;
+                for (int index_l = l - 1, index_r = r - 1; index_l < index_r; ++index_l, --index_r)
+                {
+                    temp = leftNode->array[index_l];
+                    leftNode->array[index_l] = leftNode->array[index_r];
+                    leftNode->array[index_r] = temp;
+                }
+                print(list, 1);
+                break;
+            }
+            // int numOfL = l - temp_left; //從這個node的第幾個ele開始般
+            // int numOfR = r - temp_right;
+            Node *leftNewNode = createNode();
+            Node *rightNewNode = createNode();
+            // if (leftNode->next != rightNode)
+            {
+                leftNewNode->next = leftNode->next;
+                leftNewNode->prev = leftNode;
+                leftNode->next->prev = leftNewNode;
+                rightNewNode->next = rightNode;
+                rightNewNode->prev = rightNode->prev;
+                rightNode->prev->next = rightNewNode;
+                leftNode->next = leftNewNode;
+                rightNode->prev = rightNewNode;
+            }
+            // else  //不需要的部分
             // {
-            //     // if (x-temp)
-            //     temp += curNode->array_size;
-            //     if (curNode->next == NULL)
-            //     {
-            //         Node *newNode = createNode();
-            //         newNode->prev = curNode;
-            //         curNode->next = newNode;
-            //     }
-            //     curNode = curNode->next;
+            //     leftNode->next = leftNewNode;
+            //     rightNode->prev = rightNewNode;
+            //     leftNewNode->prev = leftNewNode;
+            //     leftNewNode->next = rightNewNode;
+            //     rightNewNode->prev = leftNewNode;
+            //     rightNewNode->next = rightNode;
             // }
-            // //curNode 在l那個node
+            //般左邊的node
+            if (leftNode->tag == isNotReverse && rightNode->tag == isNotReverse)
+            {
+                // leftNode->next = leftNewNode;
+                // rightNode->prev = rightNewNode;
+                // leftNewNode->prev = leftNewNode;
+                // leftNewNode->next = rightNewNode;
+                // rightNewNode->prev = leftNewNode;
+                // rightNewNode->next = rightNode;
+                int up_index = leftNode->array_size;
+                for (int index = l - temp_left - 1; index < up_index; ++index)
+                {
+                    rightNewNode->array[rightNewNode->array_size++] = leftNode->array[index];
+                    --leftNode->array_size;
+                }
+                changeTag(rightNewNode);
+
+                // up_index = rightNode->array_size;
+                for (int index = 0; index < r - temp_right; ++index)
+                {
+                    leftNewNode->array[leftNewNode->array_size++] = rightNode->array[index];
+                    rightNode->array[index] = rightNode->array[index + 1];
+                    --rightNode->array_size;
+                }
+                changeTag(leftNewNode);
+                if (leftNewNode->array_size == 1)
+                    leftNewNode->tag = isNotReverse;
+                if (leftNode->array_size == 1)
+                    leftNode->tag = isNotReverse;
+                if (rightNewNode->array_size == 1)
+                    rightNewNode->tag = isNotReverse;
+                if (rightNode->array_size == 1)
+                    rightNode->tag = isNotReverse;
+            }
+            else if (leftNode->tag == isReverse && rightNode->tag == isReverse)
+            {
+                // 把leftNode東西搬到rightNewNode，但兩個node的array順序不同，不用changeTag
+                for (int index = leftNode->array_size - (l - temp_left); index > 0; --index)
+                {
+                    rightNewNode->array[index] = leftNode->array[index];
+                    ++rightNewNode->array_size;
+                }
+                for (int index = rightNode->array_size - (r - temp_right); index >= 0; --index)
+                {
+                    leftNewNode->array[index] = rightNode->array[index];
+                    ++leftNewNode->array_size;
+                }
+                changeTag(rightNewNode);
+                changeTag(leftNewNode);
+                if (leftNewNode->array_size == 1)
+                    leftNewNode->tag = isNotReverse;
+                if (leftNode->array_size == 1)
+                    leftNode->tag = isNotReverse;
+                if (rightNewNode->array_size == 1)
+                    rightNewNode->tag = isNotReverse;
+                if (rightNode->array_size == 1)
+                    rightNode->tag = isNotReverse;
+            }
+            else if (leftNode->tag == isNotReverse && rightNode->tag == isReverse)
+            {
+                for (int index = rightNode->array_size - (r - temp_right); index > 0; --index)
+                {
+                    leftNewNode->array[leftNewNode->array_size++] = rightNode->array[index];
+                    --rightNode->array_size;
+                }
+                for (int index = leftNode->array_size - (l - temp_left); index >= 0; --index)
+                {
+                    rightNewNode->array[index] = leftNode->array[index];
+                    ++rightNewNode->array_size;
+                    --leftNode->array_size;
+                }
+                changeTag(rightNewNode);
+                if (leftNewNode->array_size == 1)
+                    leftNewNode->tag = isNotReverse;
+                if (leftNode->array_size == 1)
+                    leftNode->tag = isNotReverse;
+                if (rightNewNode->array_size == 1)
+                    rightNewNode->tag = isNotReverse;
+                if (rightNode->array_size == 1)
+                    rightNode->tag = isNotReverse;
+                // changeTag(leftNewNode);
+            }
+            else if (leftNode->tag == isReverse && rightNode->tag == isNotReverse)
+            {
+
+                for (int index = leftNode->array_size - (l - temp_left); index >= 0; --index)
+                {
+                    rightNewNode->array[index] = leftNode->array[index];
+                    ++rightNewNode->array_size;
+                    leftNode->array[index] = leftNode->array[index + 1];
+                    --leftNode->array_size;
+                }
+                int up_index = rightNode->array_size;
+                for (int index = 0; index < r - temp_right; ++index)
+                {
+                    leftNewNode->array[leftNewNode->array_size++] = rightNode->array[index];
+                    rightNode->array[index] = rightNode->array[index + 1];
+                    --rightNode->array_size;
+                }
+                changeTag(leftNewNode);
+                if (leftNewNode->array_size == 1)
+                    leftNewNode->tag = isNotReverse;
+                if (leftNode->array_size == 1)
+                    leftNode->tag = isNotReverse;
+                if (rightNewNode->array_size == 1)
+                    rightNewNode->tag = isNotReverse;
+                if (rightNode->array_size == 1)
+                    rightNode->tag = isNotReverse;
+                // changeTag(leftNewNode);
+            }
+            else
+                assert(1 == 2);
+
+            while (leftNewNode != rightNewNode && leftNewNode != NULL)
+            {
+                leftNewNode = leftNewNode->next;
+                if (leftNewNode != rightNewNode && leftNewNode != NULL)
+                    changeTag(leftNewNode);
+            }
+            print(list, 1);
+            //curNode 在l那個node
             // if (i - temp == i) //array[0]
             // {
             //     changeTag(curNode);
             // }
             // else
             // {
-            //     Node *newNode = createNode();  //for reverse array
+            //     Node *newNode = createNode(); //for reverse array
             //     newNode->prev = curNode;
             //     newNode->next = curNode->next;
             //     for (int index = i - temp - 1; index < curNode->array_size; ++index)
             //     {
-
+            //         newNode->array[newNode->array_size++] = curNode->array[index];
+            //         --curNode->array_size;
             //     }
+            //     newNode
             // }
 
-            // for (int i = 0; i < curNode->array_size; ++i)
-            //     printf("%d ", curNode->array[i]);
-            // curNode = curNode->next;
-            // printf("%d\n", l - r);
+            // for (int i = 0; i < leftNode->array_size; ++i)
+            //     printf("%d ", leftNode->array[i]);
+            // leftNode = leftNode->next;
+            // printf("\n");
+            // for (int i = 0; i < rightNode->array_size; ++i)
+            //     printf("%d ", rightNode->array[i]);
+            // rightNode = rightNode->next;
+            // printf("\n");
 
             break;
         case 'Q':
@@ -313,5 +497,5 @@ int main()
     //     curNode = curNode->next;
     // }
     // return 0;
-    print(list);
+    print(list, 0);
 }

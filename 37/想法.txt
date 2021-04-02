@@ -7,3 +7,7 @@ array大小跟Delete有關，要取捨一下
 然後每個Node的array只能用一種順序去看
 如果reverse讓一個array可能出現兩種順序
 就把該array拆開放入兩個Node
+
+reverse 想法
+把l r 所在的的node的array部分交換，
+中間node只要改變tag就好

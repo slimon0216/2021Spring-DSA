@@ -132,7 +132,7 @@ int main()
         curNode->array[curNode->array_size++] = temp;
         ++list->total_element;
     }
-    print(list, 1);
+    // print(list, 1);
     // curNode = list->head;
     // while (curNode != NULL){
     //     for (int i = 0; i < curNode->array_size; ++i)
@@ -306,7 +306,7 @@ int main()
                     leftNode->array[index_l] = leftNode->array[index_r];
                     leftNode->array[index_r] = temp;
                 }
-                print(list, 1);
+                // print(list, 1);
                 break;
             }
             // int numOfL = l - temp_left; //從這個node的第幾個ele開始般
@@ -452,7 +452,7 @@ int main()
                 if (leftNewNode != rightNewNode && leftNewNode != NULL)
                     changeTag(leftNewNode);
             }
-            print(list, 1);
+            // print(list, 1);
             //curNode 在l那個node
             // if (i - temp == i) //array[0]
             // {
@@ -497,5 +497,5 @@ int main()
     //     curNode = curNode->next;
     // }
     // return 0;
-    print(list, 0);
+    // print(list, 0);
 }

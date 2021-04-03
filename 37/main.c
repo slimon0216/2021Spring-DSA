@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 6;
+int MAX_LEN = 300;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -120,7 +120,7 @@ int main()
     // scanf("%d %d", &n_len_int_seq, &q_num_query);
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    // MAX_LEN = (int)sqrt(n_len_int_seq);
+    MAX_LEN = (int)sqrt(n_len_int_seq);
     // printf("hello");
     DList *list = createDList();
     list->tail = list->head = createNode();
@@ -142,7 +142,7 @@ int main()
         curNode->array[curNode->array_size++] = temp;
         ++list->total_element;
     }
-    print(list, 1);
+    // print(list, 1);
     // curNode = list->head;
     // while (curNode != NULL){
     //     for (int i = 0; i < curNode->array_size; ++i)
@@ -330,14 +330,14 @@ int main()
                         leftNode->array[index_r] = temp;
                     }
                 else
-                    for (int index_l = leftNode->array_size - (l - temp_left), index_r = leftNode->array_size - (r - temp) - 1;
+                    for (int index_l = leftNode->array_size - (l - temp_left), index_r = leftNode->array_size - (r - temp_right);
                          index_r < index_l; ++index_r, --index_l)
                     {
                         temp = leftNode->array[index_l];
                         leftNode->array[index_l] = leftNode->array[index_r];
                         leftNode->array[index_r] = temp;
                     }
-                print(list, 1);
+                // print(list, 1);
                 break;
             }
 
@@ -458,7 +458,7 @@ int main()
             //     curNode = curNode->prev;
             // }
             // text("");
-            print(list, 1);
+            // print(list, 1);
 
             break;
         case 'Q':
@@ -477,5 +477,5 @@ int main()
     //     curNode = curNode->next;
     // }
     // return 0;
-    print(list, 0);
+    print(list, 1);
 }

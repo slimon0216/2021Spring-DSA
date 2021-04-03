@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 7000;
+int MAX_LEN = 1000;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -140,7 +140,7 @@ int main()
     // scanf("%d %d", &n_len_int_seq, &q_num_query);
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)sqrt(n_len_int_seq);
+    // MAX_LEN = (int)sqrt(n_len_int_seq);
     // printf("hello");
     DList *list = createDList();
     list->tail = list->head = createNode();
@@ -436,7 +436,8 @@ int main()
                 temp_right += rightNode->array_size;
                 rightNode = rightNode->next;
                 if (rightNode->array_size == 1)
-                    assert(rightNode->tag == isNotReverse);    
+                    assert(rightNode->tag == isNotReverse);
+    
             }
 
             if (leftNode == rightNode) //reverse的區間都再同一個node
@@ -587,6 +588,6 @@ int main()
     //         printf("%d ", curNode->array[i]);
     //     curNode = curNode->next;
     // }
-    // return 0;
-    // print(list, 0);
+    print(list, 0);
+    return 0;
 }

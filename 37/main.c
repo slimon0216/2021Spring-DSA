@@ -322,9 +322,8 @@ int main()
             Node *leftNewNode = createNode();
             Node *rightNewNode = createNode();
 
-            if (leftNode->tag == isNotReverse && rightNode->tag == isNotReverse)
+            if (leftNode->tag == isNotReverse)
             {
-
                 int up_index = leftNode->array_size;
                 for (int index = l - temp_left - 1; index < up_index; ++index)
                 {
@@ -332,59 +331,20 @@ int main()
                     --leftNode->array_size;
                 }
                 changeTag(leftNewNode);
-
-                // up_index = rightNode->array_size;
-                for (int index = 0; index < r - temp_right; ++index)
-                {
-                    rightNewNode->array[rightNewNode->array_size++] = rightNode->array[index];
-                    rightNode->array[index] = rightNode->array[index + 1];
-                    --rightNode->array_size;
-                }
-                changeTag(rightNewNode);
             }
-            else if (leftNode->tag == isReverse && rightNode->tag == isReverse)
+            else
             {
-                for (int index = leftNode->array_size - (l - temp_left); index >= 0; --index)
+                for (int index = leftNode->array_size - 1, cnt = (l - temp_left - 1); cnt >= 0; --index, --cnt)
                 {
-                    leftNewNode->array[index] = leftNode->array[index];
-                    ++leftNewNode->array_size;
-                }
-                for (int index = rightNode->array_size - (r - temp_right); index >= 0; --index)
-                {
-                    rightNewNode->array[index] = rightNode->array[index];
-                    ++rightNewNode->array_size;
-                }
-                changeTag(rightNewNode);
-                changeTag(leftNewNode);
-            }
-            else if (leftNode->tag == isNotReverse && rightNode->tag == isReverse)
-            {
-                for (int index = rightNode->array_size - (r - temp_right); index > 0; --index)
-                {
-                    rightNewNode->array[rightNewNode->array_size++] = rightNode->array[index];
-                    --rightNode->array_size;
-                }
-                for (int index = leftNode->array_size - (l - temp_left); index >= 0; --index)
-                {
-                    leftNewNode->array[index] = leftNode->array[index];
-                    ++leftNewNode->array_size;
+                    leftNewNode->array[leftNewNode->array_size++] = leftNode->array[index];
+                    // ++leftNewNode->array_size;
                     --leftNode->array_size;
                 }
                 changeTag(leftNewNode);
-
-                // changeTag(leftNewNode);
             }
-            else if (leftNode->tag == isReverse && rightNode->tag == isNotReverse)
-            {
 
-                for (int index = leftNode->array_size - (l - temp_left); index >= 0; --index)
-                {
-                    leftNewNode->array[index] = leftNode->array[index];
-                    ++leftNewNode->array_size;
-                    leftNode->array[index] = leftNode->array[index + 1];
-                    --leftNode->array_size;
-                }
-                int up_index = rightNode->array_size;
+            if (rightNode->tag == isNotReverse)
+            {
                 for (int index = 0; index < r - temp_right; ++index)
                 {
                     rightNewNode->array[rightNewNode->array_size++] = rightNode->array[index];
@@ -394,7 +354,14 @@ int main()
                 changeTag(rightNewNode);
             }
             else
-                assert(1 == 2);
+            {
+                for (int index = rightNode->array_size - 1, cnt = (r - temp_right - 1); cnt >= 0; --index, --cnt)
+                {
+                    rightNewNode->array[rightNewNode->array_size++] = rightNode->array[index];
+                    --rightNode->array_size;
+                }
+                changeTag(rightNewNode);
+            }
 
             leftNewNode->next = leftNode->next;
             leftNewNode->prev = leftNode;

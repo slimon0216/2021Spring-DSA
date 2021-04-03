@@ -194,7 +194,6 @@ int main()
                 list->head->prev = newNode;
                 list->head = newNode;
                 ++list->list_size;
-                ++list->total_element;
             }
             else if (i == list->total_element)
             {
@@ -213,12 +212,12 @@ int main()
                 list->tail->next = newNode;
                 newNode->prev = list->tail;
                 ++list->list_size;
-                ++list->total_element;
+
                 list->tail = newNode;
             }
             else if (i - 1 == list->total_element)
             {
-                if (list->tail->tag == isNotReverse)
+                // if (list->tail->tag == isNotReverse)
                 {
                     Node *newNode = createNode();
                     newNode->array[newNode->array_size++] = x;
@@ -226,10 +225,9 @@ int main()
                     newNode->prev = list->tail;
                     ++list->list_size;
                     list->tail = newNode;
-                    ++list->total_element;
                 }
-                else
-                    assert(1 == 2);
+                // else
+                // assert(1 == 2);
             }
             else
             {
@@ -260,13 +258,12 @@ int main()
                             {
                                 curNode = curNode->prev;
                                 curNode->array[curNode->array_size++] = x;
-                                ++list->total_element;
                             }
                             else
                             {
                                 Node *newNode = createNode();
                                 newNode->array[newNode->array_size++] = x;
-                                ++list->total_element;
+
                                 // ++newNode->array_size;
                                 newNode->next = curNode;
                                 newNode->prev = curNode->prev;
@@ -289,7 +286,7 @@ int main()
                             }
                             curNode->array[i - temp - 1] = x;
                             ++curNode->array_size;
-                            ++list->total_element;
+
                             ++list->list_size;
                         }
                     }
@@ -301,13 +298,12 @@ int main()
                             {
                                 curNode = curNode->prev;
                                 curNode->array[curNode->array_size++] = x;
-                                ++list->total_element;
                             }
                             else //不然就新增node，因為順序是反的，新增的Node要放在這個前面
                             {
                                 Node *newNode = createNode();
                                 newNode->array[newNode->array_size++] = x;
-                                ++list->total_element;
+
                                 // ++newNode->array_size;
                                 newNode->next = curNode;
                                 newNode->prev = curNode->prev;
@@ -334,7 +330,7 @@ int main()
                                 // --curNode->array_size;
                             }
                             curNode->array[index] = x;
-                            ++list->total_element;
+
                             ++list->list_size;
                         }
                         check_tail(list);
@@ -350,7 +346,6 @@ int main()
                             {
                                 curNode = curNode->prev;
                                 curNode->array[curNode->array_size++] = x;
-                                ++list->total_element;
                             }
                         }
                         else
@@ -358,7 +353,7 @@ int main()
                             for (int index = curNode->array_size; index > (i - temp - 1); index--)
                                 curNode->array[index] = curNode->array[index - 1];
                             curNode->array[i - temp - 1] = x;
-                            ++list->total_element;
+
                             curNode->array_size++;
                         }
                     }
@@ -378,7 +373,7 @@ int main()
                         //     {
                         //         curNode = curNode->prev;
                         //         curNode->array[curNode->array_size++] = x;
-                        //         ++list->total_element;
+                        //
                         //     }
                         // }
                         // else
@@ -386,12 +381,13 @@ int main()
                         //     for (int index = curNode->array_size; index > (i - temp - 1); index--)
                         //         curNode->array[index] = curNode->array[index - 1];
                         //     curNode->array[i - temp - 1] = x;
-                        //     ++list->total_element;
+                        //
                         //     curNode->array_size++;
                         // }
                     }
                 }
             }
+            ++list->total_element;
             print(list, 1);
 
             break;

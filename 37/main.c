@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 2500;
+int MAX_LEN = 7500;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -417,8 +417,8 @@ int main()
                 }
                 temp_left += leftNode->array_size;
                 leftNode = leftNode->next;
-                if (leftNode->array_size == 1)
-                    assert(leftNode->tag == isNotReverse);
+                // if (leftNode->array_size == 1)
+                //     assert(leftNode->tag == isNotReverse);
             }
             int temp_right = temp_left;
             Node *rightNode = leftNode;
@@ -433,8 +433,8 @@ int main()
                 // }
                 temp_right += rightNode->array_size;
                 rightNode = rightNode->next;
-                if (rightNode->array_size == 1)
-                    assert(rightNode->tag == isNotReverse);
+                // if (rightNode->array_size == 1)
+                //     assert(rightNode->tag == isNotReverse);
                 // if (rightNode->array_size == 1)
                 //     rightNode->tag = isNotReverse;
             }

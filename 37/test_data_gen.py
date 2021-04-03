@@ -9,9 +9,10 @@ def generate(n, mode=1):
         r = rd.randint(l, n)
         return "Reverse {} {}\n".format(l,r)
 
-n = 5
+n = 12
 q = 10
-seq = [str(rd.randrange(-100, 100)) for i in range(n)]
+# seq = [str(rd.randrange(-100, 100)) for i in range(n)]
+seq = [str(i) for i in range(1, 1+n)]
 # with open('test.in', 'w', encoding='utf-8') as f:
 print("{} {}".format(n,q))
 print(' '.join(seq)+'')

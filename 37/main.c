@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 1000;
+int MAX_LEN = 7000;
 
 #define isReverse 0
 #define isNotReverse 1

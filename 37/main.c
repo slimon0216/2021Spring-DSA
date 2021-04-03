@@ -477,5 +477,5 @@ int main()
     //     curNode = curNode->next;
     // }
     // return 0;
-    print(list, 1);
+    print(list, 0);
 }

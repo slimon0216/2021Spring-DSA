@@ -9,12 +9,12 @@ int main()
 		system("test_data_gen.py > test.in");
 		system("a.exe < test.in > a.in");
 		double begin = clock();
-		system("reverse.py < test.in > reverse.in");
+		system("standard.py < test.in > standard.in");
 		double end = clock();
 		double t = (end - begin);
-		if (system("fc a.in reverse.in")) //當 fc 返回1時，說明這時資料不一樣
-			break;						  //不一樣就跳出迴圈
-		else if (t > 1000)				  //1秒
+		if (system("fc a.in standard.in")) //當 fc 返回1時，說明這時資料不一樣
+			break;						   //不一樣就跳出迴圈
+		else if (t > 1000)				   //1秒
 		{
 			printf("time cost  %.0lfms\n", t);
 			ok++;

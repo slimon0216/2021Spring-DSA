@@ -92,9 +92,12 @@ void print(DList *list, int sep)
     else
         while (curNode != NULL)
         {
-            for (int i = 0; i < curNode->array_size; ++i)
-                printf("%d ", curNode->array[i]);
-            // printf(" || ");
+            if (curNode->tag == isNotReverse)
+                for (int i = 0; i < curNode->array_size; ++i)
+                    printf("%d ", curNode->array[i]);
+            else
+                for (int i = curNode->array_size - 1; i >= 0; --i)
+                    printf("%d ", curNode->array[i]);
             curNode = curNode->next;
         }
     printf("\n");
@@ -110,7 +113,7 @@ int main()
     // scanf("%d %d", &n_len_int_seq, &q_num_query);
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = 300;
+    // MAX_LEN = (int)sqrt(n_len_int_seq);
     // printf("hello");
     DList *list = createDList();
     list->tail = list->head = createNode();
@@ -132,7 +135,7 @@ int main()
         curNode->array[curNode->array_size++] = temp;
         ++list->total_element;
     }
-    // print(list, 1);
+    print(list, 1);
     // curNode = list->head;
     // while (curNode != NULL){
     //     for (int i = 0; i < curNode->array_size; ++i)
@@ -306,34 +309,22 @@ int main()
                     leftNode->array[index_l] = leftNode->array[index_r];
                     leftNode->array[index_r] = temp;
                 }
-                // print(list, 1);
+                print(list, 1);
                 break;
             }
             // int numOfL = l - temp_left; //從這個node的第幾個ele開始般
             // int numOfR = r - temp_right;
             Node *leftNewNode = createNode();
             Node *rightNewNode = createNode();
-            // if (leftNode->next != rightNode)
-            {
-                leftNewNode->next = leftNode->next;
-                leftNewNode->prev = leftNode;
-                leftNode->next->prev = leftNewNode;
-                rightNewNode->next = rightNode;
-                rightNewNode->prev = rightNode->prev;
-                rightNode->prev->next = rightNewNode;
-                leftNode->next = leftNewNode;
-                rightNode->prev = rightNewNode;
-            }
-            // else  //不需要的部分
-            // {
-            //     leftNode->next = leftNewNode;
-            //     rightNode->prev = rightNewNode;
-            //     leftNewNode->prev = leftNewNode;
-            //     leftNewNode->next = rightNewNode;
-            //     rightNewNode->prev = leftNewNode;
-            //     rightNewNode->next = rightNode;
-            // }
-            //般左邊的node
+            leftNewNode->next = leftNode->next;
+            leftNewNode->prev = leftNode;
+            leftNode->next->prev = leftNewNode;
+            rightNewNode->next = rightNode;
+            rightNewNode->prev = rightNode->prev;
+            rightNode->prev->next = rightNewNode;
+            leftNode->next = leftNewNode;
+            rightNode->prev = rightNewNode;
+
             if (leftNode->tag == isNotReverse && rightNode->tag == isNotReverse)
             {
                 // leftNode->next = leftNewNode;
@@ -445,14 +436,14 @@ int main()
             }
             else
                 assert(1 == 2);
-
+            Node *curNode = leftNode;
             while (leftNewNode != rightNewNode && leftNewNode != NULL)
             {
                 leftNewNode = leftNewNode->next;
                 if (leftNewNode != rightNewNode && leftNewNode != NULL)
                     changeTag(leftNewNode);
             }
-            // print(list, 1);
+            print(list, 1);
             //curNode 在l那個node
             // if (i - temp == i) //array[0]
             // {
@@ -497,5 +488,5 @@ int main()
     //     curNode = curNode->next;
     // }
     // return 0;
-    // print(list, 0);
+    print(list, 0);
 }

@@ -27,5 +27,7 @@ int main()
 
 		printf("correct %d\n", ok);
 	}
+
+	printf("Fine difference!");
 	return 0;
 }

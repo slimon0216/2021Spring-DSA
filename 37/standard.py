@@ -16,9 +16,9 @@ while True:
         elif cmd[0] == 'Delete':
             i = int(cmd[1])
             del seq[i-1]
-        for i in seq:
-            print(i, end=' ')
-        print('')
+        # for i in seq:
+        #     print(i, end=' ')
+        # print('')
     except EOFError as e:
         break
 

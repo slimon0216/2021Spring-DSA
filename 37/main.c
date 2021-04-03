@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 4;
+int MAX_LEN = 300;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -254,7 +254,7 @@ int main()
                     {
                         if (i - temp == 1)
                         { //滿了又要插在這個array的頭
-                            if (curNode->prev->array_size < MAX_LEN)
+                            if (curNode->prev->array_size < MAX_LEN && curNode->prev->tag == isNotReverse)
                             {
                                 curNode = curNode->prev;
                                 curNode->array[curNode->array_size++] = x;
@@ -388,7 +388,7 @@ int main()
                 }
             }
             ++list->total_element;
-            print(list, 1);
+            // print(list, 1);
 
             break;
         case 'D':
@@ -449,7 +449,7 @@ int main()
                         leftNode->array[index_l] = leftNode->array[index_r];
                         leftNode->array[index_r] = temp;
                     }
-                print(list, 1);
+                // print(list, 1);
                 break;
             }
 
@@ -569,7 +569,7 @@ int main()
             // }
             // text("");
             check_tail(list);
-            print(list, 1);
+            // print(list, 1);
 
             break;
         case 'Q':

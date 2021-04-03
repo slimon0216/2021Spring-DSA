@@ -10,8 +10,8 @@ def generate(n, mode=1):
         r = rd.randint(l+1, n)
         return "Reverse {} {}\n".format(l,r)
 
-n = 50
-q = 50
+n = 5000
+q = 10000
 # seq = [str(rd.randrange(-100, 100)) for i in range(n)]
 seq = [str(i) for i in range(1, 1+n)]
 # with open('test.in', 'w', encoding='utf-8') as f:

@@ -334,13 +334,12 @@ int main()
             }
             else
             {
-                for (int index = leftNode->array_size - 1, cnt = (l - temp_left - 1); cnt >= 0; --index, --cnt)
+                for (int index = leftNode->array_size - (l - temp_left); index >= 0; --index)
                 {
-                    leftNewNode->array[leftNewNode->array_size++] = leftNode->array[index];
-                    // ++leftNewNode->array_size;
+                    leftNewNode->array[index] = leftNode->array[index];
+                    ++leftNewNode->array_size;
                     --leftNode->array_size;
                 }
-                changeTag(leftNewNode);
             }
 
             if (rightNode->tag == isNotReverse)

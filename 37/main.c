@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 300;
+int MAX_LEN = 5000;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -259,6 +259,10 @@ int main()
                                 curNode = curNode->prev;
                                 curNode->array[curNode->array_size++] = x;
                             }
+                            // else if (curNode->prev->array_size < MAX_LEN && curNode->prev->tag == isReverse)
+                            // {
+                            //     curNode = curNode->prev;
+                            // }
                             else
                             {
                                 Node *newNode = createNode();
@@ -413,6 +417,8 @@ int main()
                 }
                 temp_left += leftNode->array_size;
                 leftNode = leftNode->next;
+                if (leftNode->array_size == 1)
+                    assert(leftNode->tag == isNotReverse);
             }
             int temp_right = temp_left;
             Node *rightNode = leftNode;
@@ -427,6 +433,8 @@ int main()
                 // }
                 temp_right += rightNode->array_size;
                 rightNode = rightNode->next;
+                if (rightNode->array_size == 1)
+                    assert(rightNode->tag == isNotReverse);
                 // if (rightNode->array_size == 1)
                 //     rightNode->tag = isNotReverse;
             }
@@ -542,32 +550,24 @@ int main()
             ptr1->prev = ptr2;
             while (ptr2 != rightNode)
             {
+
                 changeTag(ptr2);
+                if(ptr2->array_size == 1)
+                    ptr2->tag = isNotReverse;
                 ptr2->prev = ptr2->next;
                 ptr2->next = ptr1;
                 ptr1 = ptr2;
                 ptr2 = ptr2->prev;
+
+                
             }
             changeTag(rightNewNode); //while迴圈會被改到，改回來
             rightNewNode->prev = leftNode;
             leftNode->next = rightNewNode;
             rightNode->prev = leftNewNode;
-            // leftNewNode->next = rightNode;
+            if (rightNode->array_size == 1)
+                rightNode->tag = isNotReverse;
 
-            // Node *curNode = list->tail;
-            // printf("||");
-            // while (curNode != NULL)
-            // {
-            //     if (curNode->tag == isNotReverse)
-            //         for (int i = 0; i < curNode->array_size; ++i)
-            //             printf("%d ", curNode->array[i]);
-            //     else
-            //         for (int i = curNode->array_size - 1; i >= 0; --i)
-            //             printf("%d ", curNode->array[i]);
-            //     printf(" || ");
-            //     curNode = curNode->prev;
-            // }
-            // text("");
             check_tail(list);
             // print(list, 1);
 
@@ -588,5 +588,5 @@ int main()
     //     curNode = curNode->next;
     // }
     // return 0;
-    print(list, 0);
+    // print(list, 1);
 }

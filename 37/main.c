@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 3000;
+int MAX_LEN = 1000;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -139,7 +139,7 @@ int main()
     // scanf("%d %d", &n_len_int_seq, &q_num_query);
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)sqrt(n_len_int_seq);
+    // MAX_LEN = (int)sqrt(n_len_int_seq);
     // printf("hello");
     DList *list = createDList();
     list->tail = list->head = createNode();

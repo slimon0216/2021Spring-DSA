@@ -136,34 +136,37 @@ int main()
         switch (c)
         {
         case 'I':
-        // text("sdf");
+            // text("sdf");
             i = readInt();
             x = readInt();
             if (i == len)
             {
-                array[len] = array[len-1];
-                array[len-1] = x;
+                array[len] = array[len - 1];
+                array[len - 1] = x;
             }
-            else if (i == len+1)
+            else if (i == len + 1)
             {
                 array[len] = x;
                 // text("sd");
             }
             else
             {
-                int index = len-1;
+                int index = len - 1;
                 for (; index >= i; --index)
                 {
-                    array[index+1] = array[index];
-                }       
-                array[index+1] = array[index];
+                    array[index + 1] = array[index];
+                }
+                array[index + 1] = array[index];
                 array[index] = x;
             }
             ++len;
             break;
         case 'D':
-            text("de");
+            // text("de");
             i = readInt();
+            for (int index = i - 1; index < len - 1; ++index)
+                array[index] = array[i + 1];
+            --len;
             break;
         case 'R':
             l = readInt();

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 4;
+int MAX_LEN = 3000;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -136,11 +136,10 @@ Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2,
 
 int main()
 {
-    int z;
     // scanf("%d %d", &n_len_int_seq, &q_num_query);
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    // MAX_LEN = (int)sqrt(n_len_int_seq);
+    MAX_LEN = (int)sqrt(n_len_int_seq);
     // printf("hello");
     DList *list = createDList();
     list->tail = list->head = createNode();
@@ -150,7 +149,7 @@ int main()
     {
         temp = readInt();
 
-        if (!(curNode->array_size < MAX_LEN / 2))
+        if (!(curNode->array_size < MAX_LEN * 3 / 4))
         {
             Node *newNode = createNode();
             list->tail = newNode;
@@ -397,11 +396,11 @@ int main()
             i = readInt();
 
             temp = 0;
-            if (i == list->total_element)
+            if (i == list->total_element && list->tail->tag == isNotReverse)
             {
                 curNode = list->tail;
-                if (curNode->tag == isNotReverse)
-                    --curNode->array_size;
+                // if (curNode->tag == isNotReverse)
+                --curNode->array_size;
                 --list->total_element;
                 // check_tail();
                 if (curNode->array_size == 0)
@@ -442,7 +441,6 @@ int main()
                 }
                 --list->list_size;
             }
-
             else if (curNode->tag == isNotReverse)
             {
                 index_to_delete = i - temp - 1;
@@ -453,6 +451,20 @@ int main()
                 }
                 --curNode->array_size;
             }
+            else if (curNode->tag == isReverse)
+            {
+                index_to_delete = curNode->array_size - (i - temp);
+                len = curNode->array_size;
+                for (index = index_to_delete; index < len - 1; ++index)
+                {
+                    curNode->array[index] = curNode->array[index + 1];
+                }
+                --curNode->array_size;
+                if (curNode->array_size == 1)
+                    curNode->tag = isNotReverse;
+            }
+            else
+                assert(1 == 2);
 
             --list->total_element;
             break;
@@ -636,7 +648,7 @@ int main()
             k = readInt();
             break;
         }
-        print(list, 1);
+        // print(list, 1);
     }
     // Node *curNode = list->head;
     // while (curNode != NULL)
@@ -645,6 +657,6 @@ int main()
     //         printf("%d ", curNode->array[i]);
     //     curNode = curNode->next;
     // }
-    print(list, 0);
+    print(list, 1);
     return 0;
 }

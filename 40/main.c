@@ -1,10 +1,13 @@
+//references:
+//https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
 
-#define MAX_LEN 100000
+#define MAX_LEN 1000
  
 
 typedef struct Stack Stack;

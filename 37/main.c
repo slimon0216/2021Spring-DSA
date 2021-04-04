@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-int MAX_LEN = 7000;
+int MAX_LEN = 4;
 
 #define isReverse 0
 #define isNotReverse 1
@@ -130,7 +130,7 @@ void print(DList *list, int sep)
     printf("\n");
 }
 
-int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k;
+int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete, index_to_insert;
 char cmd[10], c;
 Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2, *newNode;
 
@@ -323,8 +323,8 @@ int main()
                             curNode->next = newNode;
 
                             newNode->array[newNode->array_size++] = curNode->array[0];
-                            int index = 0;
-                            int index_to_insert = curNode->array_size - (i - temp);
+                            index = 0;
+                            index_to_insert = curNode->array_size - (i - temp);
                             for (; index != index_to_insert; ++index)
                             {
                                 curNode->array[index] = curNode->array[index + 1];
@@ -394,8 +394,67 @@ int main()
 
             break;
         case 'D':
-            text("de");
             i = readInt();
+
+            temp = 0;
+            if (i == list->total_element)
+            {
+                curNode = list->tail;
+                if (curNode->tag == isNotReverse)
+                    --curNode->array_size;
+                --list->total_element;
+                // check_tail();
+                if (curNode->array_size == 0)
+                {
+                    list->tail = curNode->prev;
+                    list->tail->next = NULL;
+                    free(curNode);
+                }
+                break;
+            }
+            while (temp + curNode->array_size < i)
+            {
+                // if (x-temp)
+                temp += curNode->array_size;
+                if (curNode->next == NULL)
+                {
+                    newNode = createNode();
+                    newNode->prev = curNode;
+                    curNode->next = newNode;
+                }
+                curNode = curNode->next;
+            }
+            // printf("%d\n", curNode->array[0]);
+
+            if (curNode->array_size == 1)
+            {
+                if (curNode == list->head)
+                {
+                    curNode->next->prev = NULL;
+                    list->head = curNode->next;
+                    free(curNode);
+                }
+                else
+                {
+                    curNode->next->prev = curNode->prev;
+                    curNode->prev->next = curNode->next;
+                    free(curNode);
+                }
+                --list->list_size;
+            }
+
+            else if (curNode->tag == isNotReverse)
+            {
+                index_to_delete = i - temp - 1;
+                len = curNode->array_size;
+                for (index = index_to_delete; index < len - 1; ++index)
+                {
+                    curNode->array[index] = curNode->array[index + 1];
+                }
+                --curNode->array_size;
+            }
+
+            --list->total_element;
             break;
         case 'R':
             l = readInt();
@@ -437,7 +496,6 @@ int main()
                 rightNode = rightNode->next;
                 if (rightNode->array_size == 1)
                     assert(rightNode->tag == isNotReverse);
-    
             }
 
             if (leftNode == rightNode) //reverse的區間都再同一個node
@@ -553,14 +611,12 @@ int main()
             {
 
                 changeTag(ptr2);
-                if(ptr2->array_size == 1)
+                if (ptr2->array_size == 1)
                     ptr2->tag = isNotReverse;
                 ptr2->prev = ptr2->next;
                 ptr2->next = ptr1;
                 ptr1 = ptr2;
                 ptr2 = ptr2->prev;
-
-                
             }
             changeTag(rightNewNode); //while迴圈會被改到，改回來
             rightNewNode->prev = leftNode;
@@ -580,6 +636,7 @@ int main()
             k = readInt();
             break;
         }
+        print(list, 1);
     }
     // Node *curNode = list->head;
     // while (curNode != NULL)

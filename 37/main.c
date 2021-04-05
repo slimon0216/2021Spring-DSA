@@ -217,7 +217,7 @@ int main()
     q_num_query = readInt();
     MAX_LEN = (int)sqrt(n_len_int_seq);
     // printf("hello");
-    DList *list = createDList();
+    list = createDList();
     list_tail = list_head = createNode();
     ++list->list_size;
     curNode = list_head;
@@ -227,7 +227,7 @@ int main()
 
         if (!(curNode->array_size < MAX_LEN *90 / 100))
         {
-            Node *newNode = createNode();
+            newNode = createNode();
             list_tail = newNode;
             curNode->next = newNode;
             newNode->prev = curNode;
@@ -477,6 +477,14 @@ int main()
                 curNode = list_tail;
                 if (curNode->tag == isNotReverse)
                     --curNode->array_size;
+                else
+                {
+                    int cnt = curNode->array_size - 1;
+                    for (int index = 0; index < cnt; ++index)
+                        curNode->array[index] = curNode->array[index + 1];
+                    
+                    --curNode->array_size;
+                }
                 --list->total_element;
                 // check_tail();
                 if (curNode->array_size == 0)
@@ -509,6 +517,12 @@ int main()
                     list_head = curNode->next;
                     free(curNode);
                 }
+                else if (curNode == list_tail)
+                {
+                    list_tail = curNode->prev;
+                    list_tail->next = NULL;
+                    free(curNode);
+                }
                 else
                 {
                     curNode->next->prev = curNode->prev;
@@ -518,14 +532,20 @@ int main()
                 --list->list_size;
             }
 
-            else if (curNode->tag == isNotReverse)
+            else 
             {
-                index_to_delete = i - temp - 1;
+                if(curNode->tag == isNotReverse)
+                    index_to_delete = i - temp - 1;
+                else
+                    index_to_delete = curNode->array_size -(i - temp );
+            
                 len = curNode->array_size;
                 for (index = index_to_delete; index < len - 1; ++index)
                 {
                     curNode->array[index] = curNode->array[index + 1];
                 }
+
+                
                 --curNode->array_size;
             }
 
@@ -551,8 +571,8 @@ int main()
                 }
                 temp_left += leftNode->array_size;
                 leftNode = leftNode->next;
-                if (leftNode->array_size == 1)
-                    assert(leftNode->tag == isNotReverse);
+                // if (leftNode->array_size == 1)
+                    // assert(leftNode->tag == isNotReverse);
             }
             int temp_right = temp_left;
             rightNode = leftNode;
@@ -569,8 +589,8 @@ int main()
                 }
                 temp_right += rightNode->array_size;
                 rightNode = rightNode->next;
-                if (rightNode->array_size == 1)
-                    assert(rightNode->tag == isNotReverse);
+                // if (rightNode->array_size == 1)
+                //     assert(rightNode->tag == isNotReverse);
             }
 
             if (leftNode == rightNode) //reverse的區間都再同一個node

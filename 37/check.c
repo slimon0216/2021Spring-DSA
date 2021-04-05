@@ -53,6 +53,6 @@ int main()
 		printf("correct %d\n", ok);
 	}
 
-	printf("Fine difference!");
+	printf("Find difference!");
 	return 0;
 }

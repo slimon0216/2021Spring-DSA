@@ -19,8 +19,8 @@ def generate(mode):
         i = randint(1,numofseq);
         numofseq -= 1
         return "Delete {}\n".format(i)
-n = 20
-q = 30
+n = 50000
+q = 50000
 numofseq = n
 
 # seq = [str(rd.randrange(-100, 100)) for i in range(n)]
@@ -30,4 +30,4 @@ print("{} {}".format(n,q))
 print(' '.join(seq)+'')
 for i in range(q):
     # print(numofseq)
-    print(generate(randint(1,2)),end='')
+    print(generate(randint(1,3)),end='')

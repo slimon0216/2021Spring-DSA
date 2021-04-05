@@ -109,6 +109,57 @@ void print(DList *list, int sep)
         }
     printf("\n");
 }
+int temp;
+int partition(int arr[], int l, int r)
+{
+    int x = arr[r], i = l;
+    for (int j = l; j <= r; j++)
+    {
+        if (arr[j] <= x)
+        {
+            // swap(arr[i], arr[j]);
+            temp = arr[i];
+            arr[i] = arr[r];
+            arr[r] = temp;
+            i++;
+        }
+    }
+    // swap(arr[i], arr[r]);
+    temp = arr[i];
+    arr[i] = arr[r];
+    arr[r] = temp;
+
+    return i;
+}
+
+int kthSmallest(int arr[], int l, int r, int k)
+{
+    // If k is smaller than number of
+    // elements in array
+    if (l == r)
+        return arr[l];
+    if (k > 0 && k <= r - l + 1)
+    {
+
+        // Partition the array around last
+        // element and get position of pivot
+        // element in sorted array
+        int index = partition(arr, l, r);
+
+        // If position is same as k
+        if (index - l == k - 1)
+            return arr[index];
+
+        // If position is more, recur
+        // for left subarray
+        if (index - l > k - 1)
+            return kthSmallest(arr, l, index - 1, k);
+
+        // Else recur for right subarray
+        return kthSmallest(arr, index + 1, r,
+                           k - index + l - 1);
+    }
+}
 
 int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k;
 char cmd[10], c;
@@ -164,8 +215,9 @@ int main()
         case 'D':
             // text("de");
             i = readInt();
+            // printf("%d\n", len);
             for (int index = i - 1; index < len - 1; ++index)
-                array[index] = array[i + 1];
+                array[index] = array[index + 1];
             --len;
             break;
         case 'R':
@@ -180,14 +232,15 @@ int main()
             }
             break;
         case 'Q':
-            text("query");
+            // text("query");
             l = readInt();
             r = readInt();
             k = readInt();
+            printf("%d\n", kthSmallest(array, l - 1, r - 1, k));
             break;
         }
         // for (int i = 0; i < len; ++i)
-        // printf("%d ", array[i]);
+        //     printf("%d ", array[i]);
         // printf("\n");
     }
     // Node *curNode = list->head;
@@ -198,6 +251,6 @@ int main()
     //     curNode = curNode->next;
     // }
     // return 0;
-    for (int i = 0; i < len; ++i)
-        printf("%d ", array[i]);
+    // for (int i = 0; i < len; ++i)
+    //     printf("%d ", array[i]);
 }

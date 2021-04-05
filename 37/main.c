@@ -149,39 +149,57 @@ void count_node(DList *list)
 }   
 
 
-void merge(Node *prev, Node *next) {
+int merge(Node *prev, Node *next) 
+{
+    int flag = 0;
     if (next->array_size <= MAX_LEN - prev->array_size )
     {
-        if (next->tag == isNotReverse && prev->tag == isNotReverse)
-        {
-            int prev_index = prev->array_size;
-            int post_index = 0;
-            int up_index = next->array_size;
-            for(; post_index < up_index; ++post_index, ++prev_index)
+        if (prev->tag == isNotReverse)
+        {   
+            if(next->tag == isNotReverse)
+            {     
+                int prev_index = prev->array_size;
+                int post_index = 0;
+                int up_index = next->array_size;
+                for(; post_index < up_index; ++post_index, ++prev_index)
+                {
+                    prev->array[prev_index] = next->array[post_index];
+                    ++prev->array_size; -- next->array_size;
+                }
+            }
+            else
             {
-                prev->array[prev_index] = next->array[post_index];
-                ++prev->array_size; -- next->array_size;
+                int prev_index = prev->array_size;
+                int post_index = next->array_size-1;
+                // int up_index = next->array_size;
+                for(; post_index >= 0; --post_index, ++prev_index)
+                {
+                    prev->array[prev_index] = next->array[post_index];
+                    ++prev->array_size; -- next->array_size;
+                }
+                
             }
             prev->next = next->next;
             if (next!=list_tail)
                 next->next->prev = prev;
             else
-            {
                 list_tail = prev;
-            }
             free(next);
+            flag = 1;
         }
-        
     }
+    return flag;
 }
 
 void traverse_merge()
 {
+    int flag = 0;
     Node* curNode = list_head;
     while(curNode->next != list_tail && curNode->next != NULL)
     {
-        merge(curNode, curNode->next);
-        curNode = curNode->next;
+        flag = merge(curNode, curNode->next);
+        if (flag==0)
+            curNode = curNode->next;
         // text("hi");
     }
 
@@ -207,7 +225,7 @@ int main()
     {
         temp = readInt();
 
-        if (!(curNode->array_size < MAX_LEN * 4 / 5))
+        if (!(curNode->array_size < MAX_LEN *95/100))
         {
             Node *newNode = createNode();
             list_tail = newNode;
@@ -318,6 +336,7 @@ int main()
                 while (temp + curNode->array_size < i)
                 {
                     // if (x-temp)
+                    // merge(curNode, curNode->next);
                     temp += curNode->array_size;
                     if (curNode->next == NULL)
                     {
@@ -458,22 +477,7 @@ int main()
                         }
                         curNode->array[index] = x;
                         curNode->array_size++;
-                        // if (i - temp == curNode->array_size && )
-                        // { //滿了又要插在這個array的頭
-                        //     {
-                        //         curNode = curNode->prev;
-                        //         curNode->array[curNode->array_size++] = x;
-                        //
-                        //     }
-                        // }
-                        // else
-                        // {
-                        //     for (int index = curNode->array_size; index > (i - temp - 1); index--)
-                        //         curNode->array[index] = curNode->array[index - 1];
-                        //     curNode->array[i - temp - 1] = x;
-                        //
-                        //     curNode->array_size++;
-                        // }
+
                     }
                 }
             }
@@ -503,6 +507,7 @@ int main()
             while (temp + curNode->array_size < i)
             {
                 // if (x-temp)
+                // merge(curNode, curNode->next);
                 temp += curNode->array_size;
                 if (curNode->next == NULL)
                 {
@@ -810,7 +815,7 @@ int main()
             // if (rightNewNode->array_size <= MAX_LEN - rightNode->array_size){}
             
 
-            // traverse_merge();
+            traverse_merge();
             check_tail(list);
             break;
         case 'Q':
@@ -833,7 +838,7 @@ int main()
     //         printf("%d ", curNode->array[i]);
     //     curNode = curNode->next;
     // }
-    // print(list,0);
+    print(list,0);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);
     // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);

@@ -45,8 +45,8 @@ int main()
 			printf("------------------------------------\n\n\n");
 		}
 
-		if (system("fc a.in standard.in"))			 //當 fc 返回1時，說明這時資料不一樣
-			break;									 //不一樣就跳出迴圈
+		// if (system("fc a.in standard.in"))			 //當 fc 返回1時，說明這時資料不一樣
+		// 	break;									 //不一樣就跳出迴圈
 		// if (system("fc brute_force.in standard.in")) //當 fc 返回1時，說明這時資料不一樣
 		// 	break;									 //不一樣就跳出迴圈
 

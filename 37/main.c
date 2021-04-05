@@ -54,6 +54,12 @@ DList *list;
 // void insert(int val){
 
 
+void deleteNode(Node *node)
+{
+    free(node->array);
+    free(node);
+}
+
 void check_tail(DList *list)
 {
     if (list_tail->array_size == 0)
@@ -184,7 +190,7 @@ int merge(Node *prev, Node *next)
                 next->next->prev = prev;
             else
                 list_tail = prev;
-            free(next);
+            deleteNode(next);
             flag = 1;
         }
     }
@@ -491,7 +497,7 @@ int main()
                 {
                     list_tail = curNode->prev;
                     list_tail->next = NULL;
-                    free(curNode);
+                    deleteNode(curNode);
                 }
                 break;
             }
@@ -515,19 +521,19 @@ int main()
                 {
                     curNode->next->prev = NULL;
                     list_head = curNode->next;
-                    free(curNode);
+                    deleteNode(curNode);
                 }
                 else if (curNode == list_tail)
                 {
                     list_tail = curNode->prev;
                     list_tail->next = NULL;
-                    free(curNode);
+                    deleteNode(curNode);
                 }
                 else
                 {
                     curNode->next->prev = curNode->prev;
                     curNode->prev->next = curNode->next;
-                    free(curNode);
+                    deleteNode(curNode);
                 }
                 --list->list_size;
             }
@@ -566,7 +572,7 @@ int main()
                     leftNode->prev->next = leftNode->next;
                     leftNode = leftNode->next;
                     leftNode->prev = leftNode->prev->prev;
-                    free(ptr1);
+                    deleteNode(ptr1);
                     continue;
                 }
                 temp_left += leftNode->array_size;
@@ -584,7 +590,7 @@ int main()
                     rightNode->prev->next = rightNode->next;
                     rightNode = rightNode->next;
                     rightNode->prev = rightNode->prev->prev;
-                    free(ptr1);
+                    deleteNode(ptr1);
                     continue;
                 }
                 temp_right += rightNode->array_size;

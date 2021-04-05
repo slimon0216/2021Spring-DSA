@@ -30,5 +30,5 @@ while True:
     except EOFError as e:
         break
 
-# for i in seq:
-#     print(i, end=' ')
+for i in seq:
+    print(i, end=' ')

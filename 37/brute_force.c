@@ -250,7 +250,7 @@ int main()
     //         printf("%d ", curNode->array[i]);
     //     curNode = curNode->next;
     // }
-    // return 0;
-    // for (int i = 0; i < len; ++i)
-    //     printf("%d ", array[i]);
+    for (int i = 0; i < len; ++i)
+        printf("%d ", array[i]);
+    return 0;
 }

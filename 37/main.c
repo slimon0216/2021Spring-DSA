@@ -101,7 +101,7 @@ int readInt()
 
 void print(DList *list, int sep)
 {
-    Node *curNode = list_head;
+    curNode = list_head;
     if (sep == 1)
     {
         printf("|| ");
@@ -206,7 +206,7 @@ int merge(Node *prev, Node *next)
 void traverse_merge()
 {
     int flag = 0;
-    Node* curNode = list_head;
+    curNode = list_head;
     while(curNode->next != list_tail && curNode->next != NULL)
     {
         flag = merge(curNode, curNode->next);

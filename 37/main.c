@@ -35,9 +35,11 @@ void text(char *s)
 {
     printf("%s\n", s);
 }
+int create = 0, delete = 0;
 
 Node *createNode()
 {
+    ++create;
     Node *node = malloc(sizeof(Node));
     node->next = node->prev = NULL;
     node->array_size = 0;
@@ -51,9 +53,9 @@ char cmd[10], c;
 Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
 DList *list;
 // void insert(int val){
-
 void deleteNode(Node *node)
 {
+    ++delete;
     free(node->array);
     free(node);
 }
@@ -239,6 +241,22 @@ int merge(Node *prev, Node *next)
             flag = 1;
         }
     }
+    // else if (prev->tag == isNotReverse && next->tag == isNotReverse)
+    // {
+    //     int cnt = 0;
+    //     int next_size = next->array_size;
+    //     for (int index = prev->array_size; index < MAX_LEN; ++index)
+    //     {
+    //         prev->array[index] = next->array[cnt];
+    //         cnt++;
+    //         --next->array_size;
+    //     }
+    //     for (int i = 0; cnt < next_size; ++cnt, ++i)
+    //     {
+    //         next->array[i] = next->array[cnt];
+    //     }
+    // }
+
     return flag;
 }
 
@@ -798,5 +816,6 @@ int main()
     printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
     float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
     printf("memory usage: %f KB\n", memory);
+    printf("create: %d\ndelete: %d\n", create, delete);
     return 0;
 }

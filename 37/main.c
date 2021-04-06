@@ -673,7 +673,7 @@ int main()
                 changeTag(leftNewNode);
             }
 
-            if (rightNode->tag == isNotReverse)
+            if (rightNode->tag = isNotReverse)
             {
                 int changePoint = r - temp_right;
                 int up_index = rightNode->array_size;

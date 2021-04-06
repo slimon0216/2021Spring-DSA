@@ -7,7 +7,6 @@ seq = [int(i) for i in seq]
 while True:
     try:
         cmd = input().split(' ')
-        # cmd = cmd[0]
         if cmd[0] == 'Insert':
             i, x = int(cmd[1]), int(cmd[2])
             seq.insert(i-1,x)

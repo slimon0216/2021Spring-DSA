@@ -26,6 +26,7 @@ int main()
 		begin = clock();
 		system("standard.py < test.in > standard.in");
 		end = clock();
+		
 		standard += end - begin;
 		print("standard    ", end - begin);
 

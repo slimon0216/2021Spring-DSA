@@ -32,3 +32,4 @@ while True:
 
 for i in seq:
     print(i, end=' ')
+print('')

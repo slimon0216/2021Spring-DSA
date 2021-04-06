@@ -25,8 +25,8 @@ def generate(mode):
         k = randint(1, r-l+1)
         return "Query {} {} {}\n".format(l,r, k)
   
-n = 500000
-q = 500000
+n = 100000
+q = 100000
 num_of_seq = n
 
 # seq = [str(rd.randrange(-100, 100)) for i in range(n)]

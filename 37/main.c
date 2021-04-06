@@ -62,8 +62,12 @@ void deleteNode(Node *node)
 
 void check_tail(DList *list)
 {
-    if (list_tail->array_size == 0)
+    while (list_tail->array_size == 0)
+    {
         list_tail = list_tail->prev;
+        deleteNode(list_tail->next);
+    }
+        
 }
 
 void changeTag(Node *node)
@@ -499,6 +503,7 @@ int main()
                     list_tail->next = NULL;
                     deleteNode(curNode);
                 }
+                check_tail(list);
                 break;
             }
             while (temp + curNode->array_size < i)
@@ -746,7 +751,7 @@ int main()
     //         printf("%d ", curNode->array[i]);
     //     curNode = curNode->next;
     // }
-    // print(list, 0);
+    print(list, 0);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);
     // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);

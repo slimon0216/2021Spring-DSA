@@ -46,13 +46,11 @@ Node *createNode()
     return node;
 }
 
-
 int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete, index_to_insert;
 char cmd[10], c;
 Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
 DList *list;
 // void insert(int val){
-
 
 void deleteNode(Node *node)
 {
@@ -67,7 +65,6 @@ void check_tail(DList *list)
         list_tail = list_tail->prev;
         deleteNode(list_tail->next);
     }
-        
 }
 
 void changeTag(Node *node)
@@ -96,8 +93,6 @@ int readInt()
     else
         return num * (-1);
 }
-
-
 
 void print(DList *list, int sep)
 {
@@ -158,41 +153,85 @@ void count_node(DList *list)
         // printf("%d\n", num_nodes);
     }
     printf("number of nodes:%d\n", num_nodes);
-}   
+}
 
-
-int merge(Node *prev, Node *next) 
+int merge(Node *prev, Node *next)
 {
     int flag = 0;
-    if (next->array_size <= MAX_LEN - prev->array_size )
+    if (next->array_size <= MAX_LEN - prev->array_size)
     {
         if (prev->tag == isNotReverse)
-        {   
-            if(next->tag == isNotReverse)
-            {     
+        {
+            if (next->tag == isNotReverse)
+            {
                 int prev_index = prev->array_size;
                 int post_index = 0;
                 int up_index = next->array_size;
-                for(; post_index < up_index; ++post_index, ++prev_index)
+                for (; post_index < up_index; ++post_index, ++prev_index)
                 {
                     prev->array[prev_index] = next->array[post_index];
-                    ++prev->array_size; -- next->array_size;
+                    ++prev->array_size;
+                    --next->array_size;
                 }
             }
             else
             {
                 int prev_index = prev->array_size;
-                int post_index = next->array_size-1;
+                int post_index = next->array_size - 1;
                 // int up_index = next->array_size;
-                for(; post_index >= 0; --post_index, ++prev_index)
+                for (; post_index >= 0; --post_index, ++prev_index)
                 {
                     prev->array[prev_index] = next->array[post_index];
-                    ++prev->array_size; -- next->array_size;
+                    ++prev->array_size;
+                    --next->array_size;
                 }
-                
             }
             prev->next = next->next;
-            if (next!=list_tail)
+            if (next != list_tail)
+                next->next->prev = prev;
+            else
+                list_tail = prev;
+            deleteNode(next);
+            flag = 1;
+        }
+        else if (prev->tag == isReverse)
+        {
+            if (next->tag == isNotReverse)
+            {
+                int up_index = next->array_size;
+                int index = 0;
+                int cnt = 0;
+                for (index = prev->array_size - 1; cnt < prev->array_size; --index, cnt++)
+                {
+                    prev->array[index + up_index] = prev->array[index];
+                }
+                for (index = 0; index < up_index; ++index)
+                {
+                    // prev->array[index + up_index] = prev->array[index];
+                    prev->array[index] = next->array[--next->array_size];
+                    ++prev->array_size;
+                }
+            }
+            else
+            {
+                int up_index = next->array_size;
+                int cnt = 0;
+                int index = 0;
+                for (index = prev->array_size - 1; cnt < prev->array_size; --index, cnt++)
+                {
+                    prev->array[index + up_index] = prev->array[index];
+                }
+                cnt = 0;
+                for (; cnt < up_index; ++cnt)
+                {
+                    prev->array[cnt] = next->array[--next->array_size];
+                    ++prev->array_size;
+                }
+            }
+
+            // text("sd");
+            prev->next = next->next;
+            if (next != list_tail)
                 next->next->prev = prev;
             else
                 list_tail = prev;
@@ -207,19 +246,14 @@ void traverse_merge()
 {
     int flag = 0;
     curNode = list_head;
-    while(curNode->next != list_tail && curNode->next != NULL)
+    while (curNode->next != list_tail && curNode->next != NULL)
     {
         flag = merge(curNode, curNode->next);
-        if (flag==0)
+        if (flag == 0)
             curNode = curNode->next;
         // text("hi");
     }
-
 }
-
-
-
-
 
 int main()
 {
@@ -237,7 +271,7 @@ int main()
     {
         temp = readInt();
 
-        if (!(curNode->array_size < MAX_LEN *90 / 100))
+        if (!(curNode->array_size < MAX_LEN * 90 / 100))
         {
             newNode = createNode();
             list_tail = newNode;
@@ -498,7 +532,7 @@ int main()
                     int cnt = curNode->array_size - 1;
                     for (int index = 0; index < cnt; ++index)
                         curNode->array[index] = curNode->array[index + 1];
-                    
+
                     --curNode->array_size;
                 }
                 --list->total_element;
@@ -549,20 +583,19 @@ int main()
                 --list->list_size;
             }
 
-            else 
+            else
             {
-                if(curNode->tag == isNotReverse)
+                if (curNode->tag == isNotReverse)
                     index_to_delete = i - temp - 1;
                 else
-                    index_to_delete = curNode->array_size -(i - temp );
-            
+                    index_to_delete = curNode->array_size - (i - temp);
+
                 len = curNode->array_size;
                 for (index = index_to_delete; index < len - 1; ++index)
                 {
                     curNode->array[index] = curNode->array[index + 1];
                 }
 
-                
                 --curNode->array_size;
             }
 
@@ -589,7 +622,7 @@ int main()
                 temp_left += leftNode->array_size;
                 leftNode = leftNode->next;
                 // if (leftNode->array_size == 1)
-                    // assert(leftNode->tag == isNotReverse);
+                // assert(leftNode->tag == isNotReverse);
             }
             int temp_right = temp_left;
             rightNode = leftNode;
@@ -673,7 +706,7 @@ int main()
                 changeTag(leftNewNode);
             }
 
-            if (rightNode->tag = isNotReverse)
+            if (rightNode->tag == isNotReverse)
             {
                 int changePoint = r - temp_right;
                 int up_index = rightNode->array_size;
@@ -742,10 +775,11 @@ int main()
             traverse_merge();
             break;
         case 'Q':
-            text("query");
+            // text("query");
             l = readInt();
             r = readInt();
             k = readInt();
+            // traverse_merge();
             break;
         }
         // print(list, 1);
@@ -757,12 +791,12 @@ int main()
     //         printf("%d ", curNode->array[i]);
     //     curNode = curNode->next;
     // }
-    print(list, 0);
-    // printf("MAX_LEN :%d\n", MAX_LEN);
-    // count_node(list);
-    // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);
-    // printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
-    // float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
-    // printf("memory usage: %f KB\n",  memory) ;
+    // print(list, 0);
+    printf("MAX_LEN :%d\n", MAX_LEN);
+    count_node(list);
+    printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);
+    printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
+    float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
+    printf("memory usage: %f KB\n", memory);
     return 0;
 }

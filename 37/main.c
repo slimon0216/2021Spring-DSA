@@ -97,6 +97,8 @@ int readInt()
         return num * (-1);
 }
 
+
+
 void print(DList *list, int sep)
 {
     Node *curNode = list_head;
@@ -363,7 +365,8 @@ int main()
                         {
                             newNode = createNode();
                             newNode->next = curNode->next;
-                            curNode->next->prev = newNode;
+                            if (curNode != list_tail)
+                                curNode->next->prev = newNode;
                             newNode->prev = curNode;
                             curNode->next = newNode;
                             for (int index = 0; index <= MAX_LEN - (i - temp); ++index)
@@ -373,7 +376,8 @@ int main()
                             }
                             curNode->array[i - temp - 1] = x;
                             ++curNode->array_size;
-
+                            if (curNode == list_tail)
+                                list_tail = newNode;
                             ++list->list_size;
                         }
                     }
@@ -400,10 +404,11 @@ int main()
                             }
                         }
                         else //滿了又要插在這個array的中間，且array是反的
-                        {    //就往前新增Node，從這個array的插入點往前推一格(因為是反的)
+                        {    //就往後新增Node，把這個array[0]移過去，然後插入點往前推一格(因為是反的)
                             newNode = createNode();
                             newNode->next = curNode->next;
-                            curNode->next->prev = newNode;
+                            if (curNode != list_tail)
+                                curNode->next->prev = newNode;
                             newNode->prev = curNode;
                             curNode->next = newNode;
 
@@ -417,7 +422,8 @@ int main()
                                 // --curNode->array_size;
                             }
                             curNode->array[index] = x;
-
+                            if (curNode == list_tail)
+                                list_tail = newNode;
                             ++list->list_size;
                         }
                         check_tail(list);

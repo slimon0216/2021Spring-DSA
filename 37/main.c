@@ -690,7 +690,7 @@ int main()
             // }
             // text("");
             check_tail(list);
-            traverse_merge();
+            // traverse_merge();
             // print(list, 1);
 
             break;

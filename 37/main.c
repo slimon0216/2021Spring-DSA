@@ -553,6 +553,7 @@ int main()
             break;
         case 'D':
             i = readInt();
+            break;
 
             temp = 0;
             if (i == list->total_element)
@@ -639,7 +640,6 @@ int main()
             r = readInt();
             if (l == r)
                 break;
-            break;
             int temp_left = 0;
             Node *leftNode = list_head;
             while (temp_left + leftNode->array_size < l)

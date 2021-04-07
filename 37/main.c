@@ -554,7 +554,6 @@ int main()
         case 'D':
             i = readInt();
             break;
-
             temp = 0;
             if (i == list->total_element)
             {
@@ -809,11 +808,11 @@ int main()
             // }
             // text("");
             check_tail(list);
-            // traverse_merge();
+            traverse_merge();
 
             break;
         case 'Q':
-            // text("query");
+            text("query");
             l = readInt();
             r = readInt();
             k = readInt();

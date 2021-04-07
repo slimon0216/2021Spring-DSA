@@ -812,7 +812,7 @@ int main()
 
             break;
         case 'Q':
-            // text("query");
+            text("query");
             l = readInt();
             r = readInt();
             k = readInt();
@@ -820,7 +820,7 @@ int main()
         }
         // print(list, 1);
     }
-    print(list, 0);
+    // print(list, 0);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);
     // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);

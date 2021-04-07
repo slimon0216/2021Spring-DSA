@@ -414,10 +414,20 @@ int main()
                         else
                         {
                             Node *newNode = createNode();
-                            newNode->next = curNode->next;
-                            curNode->next->prev = newNode;
-                            newNode->prev = curNode;
-                            curNode->next = newNode;
+                            if (curNode != list_tail)
+                            {
+                                newNode->next = curNode->next;
+                                curNode->next->prev = newNode;
+                                newNode->prev = curNode;
+                                curNode->next = newNode;
+                            }
+                            else
+                            {
+                                curNode->next = newNode;
+                                newNode->prev = curNode;
+                                list_tail = newNode;
+                            }
+
                             for (int index = 0; index <= MAX_LEN - (i - temp); ++index)
                             {
                                 newNode->array[newNode->array_size++] = curNode->array[index + i - temp - 1];
@@ -452,12 +462,23 @@ int main()
                             }
                         }
                         else //滿了又要插在這個array的中間，且array是反的
-                        {    //就往前新增Node，從這個array的插入點往前推一格(因為是反的)
+                        {    //就往後新增Node，從這個array的插入點往前推一格(因為是反的)
                             Node *newNode = createNode();
-                            newNode->next = curNode->next;
-                            curNode->next->prev = newNode;
-                            newNode->prev = curNode;
-                            curNode->next = newNode;
+                            if (curNode != list_tail)
+                            {
+                                newNode->next = curNode->next;
+                                curNode->next->prev = newNode;
+                                newNode->prev = curNode;
+                                curNode->next = newNode;
+                            }
+                            else
+                            {
+                                curNode->next = newNode;
+                                newNode->prev = curNode;
+                                list_tail = newNode;
+                            }
+                            if (curNode == list_tail)
+                                list_tail = newNode;
 
                             newNode->array[newNode->array_size++] = curNode->array[0];
                             int index = 0;

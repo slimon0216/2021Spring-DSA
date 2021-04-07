@@ -219,7 +219,23 @@ int merge(Node *prev, Node *next)
                     ++prev->array_size;
                 }
             }
-            // text("sd");
+            else
+            {
+                int *newarr = malloc(sizeof(int) * MAX_LEN);
+                int i;
+                for (i = 0; i < next->array_size; ++i)
+                {
+                    newarr[i] = next->array[i];
+                }
+                int cnt = 0;
+                for (; cnt < prev->array_size; ++cnt, ++i)
+                {
+                    newarr[i] = prev->array[cnt];
+                }
+                free(prev->array);
+                prev->array = newarr;
+                prev->array_size = i;
+            }
             prev->next = next->next;
             if (next != list_tail)
                 next->next->prev = prev;

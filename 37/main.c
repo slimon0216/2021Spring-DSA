@@ -583,7 +583,7 @@ int main()
                 }
                 curNode = curNode->next;
             }
-            assert(curNode->array_size > 0);
+            // assert(curNode->array_size > 0);
             if (curNode->array_size == 1) //刪除這個node
             {
                 // if (curNode == list_head)
@@ -794,7 +794,7 @@ int main()
             break;
         }
         // print(list, 1);
-        assert(list_head->array_size > 0);
+        // assert(list_head->array_size > 0);
     }
     print(list, 0);
     // printf("MAX_LEN :%d\n", MAX_LEN);

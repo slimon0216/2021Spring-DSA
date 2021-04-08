@@ -9,22 +9,21 @@
 3.$O(4^n)$ ![](https://i.imgur.com/5gHSyBS.png)
 
 
-4.**(Prove or disprove) f(n)+g(n) = Θ( max(f(n), g(n)) )**\
+4.**(Prove or disprove)** $f(n)+g(n) = Θ( max(f(n), g(n)) )$\
 Sol:\
 According to the given definition of the  Θ notation,$f(n)+g(n) = Θ( max(f(n), g(n)) )$ if and only if $f(n)+g(n) = O( max(f(n), g(n)) )$ 
 and 
 $f(n)+g(n) = \Omega( max(f(n), g(n)) )$. 
-* Since $|f(n)+g(n)| \leqslant c1*max(f(n), g(n))$ when taking c1 = 2 $\forall$ n > 1, we know that $f(n)+g(n) = O( max(f(n), g(n)) )$; 
-* And since $|f(n)+g(n)|\geqslant$ c2 $* max(f(n), g(n))$ 
-when taking c2 = 1 $\forall n > 1$,
+* Since $|f(n)+g(n)|$ $\leqslant$ c$_1$ $*max(f(n), g(n))$ when taking c$_1$ = 2 $\forall n > 1$, we know that $f(n)+g(n) = O( max(f(n), g(n)) )$; 
+* And since $|f(n)+g(n)|\geqslant$ c$_2$ $* max(f(n), g(n))$ 
+when taking c$_2$ = 1 $\forall n > 1$,
 we know that $f(n)+g(n) = \Omega( max(f(n), g(n)) )$.
 * Hence, we have proved that $f(n)+g(n) = Θ( max(f(n), g(n)) )$
 
-5.(Prove or disprove) If f(n) = O (i(n)) and g(n) = O(j(n)), then f(n) · g(n) = O(i(n) · j(n)).\
+5.(Prove or disprove) If $f(n) = O (i(n))$ and $g(n) = O(j(n))$, then $f(n) · g(n) = O(i(n) · j(n))$.\
 Sol:\
-If f(n) = O(i(n)), there exist positive numbers c1 and x$_1$ s.t. |f(x)| $\leqslant$ c1·i(n)  $\forall$ x > x$_1$.
-If f(n) = Ω(i(n)), there exist positive numbers c2 and x$_2$ s.t. |f(x)|
-$\geqslant$ c2·i(n)  $\forall$ x > x$_2$.\
+* If $f(n) = O(i(n))$, there exist positive numbers c$_1$ and x$_1$ s.t. $|f(x)|$ $\leqslant$ c$_1$ $·i(n),  \forall x > x$$_1$ .
+* If $f(n) = Ω(i(n))$, there exist positive numbers c$_2$ and x$_2$ s.t. $|f(x)| \geqslant c$_2$·i(n), \forall x > x$$_2$ .
 
 6.還沒寫\
 7.![sdfsdf](https://i.imgur.com/d66zdRj.png)

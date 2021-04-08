@@ -33,6 +33,68 @@ void insertionSort(int *arr, int len)
         arr[j + 1] = cur;
     }
 }
+int L[1000], R[1000];
+void MERGE(int *arr, int left, int mid, int right)
+{
+    int i, j, k;
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // int *L = malloc(sizeof(int) * n1);
+    // int *R = malloc(sizeof(int) * n2);
+
+    for (i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    i = 0;
+    j = 0;
+    k = left;
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int *arr, int left, int right)
+{
+    if (left < right)
+    {
+
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        MERGE(arr, left, mid, right);
+    }
+    // else
+    //     return;
+}
 int *copy_arr(int *arr, int len)
 {
     int *newarr = malloc(sizeof(int) * MAX_LEN);
@@ -334,7 +396,7 @@ void traverse_merge()
         {
             free(curNode->sorted_array);
             curNode->sorted_array = copy_arr(curNode->array, curNode->array_size);
-            insertionSort(curNode->sorted_array, curNode->array_size);
+            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
             continue;
         }
         curNode = curNode->next;
@@ -368,11 +430,11 @@ int main()
         curNode->array[curNode->array_size] = temp;
         curNode->sorted_array[curNode->array_size] = temp;
         curNode->array_size++;
-        insertionSort(curNode->sorted_array, curNode->array_size);
+        mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
         ++list->total_element;
     }
     // print(list, 1);
-
+    // print_sorted(list);
     while ((c = getchar()) != EOF)
     {
         if (c == '\n')
@@ -404,7 +466,7 @@ int main()
                     newNode->sorted_array[0] = list_tail->array[list_tail->array_size - 1];
                     list_tail->array[list_tail->array_size - 1] = x;
                     list_tail->sorted_array = copy_arr(list_tail->array, list_tail->array_size);
-                    insertionSort(list_tail->sorted_array, list_tail->array_size);
+                    mergeSort(list_tail->sorted_array, 0, list_tail->array_size - 1);
                 }
                 else
                 {
@@ -459,7 +521,7 @@ int main()
                             curNode->array[curNode->array_size] = x;
                             curNode->sorted_array[curNode->array_size] = x;
                             ++curNode->array_size;
-                            insertionSort(curNode->sorted_array, curNode->array_size);
+                            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                         }
                         else //放不下就在前面創一個node
                         {
@@ -500,10 +562,10 @@ int main()
                         curNode->sorted_array[curNode->array_size] = x;
 
                         newNode->sorted_array = copy_arr(newNode->array, newNode->array_size);
-                        insertionSort(newNode->sorted_array, newNode->array_size);
+                        mergeSort(newNode->sorted_array, 0, newNode->array_size - 1);
 
                         curNode->sorted_array = copy_arr(curNode->array, curNode->array_size);
-                        insertionSort(curNode->sorted_array, curNode->array_size);
+                        mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                     }
                 }
                 //沒滿還能放
@@ -515,7 +577,7 @@ int main()
                     curNode->array[i - temp - 1] = x;
                     curNode->sorted_array[curNode->array_size] = x;
                     curNode->array_size++;
-                    insertionSort(curNode->sorted_array, curNode->array_size);
+                    mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                 }
             }
             ++list->total_element;
@@ -552,7 +614,7 @@ int main()
                 --curNode->array_size;
                 free(curNode->sorted_array);
                 curNode->sorted_array = copy_arr(curNode->array, curNode->array_size);
-                insertionSort(curNode->sorted_array, curNode->array_size);
+                mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
             }
             check_head(list);
             check_tail(list);
@@ -653,9 +715,9 @@ int main()
                 changeTag(leftNewNode);
             }
             leftNewNode->sorted_array = copy_arr(leftNewNode->array, leftNewNode->array_size);
-            insertionSort(leftNewNode->sorted_array, leftNewNode->array_size);
+            mergeSort(leftNewNode->sorted_array, 0, leftNewNode->array_size - 1);
             leftNode->sorted_array = copy_arr(leftNode->array, leftNode->array_size);
-            insertionSort(leftNode->sorted_array, leftNode->array_size);
+            mergeSort(leftNode->sorted_array, 0, leftNode->array_size - 1);
 
             if (rightNode->tag == isNotReverse)
             {
@@ -690,9 +752,9 @@ int main()
                 changeTag(rightNewNode);
             }
             rightNewNode->sorted_array = copy_arr(rightNewNode->array, rightNewNode->array_size);
-            insertionSort(rightNewNode->sorted_array, rightNewNode->array_size);
+            mergeSort(rightNewNode->sorted_array, 0, rightNewNode->array_size - 1);
             rightNode->sorted_array = copy_arr(rightNode->array, rightNode->array_size);
-            insertionSort(rightNode->sorted_array, rightNode->array_size);
+            mergeSort(rightNode->sorted_array, 0, rightNode->array_size - 1);
 
             leftNewNode->next = leftNode->next;
             leftNewNode->prev = leftNode;

@@ -523,7 +523,39 @@ int main()
             check_tail(list);
             break;
         case 'D':
-
+            i = readInt();
+            // break;
+            temp = 0;
+            while (temp + curNode->array_size < i)
+            {
+                // if (x-temp)
+                temp += curNode->array_size;
+                curNode = curNode->next;
+            }
+            if (curNode->array_size == 1) //刪除這個node
+            {
+                --curNode->array_size;
+            }
+            else
+            {
+                if (curNode->tag == isReverse)
+                {
+                    reverse_arr(curNode->array, curNode->array_size);
+                    changeTag(curNode);
+                }
+                int index_to_delete = i - temp - 1;
+                int len = curNode->array_size;
+                for (int index = index_to_delete; index < len - 1; ++index)
+                {
+                    curNode->array[index] = curNode->array[index + 1];
+                }
+                --curNode->array_size;
+                free(curNode->sorted_array);
+                curNode->sorted_array = copy_arr(curNode->array, curNode->array_size);
+                insertionSort(curNode->sorted_array, curNode->array_size);
+            }
+            check_head(list);
+            check_tail(list);
             --list->total_element;
             break;
         case 'R':

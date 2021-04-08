@@ -1,19 +1,30 @@
 ### 2021 SPRING DSA HW1
 #### Problem 1
-1. while loop 總共會跑n次，所以是$\Theta$(n)
-2. 猜是$\Theta$(loglogn)
-3. 不知道
-4. **(Prove or disprove) f(n)+g(n) = Θ( max(f(n), g(n)) )**\
-Sol:
+1.假設while loop 總共會跑k次，1+2+3+...+k =$\frac{k(1+k)}{2} < n$，$\frac{(k+1)(1+(k+1))}{2} > n$;\
+得到$k^2 + k < 2n$， $(k+1)^2 + (k+1) > 2n$ \
+所以是$\Theta(\sqrt{n})$
+
+2.$\Theta$(loglogn) ![](https://i.imgur.com/sU9ogmy.png)
+
+3.$O(4^n)$ ![](https://i.imgur.com/5gHSyBS.png)
+
+
+4.**(Prove or disprove) f(n)+g(n) = Θ( max(f(n), g(n)) )**\
+Sol:\
 According to the given definition of the  Θ notation,f(n)+g(n) = Θ( max(f(n), g(n)) ) if and only if **f(n)+g(n) = O( max(f(n), g(n)) ) and f(n)+g(n) = $\Omega$( max(f(n), g(n)) )**. Since |f(n)+g(n)| $\leqslant$ c1\*max(f(n), g(n)) when taking c1 = 2 $\forall$ n > 1, **we know that f(n)+g(n) = O( max(f(n), g(n)) );** and since |f(n)+g(n)| $\geqslant$ c2\* max(f(n), g(n)) when taking c2 = 1 $\forall$ n > 1, **we know that f(n)+g(n) = $\Omega$( max(f(n), g(n)) )**.
 Hence, **we have proved that f(n)+g(n) = Θ( max(f(n), g(n)) )**
 
-5. (Prove or disprove) If f(n) = O (i(n)) and g(n) = O(j(n)), then f(n) · g(n) = O(i(n) · j(n)).
-Sol:
+5.(Prove or disprove) If f(n) = O (i(n)) and g(n) = O(j(n)), then f(n) · g(n) = O(i(n) · j(n)).\
+Sol:\
 If f(n) = O(i(n)), there exist positive numbers c1 and x$_1$ s.t. |f(x)| $\leqslant$ c1·i(n)  $\forall$ x > x$_1$.
 If f(n) = Ω(i(n)), there exist positive numbers c2 and x$_2$ s.t. |f(x)|
-$\geqslant$ c2·i(n)  $\forall$ x > x$_2$.
+$\geqslant$ c2·i(n)  $\forall$ x > x$_2$.\
 
+6.還沒寫\
+7.![sdfsdf](https://i.imgur.com/d66zdRj.png)
+
+8.(Prove or disprove) lg(n!) = Θ(nlgn)![](https://i.imgur.com/H94noNz.png)
+9.![](https://i.imgur.com/zeLsJVA.png)
 
 
 ---
@@ -63,7 +74,7 @@ int pop_front():
     if left is empty
         while right is not empty
             push the top element of right into left
-            rem##ove the top of right
+            remove the top of right
     front = the top of left
     remove the top of left
     return front
@@ -80,8 +91,8 @@ int pop_back():
 Time complexity analysis:  
 4. O(1) &emsp; 5.O(1)  
 6. In the worse case, the while loop would repeat n times (n is the number of elements in right stack);hence O(n).   
-7. O(n) for the same reason as above
-
+7. O(n) for the same reason as above\
+8.![](https://i.imgur.com/5q0oecI.png)
 #### Problem 3
 1. Given the initial position of the frog, design an algorithm that computes whether the frog will stop somewhere or keep jumping forever.  
 ```
@@ -127,3 +138,4 @@ COUNT-LOOP-LENGTH(A,init)
 If the frog jumps into the position at which have been arrived, the number of steps it takes is just the length of the cycle.
 ##### Analysis:
 The length of array B is n, and the while loop repeats up top n times. Time complexity is O(n), and extra-space complexity is also O(n).
+

@@ -546,31 +546,7 @@ int main()
             break;
         case 'D':
             i = readInt();
-            break;
-            // if (i == list->total_element)
-            // {
-            //     curNode = list_tail;
-            //     if (curNode->tag == isNotReverse)
-            //         --curNode->array_size;
-            //     else
-            //     {
-            //         int cnt = curNode->array_size - 1;
-            //         for (int index = 0; index < cnt; ++index)
-            //             curNode->array[index] = curNode->array[index + 1];
-
-            //         --curNode->array_size;
-            //     }
-            //     --list->total_element;
-            //     // check_tail();
-            //     if (curNode->array_size == 0)
-            //     {
-            //         list_tail = curNode->prev;
-            //         list_tail->next = NULL;
-            //         deleteNode(curNode);
-            //     }
-            //     check_tail(list);
-            //     break;
-            // }
+            // break;
             temp = 0;
             while (temp + curNode->array_size < i)
             {
@@ -585,29 +561,12 @@ int main()
                 curNode = curNode->next;
             }
             // assert(curNode->array_size > 0);
-            if (curNode->array_size == 1) //刪除這個node
-            {
-                // if (curNode == list_head)
-                // {
-                //     curNode->next->prev = NULL;
-                //     list_head = curNode->next;
-                // }
-                // else if (curNode == list_tail)
-                // {
-                //     curNode->prev->next = NULL;
-                //     list_tail = curNode->prev;
-                // }
-                // else
-                // {
-                //     curNode->next->prev = curNode->prev;
-                //     curNode->prev->next = curNode->next;
-                // }
-                // deleteNode(curNode);
-                // --list->total_element;
-                --curNode->array_size;
-            }
+            // if (curNode->array_size == 1) //刪除這個node
+            // {
+            //     --curNode->array_size;
+            // }
 
-            else
+            // else
             {
                 if (curNode->tag == isNotReverse)
                     index_to_delete = i - temp - 1;

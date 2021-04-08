@@ -546,6 +546,7 @@ int main()
             break;
         case 'D':
             i = readInt();
+            break;
             // if (i == list->total_element)
             // {
             //     curNode = list_tail;

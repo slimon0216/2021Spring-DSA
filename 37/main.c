@@ -552,12 +552,6 @@ int main()
             {
                 // if (x-temp)
                 temp += curNode->array_size;
-                if (curNode->next == NULL)
-                {
-                    newNode = createNode();
-                    newNode->prev = curNode;
-                    curNode->next = newNode;
-                }
                 curNode = curNode->next;
             }
             // assert(curNode->array_size > 0);
@@ -566,21 +560,32 @@ int main()
                 --curNode->array_size;
             }
 
-            // // else
-            // {
-            //     if (curNode->tag == isNotReverse)
-            //         index_to_delete = i - temp - 1;
-            //     else
-            //         index_to_delete = curNode->array_size - (i - temp);
+            else
+            {
+                int index_to_delete;
+                if (curNode->tag == isNotReverse)
+                    index_to_delete = i - temp - 1;
+                else
+                    index_to_delete = curNode->array_size - (i - temp);
 
-            //     len = curNode->array_size;
-            //     for (index = index_to_delete; index < len - 1; ++index)
-            //     {
-            //         curNode->array[index] = curNode->array[index + 1];
-            //     }
+                int *new_array = malloc(sizeof(int) * MAX_LEN);
+                for (int i = 0, index = 0; index < curNode->array_size; ++i, ++index)
+                {
+                    if (i == index_to_delete)
+                        index++;
+                    new_array[i] = curNode->array[index];
+                }
 
-            //     --curNode->array_size;
-            // }
+                free(curNode->array);
+                curNode->array = new_array;
+                // int len = curNode->array_size;
+                // for (int index = index_to_delete; index < len - 1; ++index)
+                // {
+                //     curNode->array[index] = curNode->array[index + 1];
+                // }
+
+                --curNode->array_size;
+            }
 
             --list->total_element;
             check_head(list);

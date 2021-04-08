@@ -7,6 +7,33 @@ int MAX_LEN = 300;
 #define isReverse 0
 #define isNotReverse 1
 
+void reverse_arr(int *arr, int len)
+{
+    int temp = 0;
+    for (int i = 0, j = len - 1; i < j; ++i, --j)
+    {
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
+void insertionSort(int *arr, int len)
+{
+    int cur;
+    for (int i = 1; i < len; ++i)
+    {
+        cur = arr[i];
+        int j = i - 1;
+        while ((j >= 0) && (arr[j] > cur))
+        {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = cur;
+    }
+}
+
 typedef struct Node
 {
     struct Node *prev, *next;
@@ -47,8 +74,8 @@ Node *createNode()
     return node;
 }
 
-// void insert(int val){
-
+// void insert(int val)
+// {
 // }
 int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete, index_to_insert;
 char cmd[10], c;
@@ -154,6 +181,32 @@ void print(DList *list, int sep)
             for (int i = curNode->array_size - 1; i >= 0; --i)
                 printf("%d ", curNode->array[i]);
     }
+    printf("\n");
+}
+
+void print_sorted(DList *list)
+{
+    Node *curNode = list_head;
+
+    printf("|| ");
+    while (curNode != list_tail)
+    {
+        // num_nodes++;
+        if (curNode->tag == isNotReverse)
+            for (int i = 0; i < curNode->array_size; ++i)
+                printf("%d ", curNode->sorted_array[i]);
+        else
+            for (int i = curNode->array_size - 1; i >= 0; --i)
+                printf("%d ", curNode->sorted_array[i]);
+        printf(" || ");
+        curNode = curNode->next;
+    }
+    if (curNode->tag == isNotReverse)
+        for (int i = 0; i < curNode->array_size; ++i)
+            printf("%d ", curNode->sorted_array[i]);
+    else
+        for (int i = curNode->array_size - 1; i >= 0; --i)
+            printf("%d ", curNode->sorted_array[i]);
     printf("\n");
 }
 int num_nodes = 1;
@@ -308,7 +361,10 @@ int main()
             newNode->prev = curNode;
             curNode = curNode->next;
         }
-        curNode->array[curNode->array_size++] = temp;
+        curNode->array[curNode->array_size] = temp;
+        curNode->sorted_array[curNode->array_size] = temp;
+        curNode->array_size++;
+        insertionSort(curNode->sorted_array, curNode->array_size);
         ++list->total_element;
     }
     // print(list, 1);
@@ -333,211 +389,95 @@ int main()
             // If i − 1 equals the length of the sequence, then insert x at the end of it.
             i = readInt();
             x = readInt();
-            if (i == 1)
+            if (i - 1 == list->total_element)
+            {
+                Node *newNode = createNode();
+                newNode->array[0] = x;
+                newNode->sorted_array[0] = x;
+                ++newNode->array_size;
+                newNode->prev = list_tail;
+                list_tail->next = newNode;
+                list_tail = newNode;
+            }
+            temp = 0;
+            while (temp + curNode->array_size < i)
+            {
+                // if (x-temp)
+                temp += curNode->array_size;
+                if (curNode->next == NULL)
+                {
+                    Node *newNode = createNode();
+                    newNode->prev = curNode;
+                    curNode->next = newNode;
+                }
+                curNode = curNode->next;
+            }
+
+            //現在到了理論上要可以插入的點
+            //但如果滿了，就新增一個newNode在後面
+            //把要插入的地方的後面都放進newNode
+            if (curNode == list_head) //create new list_head
             {
                 Node *newNode = createNode();
                 newNode->array[newNode->array_size++] = x;
-                newNode->next = list_head;
-                list_head->prev = newNode;
+                newNode->sorted_array[0] = x;
+                newNode->next = curNode;
+                curNode->prev = newNode;
                 list_head = newNode;
             }
-            else if (i == list->total_element)
+            else if (curNode->array_size == MAX_LEN)
             {
-                Node *newNode = createNode();
-                // curNode = list_tail;
-                if (list_tail->tag == isNotReverse)
+                if (curNode->tag == isReverse)
                 {
-                    newNode->array[newNode->array_size++] = list_tail->array[list_tail->array_size - 1];
-                    list_tail->array[list_tail->array_size - 1] = x;
+                    reverse_arr(curNode->array, curNode->array_size);
+                    curNode->tag == isNotReverse;
                 }
-                else
+
+                if (i - temp == 1 && curNode->prev->array_size < MAX_LEN && curNode->prev->tag == isNotReverse)
+                { //滿了又要插在這個array的頭
+
+                    curNode = curNode->prev;
+                    curNode->array[curNode->array_size] = x;
+                    curNode->sorted_array[curNode->array_size] = x;
+                    ++curNode->array_size;
+                    insertionSort(curNode->sorted_array, curNode->array_size);
+                }
+                else //放不下就在前面創一個node
                 {
-                    newNode->array[newNode->array_size++] = list_tail->array[0];
-                    list_tail->array[0] = x;
+                    Node *newNode = createNode();
+                    newNode->array[newNode->array_size++] = x;
+                    newNode->sorted_array[0] = x;
+                    newNode->next = curNode;
+                    newNode->prev = curNode->prev;
+                    curNode->prev->next = newNode;
+                    curNode->prev = newNode;
                 }
-                list_tail->next = newNode;
-                newNode->prev = list_tail;
-                list_tail = newNode;
             }
-            else if (i - 1 == list->total_element)
-            {
-                Node *newNode = createNode();
-                newNode->array[newNode->array_size++] = x;
-                list_tail->next = newNode;
-                newNode->prev = list_tail;
-                list_tail = newNode;
-            }
+            //沒滿還能放
             else
             {
-                temp = 0;
-                while (temp + curNode->array_size < i)
+                if (curNode->tag == isReverse)
                 {
-                    // if (x-temp)
-                    temp += curNode->array_size;
-                    if (curNode->next == NULL)
-                    {
-                        Node *newNode = createNode();
-                        newNode->prev = curNode;
-                        curNode->next = newNode;
-                    }
-                    curNode = curNode->next;
+                    reverse_arr(curNode->array, curNode->array_size);
+                    curNode->tag == isNotReverse;
                 }
 
-                //現在到了理論上要可以插入的點
-                //但如果滿了，就新增一個newNode在後面
-                //把要插入的地方的後面都放進newNode
-                if (curNode->array_size == MAX_LEN)
-                {
-                    if (curNode->tag == isNotReverse)
-                    {
-                        if (i - temp == 1)
-                        { //滿了又要插在這個array的頭
-                            // if 前面還放得下(curNode不會是head  會在前面被做掉)
-                            if (curNode->prev->array_size < MAX_LEN && curNode->prev->tag == isNotReverse)
-                            {
-                                curNode = curNode->prev;
-                                curNode->array[curNode->array_size++] = x;
-                            }
-                            else //放不下就在前面創一個node
-                            {
-                                Node *newNode = createNode();
-                                newNode->array[newNode->array_size++] = x;
-
-                                // ++newNode->array_size;
-                                newNode->next = curNode;
-                                newNode->prev = curNode->prev;
-                                curNode->prev->next = newNode;
-                                curNode->prev = newNode;
-                            }
-                        }
-                        else //不然在後面創node，把東西往後推
-                        {
-                            Node *newNode = createNode();
-                            if (curNode != list_tail)
-                            {
-                                newNode->next = curNode->next;
-                                curNode->next->prev = newNode;
-                                newNode->prev = curNode;
-                                curNode->next = newNode;
-                            }
-                            else
-                            {
-                                curNode->next = newNode;
-                                newNode->prev = curNode;
-                                list_tail = newNode;
-                            }
-
-                            for (int index = 0; index <= MAX_LEN - (i - temp); ++index)
-                            {
-                                newNode->array[newNode->array_size++] = curNode->array[index + i - temp - 1];
-                                --curNode->array_size;
-                            }
-                            curNode->array[i - temp - 1] = x;
-                            ++curNode->array_size;
-                        }
-                    }
-                    else //順序是反的
-                    {
-                        if (i - temp == 1) //滿了又要插在這個array的頭 (其實是尾端)
-                        {                  //如果前面node還有空位而且順序是正向的就直接丟過去
-                            if (curNode->prev->array_size < MAX_LEN && curNode->prev->tag == isNotReverse)
-                            {
-                                curNode = curNode->prev;
-                                curNode->array[curNode->array_size++] = x;
-                            }
-                            else //不然就新增node，因為順序是反的，新增的Node要放在這個前面
-                            {
-                                Node *newNode = createNode();
-                                newNode->array[newNode->array_size++] = x;
-
-                                // ++newNode->array_size;
-                                newNode->next = curNode;
-                                newNode->prev = curNode->prev;
-                                curNode->prev->next = newNode;
-                                curNode->prev = newNode;
-                            }
-                        }
-                        else //滿了又要插在這個array的中間，且array是反的
-                        {    //就往後新增Node，從這個array的插入點往前推一格(因為是反的)
-                            Node *newNode = createNode();
-                            if (curNode != list_tail)
-                            {
-                                newNode->next = curNode->next;
-                                curNode->next->prev = newNode;
-                                newNode->prev = curNode;
-                                curNode->next = newNode;
-                            }
-                            else
-                            {
-                                curNode->next = newNode;
-                                newNode->prev = curNode;
-                                list_tail = newNode;
-                            }
-                            if (curNode == list_tail)
-                                list_tail = newNode;
-
-                            newNode->array[newNode->array_size++] = curNode->array[0];
-                            int index = 0;
-                            int index_to_insert = curNode->array_size - (i - temp);
-                            for (; index != index_to_insert; ++index)
-                            {
-                                curNode->array[index] = curNode->array[index + 1];
-                                // newNode->array[newNode->array_size++] = curNode->array[index + i - temp - 1];
-                                // --curNode->array_size;
-                            }
-                            curNode->array[index] = x;
-                        }
-                    }
+                if (i - temp == 1 && (curNode->prev->array_size < MAX_LEN) && curNode->prev->tag == isNotReverse)
+                { //滿了又要插在這個array的頭，但前面沒滿
+                    curNode = curNode->prev;
+                    curNode->array[curNode->array_size] = x;
+                    curNode->sorted_array[curNode->array_size] = x;
+                    ++curNode->array_size;
+                    insertionSort(curNode->sorted_array, curNode->array_size);
                 }
-                //沒滿還能放
                 else
                 {
-                    if (curNode->tag == isNotReverse)
-                    {
-                        if (i - temp == 1 && (curNode->prev->array_size < MAX_LEN) && curNode->prev->tag == isNotReverse)
-                        { //滿了又要插在這個array的頭，但前面沒滿
-                            {
-                                curNode = curNode->prev;
-                                curNode->array[curNode->array_size++] = x;
-                            }
-                        }
-                        else
-                        {
-                            for (int index = curNode->array_size; index > (i - temp - 1); index--)
-                                curNode->array[index] = curNode->array[index - 1];
-                            curNode->array[i - temp - 1] = x;
-
-                            curNode->array_size++;
-                        }
-                    }
-                    else
-                    {
-                        int index = curNode->array_size;
-                        int index_to_insert = curNode->array_size - (i - temp - 1);
-                        // int cnt = 0;
-                        for (; index != index_to_insert; --index)
-                        {
-                            curNode->array[index] = curNode->array[index - 1];
-                        }
-                        curNode->array[index] = x;
-                        curNode->array_size++;
-                        // if (i - temp == curNode->array_size && )
-                        // { //滿了又要插在這個array的頭
-                        //     {
-                        //         curNode = curNode->prev;
-                        //         curNode->array[curNode->array_size++] = x;
-                        //
-                        //     }
-                        // }
-                        // else
-                        // {
-                        //     for (int index = curNode->array_size; index > (i - temp - 1); index--)
-                        //         curNode->array[index] = curNode->array[index - 1];
-                        //     curNode->array[i - temp - 1] = x;
-                        //
-                        //     curNode->array_size++;
-                        // }
-                    }
+                    for (int index = curNode->array_size; index > (i - temp - 1); index--)
+                        curNode->array[index] = curNode->array[index - 1];
+                    curNode->array[i - temp - 1] = x;
+                    curNode->sorted_array[curNode->array_size] = x;
+                    curNode->array_size++;
+                    insertionSort(curNode->sorted_array, curNode->array_size);
                 }
             }
             ++list->total_element;
@@ -758,7 +698,8 @@ int main()
             k = readInt();
             break;
         }
-        // print(list, 1);
+        print(list, 1);
+        print_sorted(list);
         // assert(list_head->array_size > 0);
     }
     print(list, 0);
@@ -768,4 +709,6 @@ int main()
     // printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
     // float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
     // printf("memory usage: %f KB\n", memory);
+
+    return 0;
 }

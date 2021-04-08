@@ -197,22 +197,15 @@ void print_sorted(DList *list)
     printf("|| ");
     while (curNode != list_tail)
     {
-        // num_nodes++;
-        if (curNode->tag == isNotReverse)
-            for (int i = 0; i < curNode->array_size; ++i)
-                printf("%d ", curNode->sorted_array[i]);
-        else
-            for (int i = curNode->array_size - 1; i >= 0; --i)
-                printf("%d ", curNode->sorted_array[i]);
+
+        for (int i = 0; i < curNode->array_size; ++i)
+            printf("%d ", curNode->sorted_array[i]);
         printf(" || ");
         curNode = curNode->next;
     }
-    if (curNode->tag == isNotReverse)
-        for (int i = 0; i < curNode->array_size; ++i)
-            printf("%d ", curNode->sorted_array[i]);
-    else
-        for (int i = curNode->array_size - 1; i >= 0; --i)
-            printf("%d ", curNode->sorted_array[i]);
+
+    for (int i = 0; i < curNode->array_size; ++i)
+        printf("%d ", curNode->sorted_array[i]);
     text("");
 }
 int num_nodes = 1;
@@ -338,7 +331,12 @@ void traverse_merge()
         }
         if_delete_next = merge(curNode, curNode->next);
         if (if_delete_next == 1)
+        {
+            free(curNode->sorted_array);
+            curNode->sorted_array = copy_arr(curNode->array, curNode->array_size);
+            insertionSort(curNode->sorted_array, curNode->array_size);
             continue;
+        }
         curNode = curNode->next;
     }
     // check_tail(list);
@@ -374,13 +372,6 @@ int main()
         ++list->total_element;
     }
     // print(list, 1);
-    // curNode = list_head;
-    // while (curNode != NULL){
-    //     for (int i = 0; i < curNode->array_size; ++i)
-    //         printf("%d ", curNode->array[i]);
-    //     curNode = curNode->next;
-    // }
-    // printf("\n");
 
     while ((c = getchar()) != EOF)
     {
@@ -412,6 +403,7 @@ int main()
                     newNode->array[newNode->array_size++] = list_tail->array[list_tail->array_size - 1];
                     newNode->sorted_array[0] = list_tail->array[list_tail->array_size - 1];
                     list_tail->array[list_tail->array_size - 1] = x;
+                    list_tail->sorted_array = copy_arr(list_tail->array, list_tail->array_size);
                     insertionSort(list_tail->sorted_array, list_tail->array_size);
                 }
                 else
@@ -530,6 +522,10 @@ int main()
             check_head(list);
             check_tail(list);
             break;
+        case 'D':
+
+            --list->total_element;
+            break;
         case 'R':
             l = readInt();
             r = readInt();
@@ -580,7 +576,7 @@ int main()
                         leftNode->array[index_l] = leftNode->array[index_r];
                         leftNode->array[index_r] = temp;
                     }
-                // print(list, 1);
+
                 break;
             }
 
@@ -624,6 +620,10 @@ int main()
                 changeTag(leftNode);
                 changeTag(leftNewNode);
             }
+            leftNewNode->sorted_array = copy_arr(leftNewNode->array, leftNewNode->array_size);
+            insertionSort(leftNewNode->sorted_array, leftNewNode->array_size);
+            leftNode->sorted_array = copy_arr(leftNode->array, leftNode->array_size);
+            insertionSort(leftNode->sorted_array, leftNode->array_size);
 
             if (rightNode->tag == isNotReverse)
             {
@@ -657,6 +657,10 @@ int main()
                 }
                 changeTag(rightNewNode);
             }
+            rightNewNode->sorted_array = copy_arr(rightNewNode->array, rightNewNode->array_size);
+            insertionSort(rightNewNode->sorted_array, rightNewNode->array_size);
+            rightNode->sorted_array = copy_arr(rightNode->array, rightNode->array_size);
+            insertionSort(rightNode->sorted_array, rightNode->array_size);
 
             leftNewNode->next = leftNode->next;
             leftNewNode->prev = leftNode;
@@ -696,8 +700,8 @@ int main()
             k = readInt();
             break;
         }
-        print(list, 1);
-        print_sorted(list);
+        // print(list, 1);
+        // print_sorted(list);
         // assert(list_head->array_size > 0);
     }
     print(list, 0);

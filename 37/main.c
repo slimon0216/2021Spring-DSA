@@ -561,26 +561,26 @@ int main()
                 curNode = curNode->next;
             }
             // assert(curNode->array_size > 0);
-            // if (curNode->array_size == 1) //刪除這個node
-            // {
-            //     --curNode->array_size;
-            // }
-
-            // else
+            if (curNode->array_size == 1) //刪除這個node
             {
-                if (curNode->tag == isNotReverse)
-                    index_to_delete = i - temp - 1;
-                else
-                    index_to_delete = curNode->array_size - (i - temp);
-
-                len = curNode->array_size;
-                for (index = index_to_delete; index < len - 1; ++index)
-                {
-                    curNode->array[index] = curNode->array[index + 1];
-                }
-
                 --curNode->array_size;
             }
+
+            // // else
+            // {
+            //     if (curNode->tag == isNotReverse)
+            //         index_to_delete = i - temp - 1;
+            //     else
+            //         index_to_delete = curNode->array_size - (i - temp);
+
+            //     len = curNode->array_size;
+            //     for (index = index_to_delete; index < len - 1; ++index)
+            //     {
+            //         curNode->array[index] = curNode->array[index + 1];
+            //     }
+
+            //     --curNode->array_size;
+            // }
 
             --list->total_element;
             check_head(list);

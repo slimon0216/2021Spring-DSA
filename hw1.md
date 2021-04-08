@@ -1,6 +1,6 @@
 ### 2021 SPRING DSA HW1
 #### Problem 1
-1.假設while loop 總共會跑k次，1+2+3+...+k =$\frac{k(1+k)}{2} < n$，$\frac{(k+1)(1+(k+1))}{2} > n$;\
+1.假設while loop 總共會跑k次，$1+2+3+...+k =\frac{k(1+k)}{2} < n$，$\frac{(k+1)(1+(k+1))}{2} > n$;\
 得到$k^2 + k < 2n$， $(k+1)^2 + (k+1) > 2n$ \
 所以是$\Theta(\sqrt{n})$
 
@@ -11,8 +11,14 @@
 
 4.**(Prove or disprove) f(n)+g(n) = Θ( max(f(n), g(n)) )**\
 Sol:\
-According to the given definition of the  Θ notation,f(n)+g(n) = Θ( max(f(n), g(n)) ) if and only if **f(n)+g(n) = O( max(f(n), g(n)) ) and f(n)+g(n) = $\Omega$( max(f(n), g(n)) )**. Since |f(n)+g(n)| $\leqslant$ c1\*max(f(n), g(n)) when taking c1 = 2 $\forall$ n > 1, **we know that f(n)+g(n) = O( max(f(n), g(n)) );** and since |f(n)+g(n)| $\geqslant$ c2\* max(f(n), g(n)) when taking c2 = 1 $\forall$ n > 1, **we know that f(n)+g(n) = $\Omega$( max(f(n), g(n)) )**.
-Hence, **we have proved that f(n)+g(n) = Θ( max(f(n), g(n)) )**
+According to the given definition of the  Θ notation,$f(n)+g(n) = Θ( max(f(n), g(n)) )$ if and only if $f(n)+g(n) = O( max(f(n), g(n)) )$ 
+and 
+$f(n)+g(n) = \Omega( max(f(n), g(n)) )$. 
+* Since $|f(n)+g(n)| \leqslant c1*max(f(n), g(n))$ when taking c1 = 2 $\forall$ n > 1, we know that $f(n)+g(n) = O( max(f(n), g(n)) )$; 
+* And since $|f(n)+g(n)|\geqslant$ c2 $* max(f(n), g(n))$ 
+when taking c2 = 1 $\forall n > 1$,
+we know that $f(n)+g(n) = \Omega( max(f(n), g(n)) )$.
+* Hence, we have proved that $f(n)+g(n) = Θ( max(f(n), g(n)) )$
 
 5.(Prove or disprove) If f(n) = O (i(n)) and g(n) = O(j(n)), then f(n) · g(n) = O(i(n) · j(n)).\
 Sol:\

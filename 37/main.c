@@ -450,12 +450,21 @@ int main()
             x = readInt();
             if (i == 1)
             {
-                Node *newNode = createNode();
-                newNode->array[newNode->array_size++] = x;
-                newNode->sorted_array[0] = x;
-                newNode->next = list_head;
-                list_head->prev = newNode;
-                list_head = newNode;
+                if (list->total_element == 0)
+                {
+                    list_head->array[list_head->array_size++] = x;
+                    list_head->sorted_array[0] = x;
+                    // ++list->total_element;
+                }
+                else
+                {
+                    Node *newNode = createNode();
+                    newNode->array[newNode->array_size++] = x;
+                    newNode->sorted_array[0] = x;
+                    newNode->next = list_head;
+                    list_head->prev = newNode;
+                    list_head = newNode;
+                }
             }
             else if (i == list->total_element)
             {
@@ -586,7 +595,15 @@ int main()
             break;
         case 'D':
             i = readInt();
-            break;
+            if (list->total_element == 0)
+                break;
+
+            if (i == 1 && list->total_element == 1)
+            {
+                list_head->array_size--;
+                list->total_element--;
+                break;
+            }
             temp = 0;
             while (temp + curNode->array_size < i)
             {
@@ -782,8 +799,8 @@ int main()
             leftNode->next = rightNewNode;
             rightNode->prev = leftNewNode;
 
-            check_head(list);
-            check_tail(list);
+            // check_head(list);
+            // check_tail(list);
             traverse_merge();
 
             break;

@@ -64,7 +64,7 @@ void mergeSort(int *arr, int left, int right)
         MERGE(arr, left, mid, right);
     }
 }
-
+// int cparr[MAX_LEN];
 int *copy_arr(int *arr, int len)
 {
     int *newarr = malloc(sizeof(int) * MAX_LEN);
@@ -122,20 +122,20 @@ Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2,
 DList *list;
 // void insert(int val){
 // int create = 0;
-void deleteNode(Node *node)
-{
-    // --create;
-    free(node->array);
-    free(node->sorted_array);
-    free(node);
-}
+// void deleteNode(Node *node)
+// {
+//     // --create;
+//     free(node->array);
+//     free(node->sorted_array);
+//     free(node);
+// }
 
 void check_tail(DList *list)
 {
     while (list_tail->array_size == 0)
     {
         list_tail = list_tail->prev;
-        deleteNode(list_tail->next);
+        // deleteNode(list_tail->next);
     }
 }
 
@@ -155,7 +155,7 @@ void check_head(DList *list)
     while (list_head->array_size == 0)
     {
         list_head = list_head->next;
-        deleteNode(list_head->prev);
+        // deleteNode(list_head->prev);
     }
 }
 
@@ -306,7 +306,7 @@ int merge(Node *prev, Node *next)
                 list_tail = prev;
                 list_tail->next = NULL;
             }
-            deleteNode(next);
+            // deleteNode(next);
             flag = 1;
         }
         else if (prev->tag == isReverse)
@@ -340,7 +340,7 @@ int merge(Node *prev, Node *next)
                 {
                     newarr[i] = prev->array[cnt];
                 }
-                free(prev->array);
+                // free(prev->array);
                 prev->array = newarr;
                 prev->array_size = i;
             }
@@ -349,7 +349,7 @@ int merge(Node *prev, Node *next)
                 next->next->prev = prev;
             else
                 list_tail = prev;
-            deleteNode(next);
+            // deleteNode(next);
             flag = 1;
         }
     }
@@ -372,12 +372,12 @@ void traverse_merge()
                 list_head = curNode->next;
             curNode->next->prev = curNode->prev;
             curNode = ptr->next;
-            deleteNode(ptr);
+            // deleteNode(ptr);
         }
         if_delete_next = merge(curNode, curNode->next);
         if (if_delete_next == 1)
         {
-            free(curNode->sorted_array);
+            // free(curNode->sorted_array);
             curNode->sorted_array = copy_arr(curNode->array, curNode->array_size);
             mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
             continue;
@@ -693,7 +693,7 @@ int main()
                 break;
             if (list->total_element == 1)
             {
-                free(list_head);
+                // free(list_head);
                 list_head = createNode();
                 list_tail = list_head;
                 list->total_element = 0;
@@ -741,7 +741,6 @@ int main()
         case 'R':
             l = readInt();
             r = readInt();
-            break;
             if (l == r)
                 break;
             int temp_left = 0;
@@ -754,7 +753,7 @@ int main()
                     leftNode->prev->next = leftNode->next;
                     leftNode = leftNode->next;
                     leftNode->prev = leftNode->prev->prev;
-                    deleteNode(ptr);
+                    // deleteNode(ptr);
                     continue;
                 }
                 temp_left += leftNode->array_size;
@@ -792,9 +791,6 @@ int main()
                 // print(list, 1);
                 break;
             }
-
-            // int numOfL = l - temp_left; //從這個node的第幾個ele開始般
-            // int numOfR = r - temp_right;
             Node *leftNewNode = createNode();
             Node *rightNewNode = createNode();
 
@@ -910,7 +906,53 @@ int main()
             l = readInt();
             r = readInt();
             k = readInt();
-            break;
+            // break;
+
+            if (l == r)
+                break;
+            temp_left = 0;
+            leftNode = list_head;
+            while (temp_left + leftNode->array_size < l)
+            {
+                if (leftNode->array_size == 0 && leftNode->prev != NULL)
+                {
+                    Node *ptr = leftNode;
+                    leftNode->prev->next = leftNode->next;
+                    leftNode = leftNode->next;
+                    leftNode->prev = leftNode->prev->prev;
+                    // deleteNode(ptr);
+                    continue;
+                }
+                temp_left += leftNode->array_size;
+                leftNode = leftNode->next;
+            }
+            temp_right = temp_left;
+            rightNode = leftNode;
+            while (temp_right + rightNode->array_size < r)
+            {
+
+                temp_right += rightNode->array_size;
+                rightNode = rightNode->next;
+            }
+
+            if (leftNode == rightNode) //reverse的區間都再同一個node
+            {
+                int len = 0, arr[MAX_LEN];
+                if (leftNode->tag == isNotReverse)
+                    for (int index_l = l - temp_left - 1, index_r = r - temp_right - 1; index_l <= index_r; ++index_l)
+                    {
+                        arr[len++] = leftNode->array[index_l];
+                    }
+                else
+                    for (int index_l = leftNode->array_size - (l - temp_left), index_r = leftNode->array_size - (r - temp_right);
+                         index_r <= index_l; ++index_r)
+                    {
+                        arr[len++] = leftNode->array[index_r];
+                    }
+                mergeSort(arr, 0, len);
+                printf("%d\n", arr[k - 1]);
+                break;
+            }
         }
         // print(list, 1);
         // print_sorted(list);

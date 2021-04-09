@@ -376,12 +376,16 @@ void traverse_merge()
         }
         if_delete_next = merge(curNode, curNode->next);
         if (if_delete_next == 1)
+        {
+            free(curNode->sorted_array);
+            curNode->sorted_array = copy_arr(curNode->array, curNode->array_size);
+            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
             continue;
+        }
         curNode = curNode->next;
     }
     // check_tail(list);
 }
-
 int main()
 {
     int z;
@@ -411,8 +415,8 @@ int main()
         mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
         ++list->total_element;
     }
-    print(list, 1);
-    print_sorted(list);
+    // print(list, 1);
+    // print_sorted(list);
     // curNode = list_head;
     // while (curNode != NULL){
     //     for (int i = 0; i < curNode->array_size; ++i)
@@ -470,6 +474,8 @@ int main()
                 else
                 {
                     newNode->array[newNode->array_size++] = list_tail->array[0];
+                    newNode->sorted_array[0] = list_tail->array[0];
+                    delete_from_sorted(list_tail->sorted_array, list_tail->array_size, list_tail->array[0]);
                     list_tail->array[0] = x;
                 }
                 list_tail->next = newNode;
@@ -826,7 +832,10 @@ int main()
                 changeTag(leftNode);
                 changeTag(leftNewNode);
             }
-
+            leftNewNode->sorted_array = copy_arr(leftNewNode->array, leftNewNode->array_size);
+            mergeSort(leftNewNode->sorted_array, 0, leftNewNode->array_size - 1);
+            leftNode->sorted_array = copy_arr(leftNode->array, leftNode->array_size);
+            mergeSort(leftNode->sorted_array, 0, leftNode->array_size - 1);
             if (rightNode->tag == isNotReverse)
             {
                 int changePoint = r - temp_right;
@@ -859,6 +868,10 @@ int main()
                 }
                 changeTag(rightNewNode);
             }
+            rightNewNode->sorted_array = copy_arr(rightNewNode->array, rightNewNode->array_size);
+            mergeSort(rightNewNode->sorted_array, 0, rightNewNode->array_size - 1);
+            rightNode->sorted_array = copy_arr(rightNode->array, rightNode->array_size);
+            mergeSort(rightNode->sorted_array, 0, rightNode->array_size - 1);
 
             leftNewNode->next = leftNode->next;
             leftNewNode->prev = leftNode;
@@ -898,12 +911,12 @@ int main()
             k = readInt();
             break;
         }
-        print(list, 1);
-        print_sorted(list);
+        // print(list, 1);
+        // print_sorted(list);
         // assert(list_head->array_size > 0);
     }
     print(list, 0);
-    print_sorted(list);
+    // print_sorted(list);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);
     // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);

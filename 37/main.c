@@ -741,6 +741,7 @@ int main()
         case 'R':
             l = readInt();
             r = readInt();
+            break;
             if (l == r)
                 break;
             int temp_left = 0;

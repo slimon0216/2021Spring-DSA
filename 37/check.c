@@ -32,7 +32,7 @@ int main()
 		print("standard    ", end - begin);
 
 		begin = clock();
-		// system("brute_force.exe < test.in > brute_force.in");
+		system("brute_force.exe < test.in > brute_force.in");
 		end = clock();
 		brute_force += end - begin;
 		print("brute_force ", end - begin);

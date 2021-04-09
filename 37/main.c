@@ -586,7 +586,7 @@ int main()
             break;
         case 'D':
             i = readInt();
-            // break;
+            break;
             temp = 0;
             while (temp + curNode->array_size < i)
             {

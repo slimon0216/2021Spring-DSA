@@ -314,7 +314,7 @@ int merge(Node *prev, Node *next)
 
 void traverse_merge()
 {
-    int if_delete_next = 0;
+    int if_merge = 0;
     curNode = list_head->next;
     Node *ptr;
     while (curNode->next != list_tail && curNode != list_tail && curNode->next != NULL && curNode->next != NULL)
@@ -330,9 +330,13 @@ void traverse_merge()
             curNode = ptr->next;
             // deleteNode(ptr);
         }
-        if_delete_next = merge(curNode, curNode->next);
-        if (if_delete_next == 1)
+        if_merge = merge(curNode, curNode->next);
+        if (if_merge == 1)
+        {
+            copy_arr(curNode->array, curNode->sorted_array, curNode->array_size);
+            insertionSort(curNode->sorted_array, curNode->array_size);
             continue;
+        }
         curNode = curNode->next;
     }
     // check_tail(list);
@@ -774,6 +778,11 @@ int main()
                 changeTag(leftNewNode);
             }
 
+            copy_arr(leftNewNode->array, leftNewNode->sorted_array, leftNewNode->array_size);
+            insertionSort(leftNewNode->sorted_array, leftNewNode->array_size);
+            copy_arr(leftNode->array, leftNode->sorted_array, leftNode->array_size);
+            insertionSort(leftNode->sorted_array, leftNode->array_size);
+
             if (rightNode->tag == isNotReverse)
             {
                 int changePoint = r - temp_right;
@@ -806,6 +815,10 @@ int main()
                 }
                 changeTag(rightNewNode);
             }
+            copy_arr(rightNewNode->array, rightNewNode->sorted_array, rightNewNode->array_size);
+            insertionSort(rightNewNode->sorted_array, rightNewNode->array_size);
+            copy_arr(rightNode->array, rightNode->sorted_array, rightNode->array_size);
+            insertionSort(rightNode->sorted_array, rightNode->array_size);
 
             leftNewNode->next = leftNode->next;
             leftNewNode->prev = leftNode;
@@ -848,7 +861,7 @@ int main()
         // print(list, 1);
         // print_sorted(list);
     }
-    // print(list, 0);
+    print(list, 0);
     // print_sorted(list);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);

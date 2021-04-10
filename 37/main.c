@@ -64,7 +64,7 @@ void mergeSort(int *arr, int left, int right)
         MERGE(arr, left, mid, right);
     }
 }
-// int cparr[MAX_LEN];
+
 int *copy_arr(int *arr, int len)
 {
     int *newarr = malloc(sizeof(int) * MAX_LEN);
@@ -124,10 +124,10 @@ DList *list;
 // int create = 0;
 // void deleteNode(Node *node)
 // {
-//     // --create;
-//     free(node->array);
-//     free(node->sorted_array);
-//     free(node);
+// --create;
+// free(node->array);
+// free(node->sorted_array);
+// free(node);
 // }
 
 void check_tail(DList *list)
@@ -791,6 +791,9 @@ int main()
                 // print(list, 1);
                 break;
             }
+
+            // int numOfL = l - temp_left; //從這個node的第幾個ele開始般
+            // int numOfR = r - temp_right;
             Node *leftNewNode = createNode();
             Node *rightNewNode = createNode();
 
@@ -906,53 +909,7 @@ int main()
             l = readInt();
             r = readInt();
             k = readInt();
-            // break;
-
-            if (l == r)
-                break;
-            temp_left = 0;
-            leftNode = list_head;
-            while (temp_left + leftNode->array_size < l)
-            {
-                if (leftNode->array_size == 0 && leftNode->prev != NULL)
-                {
-                    Node *ptr = leftNode;
-                    leftNode->prev->next = leftNode->next;
-                    leftNode = leftNode->next;
-                    leftNode->prev = leftNode->prev->prev;
-                    // deleteNode(ptr);
-                    continue;
-                }
-                temp_left += leftNode->array_size;
-                leftNode = leftNode->next;
-            }
-            temp_right = temp_left;
-            rightNode = leftNode;
-            while (temp_right + rightNode->array_size < r)
-            {
-
-                temp_right += rightNode->array_size;
-                rightNode = rightNode->next;
-            }
-
-            if (leftNode == rightNode) //reverse的區間都再同一個node
-            {
-                int len = 0, arr[MAX_LEN];
-                if (leftNode->tag == isNotReverse)
-                    for (int index_l = l - temp_left - 1, index_r = r - temp_right - 1; index_l <= index_r; ++index_l)
-                    {
-                        arr[len++] = leftNode->array[index_l];
-                    }
-                else
-                    for (int index_l = leftNode->array_size - (l - temp_left), index_r = leftNode->array_size - (r - temp_right);
-                         index_r <= index_l; ++index_r)
-                    {
-                        arr[len++] = leftNode->array[index_r];
-                    }
-                mergeSort(arr, 0, len);
-                printf("%d\n", arr[k - 1]);
-                break;
-            }
+            break;
         }
         // print(list, 1);
         // print_sorted(list);

@@ -847,7 +847,6 @@ int main()
         }
         // print(list, 1);
         // print_sorted(list);
-        // assert(list_head->array_size > 0);
     }
     // print(list, 0);
     // print_sorted(list);

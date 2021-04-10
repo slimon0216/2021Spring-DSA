@@ -367,8 +367,8 @@ int main()
         insertionSort(curNode->sorted_array, curNode->array_size);
         ++list->total_element;
     }
-    print(list, 1);
-    print_sorted(list);
+    // print(list, 1);
+    // print_sorted(list);
     // curNode = list_head;
     // while (curNode != NULL){
     //     for (int i = 0; i < curNode->array_size; ++i)
@@ -630,7 +630,16 @@ int main()
             break;
         case 'D':
             i = readInt();
-            // break;
+            if (list->total_element == 0)
+                break;
+            if (list->total_element == 1)
+            {
+                // free(list_head);
+                list_head = createNode();
+                list_tail = list_head;
+                list->total_element = 0;
+                break;
+            }
             temp = 0;
             while (temp + curNode->array_size < i)
             {
@@ -644,32 +653,31 @@ int main()
                 }
                 curNode = curNode->next;
             }
-            // assert(curNode->array_size > 0);
-            // if (curNode->array_size == 1) //刪除這個node
-            // {
-            //     --curNode->array_size;
-            // }
+            if (curNode->array_size == 1) //刪除這個node
+            {
+                --curNode->array_size;
+            }
 
-            // else
+            else
             {
                 if (curNode->tag == isNotReverse)
                     index_to_delete = i - temp - 1;
                 else
                     index_to_delete = curNode->array_size - (i - temp);
 
+                int d = curNode->array[index_to_delete];
                 len = curNode->array_size;
                 for (index = index_to_delete; index < len - 1; ++index)
                 {
                     curNode->array[index] = curNode->array[index + 1];
                 }
-
+                delete_from_sorted(curNode->sorted_array, curNode->array_size, d);
                 --curNode->array_size;
             }
 
             --list->total_element;
             check_head(list);
             check_tail(list);
-
             break;
         case 'R':
             l = readInt();
@@ -841,14 +849,14 @@ int main()
         // print_sorted(list);
         // assert(list_head->array_size > 0);
     }
-    print(list, 1);
-    print_sorted(list);
-
+    // print(list, 0);
+    // print_sorted(list);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);
     // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);
     // printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
     // float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
     // printf("memory usage: %f KB\n", memory);
+
     return 0;
 }

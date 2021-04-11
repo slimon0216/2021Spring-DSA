@@ -435,6 +435,10 @@ int main()
                     newNode->sorted_array[0] = list_tail->array[0];
                     delete_from_sorted(list_tail->sorted_array, list_tail->array_size, list_tail->array[0]);
                     list_tail->array[0] = x;
+                    list_tail->sorted_array[list_tail->array_size - 1] = x;
+                    // if (list_tail->array_size != MAX_LEN)
+                    // ++list_tail->ar
+                    insertionSort(list_tail->sorted_array, list_tail->array_size);
                 }
                 list_tail->next = newNode;
                 newNode->prev = list_tail;
@@ -861,6 +865,7 @@ int main()
             // {
 
             // }
+            // printf("query: %d %d %d\n", l, r, k);
             temp_left = 0;
             leftNode = list_head;
             while (temp_left + leftNode->array_size < l)
@@ -914,8 +919,8 @@ int main()
             int len_temp_arr_l = 0, len_temp_arr_r = 0;
             if (leftNode->tag == isNotReverse)
             {
-                int up_index = leftNode->array_size;
-                for (int index = l - temp_left - 1; index < up_index; ++index)
+                // int up_index = leftNode->array_size;
+                for (int index = l - temp_left - 1; index < leftNode->array_size; ++index)
                     temp_arr_l[len_temp_arr_l++] = leftNode->array[index];
             }
             else
@@ -926,8 +931,8 @@ int main()
 
             if (rightNode->tag == isNotReverse)
             {
-                int up_index = rightNode->array_size;
-                for (int index = r - temp_right - 1; index < up_index; ++index)
+                // int up_index = rightNode->array_size;
+                for (int index = 0; index < r - temp_right; ++index)
                     temp_arr_r[len_temp_arr_r++] = rightNode->array[index];
             }
             else
@@ -949,10 +954,15 @@ int main()
             leftNode = leftNode->next;
             while (leftNode != rightNode)
             {
-                if (leftNode->array[0] < min)
-                    min = leftNode->array[0];
-                if (leftNode->array[leftNode->array_size - 1] > max)
-                    max = leftNode->array[leftNode->array_size - 1];
+                if (leftNode->array_size == 0)
+                {
+                    leftNode = leftNode->next;
+                    continue;
+                }
+                if (leftNode->sorted_array[0] < min)
+                    min = leftNode->sorted_array[0];
+                if (leftNode->sorted_array[leftNode->array_size - 1] > max)
+                    max = leftNode->sorted_array[leftNode->array_size - 1];
                 arr_for_query[len_arr_query] = leftNode->sorted_array;
                 query_arr_lens[len_arr_query] = leftNode->array_size;
                 ++len_arr_query;
@@ -977,7 +987,8 @@ int main()
             arr_for_query[len_arr_query] = temp_arr_r;
             query_arr_lens[len_arr_query] = len_temp_arr_r;
             ++len_arr_query;
-            // for (int i = 0; i < len_arr_query; ++i)
+
+                        // for (int i = 0; i < len_arr_query; ++i)
             // {
             //     for (int j = 0; j < query_arr_lens[i]; j++)
             //     {
@@ -985,46 +996,86 @@ int main()
             //     }
             //     printf("\n");
             // }
-            // printf("%d %d\n", min, max);
+            // printf("min: %d\nmax: %d\n", min, max);
 
             int less_than_k = 0;
             int mid = (max + min) / 2;
 
             while (1)
             {
+                // text("hu");
+                // printf("l: %d\nr: %d\n", l, r);
+                // printf("mid: %d\nless_than_k: %d\nk: %d\n", mid, less_than_k, k);
+
+                // 所有mid去切割，mid_index總是會在最後一個小於mid的地方
                 for (int i = 0; i < len_arr_query; ++i)
                 {
                     // int index_in_this_arr = 0;
-                    for (int j = 0; j < query_arr_lens[i]; j++)
+                    if (query_arr_lens[i] == 1)
                     {
-
-                        if (arr_for_query[i][j] >= mid || j == query_arr_lens[i] - 1)
+                        if (arr_for_query[i][0] < mid)
                         {
-                            arr_for_indexes[i] = j;
-                            less_than_k += j;
-                            break;
+                            arr_for_indexes[i] = 0;
+                            less_than_k += 1;
+                            continue;
+                        }
+                        else
+                        {
+                            arr_for_indexes[i] = -1;
+                            continue;
                         }
                     }
+                    int j = -1;
+                    while (j < query_arr_lens[i] - 1)
+                    {
+                        if (arr_for_query[i][j + 1] >= mid)
+                        {
+                            // if (j !+0)
+                            arr_for_indexes[i] = j;
+                            less_than_k += j + 1;
+                            break;
+                        }
+                        if (j == (query_arr_lens[i] - 1) - 1)
+                        {
+                            arr_for_indexes[i] = j + 1;
+                            less_than_k += j + 2;
+                            break;
+                        }
+                        ++j;
+                    }
+
+                    // for (int j = 0; j < query_arr_lens[i] - 1; j++)
+                    // {
+
+                    //     if (arr_for_query[i][j + 1] >= mid || j == query_arr_lens[i] - 2)
+                    //     {
+                    //         arr_for_indexes[i] = j;
+                    //         less_than_k += j + 1;
+                    //         break;
+                    //     }
+                    // }
                 }
                 if (less_than_k == k - 1)
                 {
                     int ans = 1000000;
                     for (int i = 0; i < len_arr_query; ++i)
                     {
-                        if (arr_for_query[i][arr_for_indexes[i]] < ans)
-                            ans = arr_for_query[i][arr_for_indexes[i]];
+                        if ((arr_for_indexes[i] < query_arr_lens[i] - 1)) //arr_for_indexes[i] == -1 代表那個array全部都不小於k
+                            if (arr_for_query[i][arr_for_indexes[i] + 1] < ans)
+                                ans = arr_for_query[i][arr_for_indexes[i] + 1];
                     }
                     printf("%d\n", ans);
                     break;
                 }
                 else if (less_than_k == k)
                 {
-                    int ans = 1000000;
+                    int ans = -1000000;
                     for (int i = 0; i < len_arr_query; ++i)
                     {
-                        if (arr_for_indexes[i] - 1 >= 0)
-                            if (arr_for_query[i][arr_for_indexes[i] - 1] < ans)
-                                ans = arr_for_query[i][arr_for_indexes[i] - 1];
+                        if (arr_for_indexes[i] >= 0)
+                            // if (arr_for_indexes[i] >= 0)
+                            if (arr_for_query[i][arr_for_indexes[i]] > ans)
+                                ans = arr_for_query[i][arr_for_indexes[i]];
                     }
                     printf("%d\n", ans);
                     break;
@@ -1049,7 +1100,7 @@ int main()
         // print(list, 1);
         // print_sorted(list);
     }
-    // print(list, 0);
+    // print(list, 1);
     // print_sorted(list);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);

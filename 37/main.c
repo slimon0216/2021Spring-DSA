@@ -988,15 +988,15 @@ int main()
             query_arr_lens[len_arr_query] = len_temp_arr_r;
             ++len_arr_query;
 
-                        // for (int i = 0; i < len_arr_query; ++i)
-            // {
-            //     for (int j = 0; j < query_arr_lens[i]; j++)
-            //     {
-            //         printf("%d ", arr_for_query[i][j]);
-            //     }
-            //     printf("\n");
-            // }
-            // printf("min: %d\nmax: %d\n", min, max);
+            for (int i = 0; i < len_arr_query; ++i)
+            {
+                for (int j = 0; j < query_arr_lens[i]; j++)
+                {
+                    printf("%d ", arr_for_query[i][j]);
+                }
+                printf("\n");
+            }
+            printf("min: %d\nmax: %d\n", min, max);
 
             int less_than_k = 0;
             int mid = (max + min) / 2;
@@ -1097,8 +1097,8 @@ int main()
                 less_than_k = 0;
             }
         }
-        // print(list, 1);
-        // print_sorted(list);
+        print(list, 1);
+        print_sorted(list);
     }
     // print(list, 1);
     // print_sorted(list);

@@ -896,27 +896,27 @@ int main()
             int index_l, index_r;
             int len_temp_arr = 0;
 
-            // if (leftNode == rightNode) //reverse的區間都再同一個node
-            // {
-            //     if (leftNode->tag == isNotReverse)
-            //     {
-            //         index_l = l - temp_left - 1;
-            //         index_r = r - temp_right - 1;
-            //     }
-            //     else
-            //     {
-            //         index_l = leftNode->array_size - (r - temp_right);
-            //         index_r = leftNode->array_size - (l - temp_left);
-            //     }
-            //     for (; index_l <= index_r; index_l++)
-            //     {
-            //         temp_arr[len_temp_arr] = leftNode->array[index_l];
-            //         ++len_temp_arr;
-            //     }
-            //     insertionSort(temp_arr, len_temp_arr);
-            //     printf("%d\n", temp_arr[k - 1]);
-            //     break;
-            // }
+            if (leftNode == rightNode) //reverse的區間都再同一個node
+            {
+                if (leftNode->tag == isNotReverse)
+                {
+                    index_l = l - temp_left - 1;
+                    index_r = r - temp_right - 1;
+                }
+                else
+                {
+                    index_l = leftNode->array_size - (r - temp_right);
+                    index_r = leftNode->array_size - (l - temp_left);
+                }
+                for (; index_l <= index_r; index_l++)
+                {
+                    temp_arr[len_temp_arr] = leftNode->array[index_l];
+                    ++len_temp_arr;
+                }
+                insertionSort(temp_arr, len_temp_arr);
+                printf("%d\n", temp_arr[k - 1]);
+                break;
+            }
             int len_temp_arr_l = 0, len_temp_arr_r = 0;
             if (leftNode->tag == isNotReverse)
             {

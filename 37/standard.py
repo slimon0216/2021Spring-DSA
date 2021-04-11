@@ -29,6 +29,6 @@ while True:
     except EOFError as e:
         break
 
-for i in seq:
-    print(i, end=' ')
-print('')
+# for i in seq:
+#     print(i, end=' ')
+# print('')

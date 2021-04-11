@@ -20,13 +20,13 @@ def generate(mode):
         num_of_seq -= 1
         return "Delete {}\n".format(i)
     if mode == 4:
-        l = rd.randint(1, num_of_seq-1)
-        r = rd.randint(l+1, num_of_seq)
+        l = rd.randint(1, num_of_seq)
+        r = rd.randint(l, num_of_seq)
         k = randint(1, r-l+1)
         return "Query {} {} {}\n".format(l,r, k)
   
-n = 50000
-q = 50000
+n = 12
+q = 12
 num_of_seq = n
 
 # seq = [str(rd.randrange(-100, 100)) for i in range(n)]
@@ -36,4 +36,4 @@ print("{} {}".format(n,q))
 print(' '.join(seq)+'')
 for i in range(q):
     # print(num_of_seq)
-    print(generate(randint(1,3)),end='')
+    print(generate(randint(1,4)),end='')

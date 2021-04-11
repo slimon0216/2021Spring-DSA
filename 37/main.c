@@ -77,6 +77,8 @@ int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete
 char cmd[10], c;
 Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
 DList *list;
+int temp_arr[1000], temp_arr_l[1000], temp_arr_r[1000], *arr_for_query[1000], query_arr_lens[1000], arr_for_indexes[1000];
+
 // void insert(int val){
 // int create = 0;
 // void deleteNode(Node *node)
@@ -852,16 +854,202 @@ int main()
 
             break;
         case 'Q':
-            // text("query");
             l = readInt();
             r = readInt();
             k = readInt();
-            break;
+            // if (r == l)
+            // {
+
+            // }
+            temp_left = 0;
+            leftNode = list_head;
+            while (temp_left + leftNode->array_size < l)
+            {
+                if (leftNode->array_size == 0 && leftNode->prev != NULL)
+                {
+                    Node *ptr = leftNode;
+                    leftNode->prev->next = leftNode->next;
+                    leftNode = leftNode->next;
+                    leftNode->prev = leftNode->prev->prev;
+                    continue;
+                }
+                temp_left += leftNode->array_size;
+                leftNode = leftNode->next;
+            }
+            temp_right = temp_left;
+            rightNode = leftNode;
+            while (temp_right + rightNode->array_size < r)
+            {
+
+                temp_right += rightNode->array_size;
+                rightNode = rightNode->next;
+                // if (rightNode->array_size == 1)
+                //     rightNode->tag = isNotReverse;
+            }
+
+            int index_l, index_r;
+            int len_temp_arr = 0;
+
+            if (leftNode == rightNode) //reverse的區間都再同一個node
+            {
+                if (leftNode->tag == isNotReverse)
+                {
+                    index_l = l - temp_left - 1;
+                    index_r = r - temp_right - 1;
+                }
+                else
+                {
+                    index_l = leftNode->array_size - (r - temp_right);
+                    index_r = leftNode->array_size - (l - temp_left);
+                }
+                for (; index_l <= index_r; index_l++)
+                {
+                    temp_arr[len_temp_arr] = leftNode->array[index_l];
+                    ++len_temp_arr;
+                }
+                insertionSort(temp_arr, len_temp_arr);
+                printf("%d\n", temp_arr[k - 1]);
+                break;
+            }
+            int len_temp_arr_l = 0, len_temp_arr_r = 0;
+            if (leftNode->tag == isNotReverse)
+            {
+                int up_index = leftNode->array_size;
+                for (int index = l - temp_left - 1; index < up_index; ++index)
+                    temp_arr_l[len_temp_arr_l++] = leftNode->array[index];
+            }
+            else
+            {
+                for (int index = leftNode->array_size - (l - temp_left); index >= 0; index--)
+                    temp_arr_l[len_temp_arr_l++] = leftNode->array[index];
+            }
+
+            if (rightNode->tag == isNotReverse)
+            {
+                int up_index = rightNode->array_size;
+                for (int index = r - temp_right - 1; index < up_index; ++index)
+                    temp_arr_r[len_temp_arr_r++] = rightNode->array[index];
+            }
+            else
+            {
+                for (int index = rightNode->array_size - (r - temp_right); index < rightNode->array_size; index++)
+                    temp_arr_r[len_temp_arr_r++] = rightNode->array[index];
+            }
+            insertionSort(temp_arr_l, len_temp_arr_l);
+            insertionSort(temp_arr_r, len_temp_arr_r);
+
+            //arr_for_query: 指標array 裝著許多分別排好順序的array
+            //len_arr_query: arr_for_query 的長度
+            //query_arr_lens: 各排好序的array的長度
+            int len_arr_query = 0;
+            int min = temp_arr_l[0], max = temp_arr_l[len_temp_arr_l - 1];
+
+            arr_for_query[len_arr_query++] = temp_arr_l;
+            query_arr_lens[0] = len_temp_arr_l;
+            leftNode = leftNode->next;
+            while (leftNode != rightNode)
+            {
+                if (leftNode->array[0] < min)
+                    min = leftNode->array[0];
+                if (leftNode->array[leftNode->array_size - 1] > max)
+                    max = leftNode->array[leftNode->array_size - 1];
+                arr_for_query[len_arr_query] = leftNode->sorted_array;
+                query_arr_lens[len_arr_query] = leftNode->array_size;
+                ++len_arr_query;
+                leftNode = leftNode->next;
+            }
+            if (temp_arr_r[0] < min)
+                min = temp_arr_r[0];
+            if (temp_arr_r[len_temp_arr_r - 1] > max)
+                max = temp_arr_r[len_temp_arr_r - 1];
+
+            if (k == 1)
+            {
+                printf("%d\n", min);
+                break;
+            }
+            else if (k == r - l + 1)
+            {
+                printf("%d\n", max);
+                break;
+            }
+
+            arr_for_query[len_arr_query] = temp_arr_r;
+            query_arr_lens[len_arr_query] = len_temp_arr_r;
+            ++len_arr_query;
+            // for (int i = 0; i < len_arr_query; ++i)
+            // {
+            //     for (int j = 0; j < query_arr_lens[i]; j++)
+            //     {
+            //         printf("%d ", arr_for_query[i][j]);
+            //     }
+            //     printf("\n");
+            // }
+            // printf("%d %d\n", min, max);
+
+            int less_than_k = 0;
+            int mid = (max + min) / 2;
+
+            while (1)
+            {
+                for (int i = 0; i < len_arr_query; ++i)
+                {
+                    // int index_in_this_arr = 0;
+                    for (int j = 0; j < query_arr_lens[i]; j++)
+                    {
+
+                        if (arr_for_query[i][j] >= mid || j == query_arr_lens[i] - 1)
+                        {
+                            arr_for_indexes[i] = j;
+                            less_than_k += j;
+                            break;
+                        }
+                    }
+                }
+                if (less_than_k == k - 1)
+                {
+                    int ans = 1000000;
+                    for (int i = 0; i < len_arr_query; ++i)
+                    {
+                        if (arr_for_query[i][arr_for_indexes[i]] < ans)
+                            ans = arr_for_query[i][arr_for_indexes[i]];
+                    }
+                    printf("%d\n", ans);
+                    break;
+                }
+                else if (less_than_k == k)
+                {
+                    int ans = 1000000;
+                    for (int i = 0; i < len_arr_query; ++i)
+                    {
+                        if (arr_for_indexes[i] - 1 >= 0)
+                            if (arr_for_query[i][arr_for_indexes[i] - 1] < ans)
+                                ans = arr_for_query[i][arr_for_indexes[i] - 1];
+                    }
+                    printf("%d\n", ans);
+                    break;
+                }
+                else
+                {
+                    if (less_than_k < k)
+                    {
+                        min = mid;
+                        mid = (max + mid) / 2;
+                    }
+                    else
+                    {
+                        max = mid;
+                        mid = (min + mid) / 2;
+                    }
+                }
+                // printf("%d", less_than_k);
+                less_than_k = 0;
+            }
         }
         // print(list, 1);
         // print_sorted(list);
     }
-    print(list, 0);
+    // print(list, 0);
     // print_sorted(list);
     // printf("MAX_LEN :%d\n", MAX_LEN);
     // count_node(list);

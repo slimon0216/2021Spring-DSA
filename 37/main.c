@@ -28,7 +28,6 @@ int binarySearch(int *arr, int l, int r, float target)
     while (r - l + 1 > 3)
     {
         mid = (l + r) / 2;
-        // printf("l = %d, r = %d, min= %d\n", l, r, mid);
         if (arr[mid] == target)
         {
             // while (mid - 1 > 0)
@@ -56,7 +55,63 @@ int binarySearch(int *arr, int l, int r, float target)
     }
     return &arr[l - 1] - arr;
 }
+int L[1000], R[1000];
+void MERGE(int *arr, int left, int mid, int right)
+{
+    int i, j, k;
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
 
+    for (i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    i = 0;
+    j = 0;
+    k = left;
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int *arr, int left, int right)
+{
+    if (left < right)
+    {
+
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        MERGE(arr, left, mid, right);
+    }
+}
 void insertionSort(int *arr, int len)
 {
     int cur;
@@ -97,11 +152,6 @@ DList *createDList()
     return D;
 }
 
-void text(char *s)
-{
-    printf("%s\n", s);
-}
-
 Node *createNode()
 {
     Node *node = malloc(sizeof(Node));
@@ -127,7 +177,7 @@ int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete
 char cmd[10], c;
 Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
 DList *list;
-int temp_arr[1000], temp_arr_l[1000], temp_arr_r[1000], *sorted_arrarys[1000], origin_lens[1000], bound_r[1000], bound_l[1000] = {0}, arr_for_indexes[1000];
+int temp_arr[1000], temp_arr_l[1000], temp_arr_r[1000], *sorted_arrarys[1000], origin_lens[1000], bound_r[1000], arr_for_indexes[1000];
 
 // void insert(int val){
 // int create = 0;
@@ -259,21 +309,8 @@ void print_sorted(DList *list)
 
     for (int i = 0; i < curNode->array_size; ++i)
         printf("%d ", curNode->sorted_array[i]);
-    text("");
 }
 int num_nodes = 1;
-
-void count_node(DList *list)
-{
-    Node *curNode = list_head;
-    while (curNode != list_tail)
-    {
-        num_nodes++;
-        curNode = curNode->next;
-        // printf("%d\n", num_nodes);
-    }
-    printf("number of nodes:%d\n", num_nodes);
-}
 
 int merge(Node *prev, Node *next)
 {
@@ -386,7 +423,7 @@ void traverse_merge()
         if (if_merge == 1)
         {
             copy_arr(curNode->array, curNode->sorted_array, curNode->array_size);
-            insertionSort(curNode->sorted_array, curNode->array_size);
+            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
             continue;
         }
         curNode = curNode->next;
@@ -399,7 +436,6 @@ int main()
     n_len_int_seq = readInt();
     q_num_query = readInt();
     MAX_LEN = (int)sqrt(n_len_int_seq);
-    // printf("hello");
     DList *list = createDList();
     list_tail = list_head = createNode();
     curNode = list_head;
@@ -418,18 +454,9 @@ int main()
         curNode->array[curNode->array_size] = temp;
         curNode->sorted_array[curNode->array_size] = temp;
         ++curNode->array_size;
-        insertionSort(curNode->sorted_array, curNode->array_size);
+        mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
         ++list->total_element;
     }
-    // print(list, 1);
-    // print_sorted(list);
-    // curNode = list_head;
-    // while (curNode != NULL){
-    //     for (int i = 0; i < curNode->array_size; ++i)
-    //         printf("%d ", curNode->array[i]);
-    //     curNode = curNode->next;
-    // }
-    // printf("\n");
 
     while ((c = getchar()) != EOF)
     {
@@ -475,7 +502,7 @@ int main()
                     }
                     list_tail->sorted_array[index] = x;
                     list_tail->array[list_tail->array_size - 1] = x;
-                    insertionSort(list_tail->sorted_array, list_tail->array_size);
+                    mergeSort(list_tail->sorted_array, 0, list_tail->array_size - 1);
                 }
                 else
                 {
@@ -486,7 +513,7 @@ int main()
                     list_tail->sorted_array[list_tail->array_size - 1] = x;
                     // if (list_tail->array_size != MAX_LEN)
                     // ++list_tail->ar
-                    insertionSort(list_tail->sorted_array, list_tail->array_size);
+                    mergeSort(list_tail->sorted_array, 0, list_tail->array_size - 1);
                 }
                 list_tail->next = newNode;
                 newNode->prev = list_tail;
@@ -534,7 +561,7 @@ int main()
                                 curNode->array[curNode->array_size] = x;
                                 curNode->sorted_array[curNode->array_size] = x;
                                 ++curNode->array_size;
-                                insertionSort(curNode->sorted_array, curNode->array_size);
+                                mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                             }
                             else //放不下就在前面創一個node
                             {
@@ -575,10 +602,10 @@ int main()
                             curNode->sorted_array[curNode->array_size] = x;
 
                             copy_arr(newNode->array, newNode->sorted_array, newNode->array_size);
-                            insertionSort(newNode->sorted_array, newNode->array_size);
+                            mergeSort(newNode->sorted_array, 0, newNode->array_size - 1);
 
                             copy_arr(curNode->array, curNode->sorted_array, curNode->array_size);
-                            insertionSort(curNode->sorted_array, curNode->array_size);
+                            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                         }
                     }
                     else //順序是反的
@@ -591,7 +618,7 @@ int main()
                                 curNode->array[curNode->array_size] = x;
                                 curNode->sorted_array[curNode->array_size] = x;
                                 ++curNode->array_size;
-                                insertionSort(curNode->sorted_array, curNode->array_size);
+                                mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                             }
                             else //不然就新增node，因為順序是反的，新增的Node要放在這個前面
                             {
@@ -637,7 +664,7 @@ int main()
                             }
                             curNode->array[index] = x;
                             copy_arr(curNode->array, curNode->sorted_array, curNode->array_size);
-                            insertionSort(curNode->sorted_array, curNode->array_size);
+                            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                         }
                     }
                 }
@@ -653,7 +680,7 @@ int main()
                                 curNode->array[curNode->array_size] = x;
                                 curNode->sorted_array[curNode->array_size] = x;
                                 ++curNode->array_size;
-                                insertionSort(curNode->sorted_array, curNode->array_size);
+                                mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                             }
                         }
                         else
@@ -663,7 +690,7 @@ int main()
                             curNode->array[i - temp - 1] = x;
                             curNode->sorted_array[curNode->array_size] = x;
                             curNode->array_size++;
-                            insertionSort(curNode->sorted_array, curNode->array_size);
+                            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                         }
                     }
                     else
@@ -678,7 +705,7 @@ int main()
                         curNode->array[index] = x;
                         curNode->sorted_array[curNode->array_size] = x;
                         curNode->array_size++;
-                        insertionSort(curNode->sorted_array, curNode->array_size);
+                        mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
                     }
                 }
             }
@@ -787,7 +814,6 @@ int main()
                         leftNode->array[index_l] = leftNode->array[index_r];
                         leftNode->array[index_r] = temp;
                     }
-                // print(list, 1);
                 break;
             }
 
@@ -833,9 +859,9 @@ int main()
             }
 
             copy_arr(leftNewNode->array, leftNewNode->sorted_array, leftNewNode->array_size);
-            insertionSort(leftNewNode->sorted_array, leftNewNode->array_size);
+            mergeSort(leftNewNode->sorted_array, 0, leftNewNode->array_size - 1);
             copy_arr(leftNode->array, leftNode->sorted_array, leftNode->array_size);
-            insertionSort(leftNode->sorted_array, leftNode->array_size);
+            mergeSort(leftNode->sorted_array, 0, leftNode->array_size - 1);
 
             if (rightNode->tag == isNotReverse)
             {
@@ -870,9 +896,9 @@ int main()
                 changeTag(rightNewNode);
             }
             copy_arr(rightNewNode->array, rightNewNode->sorted_array, rightNewNode->array_size);
-            insertionSort(rightNewNode->sorted_array, rightNewNode->array_size);
+            mergeSort(rightNewNode->sorted_array, 0, rightNewNode->array_size - 1);
             copy_arr(rightNode->array, rightNode->sorted_array, rightNode->array_size);
-            insertionSort(rightNode->sorted_array, rightNode->array_size);
+            mergeSort(rightNode->sorted_array, 0, rightNode->array_size - 1);
 
             leftNewNode->next = leftNode->next;
             leftNewNode->prev = leftNode;
@@ -909,12 +935,7 @@ int main()
             l = readInt();
             r = readInt();
             k = readInt();
-            // break;
-            // if (r == l)
-            // {
 
-            // }
-            // printf("query: %d %d %d\n", l, r, k);
             temp_left = 0;
             leftNode = list_head;
             while (temp_left + leftNode->array_size < l)
@@ -959,7 +980,7 @@ int main()
                     temp_arr[len_temp_arr] = leftNode->array[index_l];
                     ++len_temp_arr;
                 }
-                insertionSort(temp_arr, len_temp_arr);
+                mergeSort(temp_arr, 0, len_temp_arr - 1);
                 printf("%d\n", temp_arr[k - 1]);
                 break;
             }
@@ -987,8 +1008,8 @@ int main()
                 for (int index = rightNode->array_size - (r - temp_right); index < rightNode->array_size; index++)
                     temp_arr_r[len_temp_arr_r++] = rightNode->array[index];
             }
-            insertionSort(temp_arr_l, len_temp_arr_l);
-            insertionSort(temp_arr_r, len_temp_arr_r);
+            mergeSort(temp_arr_l, 0, len_temp_arr_l - 1);
+            mergeSort(temp_arr_r, 0, len_temp_arr_r - 1);
 
             //sorted_arrarys: 指標array 裝著許多分別排好順序的array
             //num_of_sorted_arr: sorted_arrarys 的長度
@@ -1064,63 +1085,20 @@ int main()
             int less_than_k = 0, more_than_k = 0;
             float mid = (float)(max + min) / 2.0 + 0.3;
             // printf("%f\n", mid);
+            int bound_l[1000] = {0};
             int cnt = 0;
             while (1)
             {
-                // text("hu");
-                // printf("l: %d\nr: %d\n", l, r);
-                // printf("mid: %d\nless_than_k: %d\nk: %d\n", mid, less_than_k, k);
-                // 所有mid去切割，mid_index總是會在最後一個小於mid的地方
 
-                // int target_arr_index = rand() % num_of_sorted_arr;
-                // int target_index = (bound_r[longest_arr] - bound_l[longest_arr]) / 2;
-                // int target = sorted_arrarys[longest_arr][target_index];
-
-                // printf("target: %d\n", target);
                 for (int i = 0; i < num_of_sorted_arr; ++i)
                 {
-                    // if (bound_r[i] == 1)
-                    // {
-                    //     if (sorted_arrarys[i][0] < mid)
-                    //     {
-                    //         arr_for_indexes[i] = 0;
-                    //         less_than_k += 1;
-                    //         continue;
-                    //     }
-                    //     else
-                    //     {
-                    //         arr_for_indexes[i] = -1;
-                    //         continue;
-                    //     }
-                    // }
-                    index = binarySearch(sorted_arrarys[i], bound_l[i], bound_r[i], mid);
-                    // if (index > bound_r[i])
-                    // {
-                    //     index = bound_r[i];
-                    //     arr_for_indexes[i] = index;
-                    //     less_than_k += index;
-                    // }
-                    // else if (index == 0)
-                    // {
-                    //     arr_for_indexes[i] = index;
-                    //     less_than_k += index + 1;
-                    // }
-                    // else if (index == -1)
-                    // {
 
-                    //     arr_for_indexes[i] = -1;
-                    //     less_than_k += 0;
-                    // }
-                    // else
+                    index = binarySearch(sorted_arrarys[i], bound_l[i], bound_r[i], mid);
                     {
                         arr_for_indexes[i] = index;
                         less_than_k += index;
                         more_than_k += origin_lens[i] - index;
                     }
-
-                    // if (index == bound_r[i])
-                    //     less_than_k += index - 1;
-                    // else
                 }
 
                 if (less_than_k == k - 1)
@@ -1168,24 +1146,15 @@ int main()
                 if (less_than_k < k)
                 {
 
-                    // if (min == mid)
-                    // {
-                    //     int target_arr_index = rand() % num_of_sorted_arr;
-                    //     target_index = (bound_r[longest_arr] - bound_l[longest_arr]) / 2;
-                    //     mid = sorted_arrarys[longest_arr][target_index];
-                    // }
-                    // else
-                    // {
                     min = mid;
                     mid = (max + mid) / 2;
-                    // for (int i = 0; i < num_of_sorted_arr; ++i)
-                    // {
-                    //     if (arr_for_indexes[i] >= 0)
-                    //         bound_l[i] = arr_for_indexes[i];
-                    //     else
-                    //         bound_l[i] = 0;
-                    // }
-                    // }
+                    for (int i = 0; i < num_of_sorted_arr; ++i)
+                    {
+                        if (arr_for_indexes[i] > 0)
+                            bound_l[i] = arr_for_indexes[i];
+                        else
+                            bound_l[i] = 0;
+                    }
                 }
                 else
                 {
@@ -1199,7 +1168,6 @@ int main()
                             bound_r[i] = 0;
                     }
                 }
-                // printf("%d", less_than_k);
                 less_than_k = more_than_k = 0;
             }
         }
@@ -1208,12 +1176,6 @@ int main()
     }
     // print(list, 1);
     // print_sorted(list);
-    // printf("MAX_LEN :%d\n", MAX_LEN);
-    // count_node(list);
-    // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);
-    // printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
-    // float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
-    // printf("memory usage: %f KB\n", memory);
 
     return 0;
 }

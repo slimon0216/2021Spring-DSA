@@ -4,15 +4,13 @@ from random import randint
 
 def generate(mode):
     global num_of_seq
-    if num_of_seq == 1:
-        mode = randint(1,2)
     if mode == 1:
-        l = rd.randint(1, num_of_seq-1)
-        r = rd.randint(l+1, num_of_seq)
+        l = rd.randint(1, num_of_seq)
+        r = rd.randint(l, num_of_seq)
         return "Reverse {} {}\n".format(l,r)
     if mode == 2:
         i = rd.randint(1, num_of_seq+1)
-        x = rd.randint(-1000,1000)
+        x = rd.randint(-10**5,10**5)
         num_of_seq += 1
         return 'Insert ' + str(i) + ' ' + str(x) + '\n'
     if mode == 3:
@@ -25,12 +23,12 @@ def generate(mode):
         k = randint(1, r-l+1)
         return "Query {} {} {}\n".format(l,r, k)
   
-n = 12
-q = 12
+n = 5000
+q = 5000
 num_of_seq = n
 
-# seq = [str(rd.randrange(-100, 100)) for i in range(n)]
-seq = [str(i) for i in range(1, 1+n)]
+seq = [str(rd.randrange(-10**5, 10**5)) for i in range(n)]
+# seq = [str(i) for i in range(1, 1+n)]
 # with open('test.in', 'w', encoding='utf-8') as f:
 print("{} {}".format(n,q))
 print(' '.join(seq)+'')

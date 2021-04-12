@@ -2,10 +2,40 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
+#include <time.h>
 int MAX_LEN = 300;
 
 #define isReverse 0
 #define isNotReverse 1
+int binarySearch(int *arr, int l, int r, int target)
+{
+    int mid;
+    while (l <= r)
+    {
+        mid = (l + r) / 2;
+        // printf("l = %d, r = %d, min= %d\n", l, r, mid);
+
+        if (arr[mid] == target)
+        {
+            // while (mid - 1 > 0)
+            // {
+            //     if (arr[mid - 1] == arr[mid])
+            //         mid--;
+            //     else
+            //         break;
+            // }
+            return mid;
+        }
+
+        else if (arr[mid] > target)
+            r = mid - 1;
+        else if (arr[mid] < target)
+            l = mid + 1;
+    }
+    if (l == 0)
+        return -1; //代表說要放在頭
+    return l;
+}
 
 void insertionSort(int *arr, int len)
 {
@@ -77,7 +107,7 @@ int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete
 char cmd[10], c;
 Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
 DList *list;
-int temp_arr[1000], temp_arr_l[1000], temp_arr_r[1000], *arr_for_query[1000], query_arr_lens[1000], arr_for_indexes[1000];
+int temp_arr[1000], temp_arr_l[1000], temp_arr_r[1000], *sorted_arrarys[1000], bound_r[1000], bound_l[1000] = {0}, arr_for_indexes[1000];
 
 // void insert(int val){
 // int create = 0;
@@ -346,7 +376,7 @@ void traverse_merge()
 
 int main()
 {
-    int z;
+    srand(time(NULL));
     // scanf("%d %d", &n_len_int_seq, &q_num_query);
     n_len_int_seq = readInt();
     q_num_query = readInt();
@@ -889,8 +919,6 @@ int main()
 
                 temp_right += rightNode->array_size;
                 rightNode = rightNode->next;
-                // if (rightNode->array_size == 1)
-                //     rightNode->tag = isNotReverse;
             }
 
             int index_l, index_r;
@@ -944,14 +972,17 @@ int main()
             insertionSort(temp_arr_l, len_temp_arr_l);
             insertionSort(temp_arr_r, len_temp_arr_r);
 
-            //arr_for_query: 指標array 裝著許多分別排好順序的array
-            //len_arr_query: arr_for_query 的長度
-            //query_arr_lens: 各排好序的array的長度
-            int len_arr_query = 0;
+            //sorted_arrarys: 指標array 裝著許多分別排好順序的array
+            //num_of_sorted_arr: sorted_arrarys 的長度
+            //bound_r: 各排好序的array的長度
+            int num_of_sorted_arr = 0;
             int min = temp_arr_l[0], max = temp_arr_l[len_temp_arr_l - 1];
+            int longest_arr = 0;
+            int max_length = 0;
 
-            arr_for_query[len_arr_query++] = temp_arr_l;
-            query_arr_lens[0] = len_temp_arr_l;
+            sorted_arrarys[num_of_sorted_arr++] = temp_arr_l;
+            bound_r[0] = len_temp_arr_l;
+
             leftNode = leftNode->next;
             while (leftNode != rightNode)
             {
@@ -960,13 +991,19 @@ int main()
                     leftNode = leftNode->next;
                     continue;
                 }
+                if (leftNode->array_size > max_length)
+                {
+                    max_length = leftNode->array_size;
+                    longest_arr = num_of_sorted_arr;
+                }
+
                 if (leftNode->sorted_array[0] < min)
                     min = leftNode->sorted_array[0];
                 if (leftNode->sorted_array[leftNode->array_size - 1] > max)
                     max = leftNode->sorted_array[leftNode->array_size - 1];
-                arr_for_query[len_arr_query] = leftNode->sorted_array;
-                query_arr_lens[len_arr_query] = leftNode->array_size;
-                ++len_arr_query;
+                sorted_arrarys[num_of_sorted_arr] = leftNode->sorted_array;
+                bound_r[num_of_sorted_arr] = leftNode->array_size;
+                ++num_of_sorted_arr;
                 leftNode = leftNode->next;
             }
             if (temp_arr_r[0] < min)
@@ -985,170 +1022,177 @@ int main()
                 break;
             }
 
-            printf("0\n");
+            sorted_arrarys[num_of_sorted_arr] = temp_arr_r;
+            bound_r[num_of_sorted_arr] = len_temp_arr_r;
+            ++num_of_sorted_arr;
 
-            arr_for_query[len_arr_query] = temp_arr_r;
-            query_arr_lens[len_arr_query] = len_temp_arr_r;
-            ++len_arr_query;
-
-            // for (int i = 0; i < len_arr_query; ++i)
-            // {
-            //     for (int j = 0; j < query_arr_lens[i]; j++)
-            //     {
-            //         printf("%d ", arr_for_query[i][j]);
-            //     }
-            //     printf("\n");
-            // }
-            // printf("min: %d\nmax: %d\n", min, max);
+            for (int i = 0; i < num_of_sorted_arr; ++i)
+            {
+                for (int j = 0; j < bound_r[i]; j++)
+                {
+                    printf("%d ", sorted_arrarys[i][j]);
+                }
+                printf("\n");
+            }
+            printf("min: %d\nmax: %d\n", min, max);
 
             int less_than_k = 0;
             int mid = (max + min) / 2;
 
-            //     while (1)
-            //     {
-            //         // text("hu");
-            //         // printf("l: %d\nr: %d\n", l, r);
-            //         // printf("mid: %d\nless_than_k: %d\nk: %d\n", mid, less_than_k, k);
+            while (1)
+            {
+                // text("hu");
+                // printf("l: %d\nr: %d\n", l, r);
+                // printf("mid: %d\nless_than_k: %d\nk: %d\n", mid, less_than_k, k);
+                // 所有mid去切割，mid_index總是會在最後一個小於mid的地方
 
-            //         // 所有mid去切割，mid_index總是會在最後一個小於mid的地方
-            //         for (int i = 0; i < len_arr_query; ++i)
-            //         {
-            //             // int index_in_this_arr = 0;
-            //             if (query_arr_lens[i] == 1)
-            //             {
-            //                 if (arr_for_query[i][0] < mid)
-            //                 {
-            //                     arr_for_indexes[i] = 0;
-            //                     less_than_k += 1;
-            //                     continue;
-            //                 }
-            //                 else
-            //                 {
-            //                     arr_for_indexes[i] = -1;
-            //                     continue;
-            //                 }
-            //             }
-            //             int j = -1;
-            //             while (j < query_arr_lens[i] - 1)
-            //             {
-            //                 if (arr_for_query[i][j + 1] >= mid)
-            //                 {
-            //                     // if (j !+0)
-            //                     arr_for_indexes[i] = j;
-            //                     less_than_k += j + 1;
-            //                     break;
-            //                 }
-            //                 if (j == (query_arr_lens[i] - 1) - 1)
-            //                 {
-            //                     arr_for_indexes[i] = j + 1;
-            //                     less_than_k += j + 2;
-            //                     break;
-            //                 }
-            //                 ++j;
-            //             }
+                // int target_arr_index = rand() % num_of_sorted_arr;
+                int target_index = (bound_r[longest_arr] - bound_l[longest_arr]) / 2;
+                int target = sorted_arrarys[longest_arr][target_index];
 
-            //             // for (int j = 0; j < query_arr_lens[i] - 1; j++)
-            //             // {
+                // printf("target: %d\n", target);
+                for (int i = 0; i < num_of_sorted_arr; ++i)
+                {
+                    // int index_in_this_arr = 0;
+                    if (bound_r[i] == 1)
+                    {
+                        if (sorted_arrarys[i][0] < mid)
+                        {
+                            arr_for_indexes[i] = 0;
+                            less_than_k += 1;
+                            continue;
+                        }
+                        else
+                        {
+                            arr_for_indexes[i] = -1;
+                            continue;
+                        }
+                    }
+                    index = binarySearch(sorted_arrarys[i], bound_l[i], bound_r[i], mid);
+                    if (index > bound_r[i])
+                    {
+                        index = bound_r[i];
+                        arr_for_indexes[i] = index;
+                        less_than_k += index;
+                    }
+                    else if (index == 0)
+                    {
+                        arr_for_indexes[i] = index;
+                        less_than_k += index + 1;
+                    }
+                    else if (index == -1)
+                    {
 
-            //             //     if (arr_for_query[i][j + 1] >= mid || j == query_arr_lens[i] - 2)
-            //             //     {
-            //             //         arr_for_indexes[i] = j;
-            //             //         less_than_k += j + 1;
-            //             //         break;
-            //             //     }
-            //             // }
-            //         }
-            //         if (less_than_k == k - 1)
-            //         {
-            //             int ans = 1000000;
-            //             for (int i = 0; i < len_arr_query; ++i)
-            //             {
-            //                 if ((arr_for_indexes[i] < query_arr_lens[i] - 1)) //arr_for_indexes[i] == -1 代表那個array全部都不小於k
-            //                     if (arr_for_query[i][arr_for_indexes[i] + 1] < ans)
-            //                         ans = arr_for_query[i][arr_for_indexes[i] + 1];
-            //             }
-            //             printf("%d\n", ans);
-            //             break;
-            //         }
-            //         else if (less_than_k == k)
-            //         {
-            //             int ans = -1000000;
-            //             for (int i = 0; i < len_arr_query; ++i)
-            //             {
-            //                 if (arr_for_indexes[i] >= 0)
-            //                     // if (arr_for_indexes[i] >= 0)
-            //                     if (arr_for_query[i][arr_for_indexes[i]] > ans)
-            //                         ans = arr_for_query[i][arr_for_indexes[i]];
-            //             }
-            //             printf("%d\n", ans);
-            //             break;
-            //         }
-            //         else if (mid == min)
-            //         {
-            //             break;
-            //         }
-            //         else if (mid == max)
-            //             break;
-            //         // {
-            //         //     mid++;
-            //         // int ans = 1000000;
-            //         // for (int i = 0; i < len_arr_query; ++i)
-            //         // {
-            //         //     if ((arr_for_indexes[i] < query_arr_lens[i] - 1)) //arr_for_indexes[i] == -1 代表那個array全部都不小於k
-            //         //         if (arr_for_query[i][arr_for_indexes[i] + 1] < ans)
-            //         //             ans = arr_for_query[i][arr_for_indexes[i] + 1];
-            //         // }
-            //         // printf("%d\n", ans);
-            //         // break;
-            //         // }
-            //         // else if (mid == max)
-            //         // {
-            //         //     mid--;
-            //         // }
+                        arr_for_indexes[i] = -1;
+                        less_than_k += 0;
+                    }
+                    else
+                    {
+                        arr_for_indexes[i] = index;
+                        less_than_k += index;
+                    }
 
-            //         else
-            //         {
+                    // if (index == bound_r[i])
+                    //     less_than_k += index - 1;
+                    // else
+                }
+                // if (less_than_k == k - 1)
+                // {
+                //     int ans = 1000000;
+                //     for (int i = 0; i < num_of_sorted_arr; ++i)
+                //     {
+                //         if ((arr_for_indexes[i] < bound_r[i]) && arr_for_indexes) //arr_for_indexes[i] == -1 代表那個array全部都不小於k
+                //             if (sorted_arrarys[i][arr_for_indexes[i]] >= mid)
+                //                 if (arr_for_indexes[i] - 1 >= 0)
+                //                     if (sorted_arrarys[i][arr_for_indexes[i] - 1] < ans)
+                //                         ans = sorted_arrarys[i][arr_for_indexes[i]];
+                //     }
+                //     printf("%d\n", ans);
+                //     break;
+                // }
+                if (less_than_k == k)
+                {
+                    int ans = -1000000;
+                    for (int i = 0; i < num_of_sorted_arr; ++i)
+                    {
+                        if (arr_for_indexes[i] >= 0)
+                            if (arr_for_indexes[i] == bound_r[i])
+                            {
+                                if (sorted_arrarys[i][arr_for_indexes[i] - 1] > ans)
+                                    ans = sorted_arrarys[i][arr_for_indexes[i] - 1];
+                            }
+                            else
+                            {
+                                if (arr_for_indexes[i] > 0)
+                                {
+                                    if (arr_for_indexes[i] - 1 >= 0)
+                                        if (sorted_arrarys[i][arr_for_indexes[i] - 1] > ans)
+                                            ans = sorted_arrarys[i][arr_for_indexes[i] - 1];
+                                }
+                                else
+                                {
+                                    if (arr_for_indexes[i] >= 0)
+                                        if (sorted_arrarys[i][arr_for_indexes[i]] > ans)
+                                            ans = sorted_arrarys[i][arr_for_indexes[i]];
+                                }
+                            }
+                    }
+                    printf("%d\n", ans);
+                    break;
+                }
 
-            //             if (less_than_k < k)
-            //             {
+                else
+                {
+                    if (less_than_k < k)
+                    {
 
-            //                 min = mid;
-            //                 mid = (max + mid) / 2;
-            //             }
-            //             else
-            //             {
-            //                 if ((min + mid) / 2 == mid)
-            //                 {
-            //                     int ans = -1000000;
-            //                     for (int i = 0; i < len_arr_query; ++i)
-            //                     {
-            //                         if (arr_for_indexes[i] >= 0)
-            //                             // if (arr_for_indexes[i] >= 0)
-            //                             if (arr_for_query[i][arr_for_indexes[i]] > ans)
-            //                                 ans = arr_for_query[i][arr_for_indexes[i]];
-            //                     }
-            //                     printf("%d\n", ans);
-            //                     break;
-            //                 }
-            //                 max = mid;
-            //                 mid = (min + mid) / 2;
-            //             }
-            //         }
-            //         // printf("%d", less_than_k);
-            //         less_than_k = 0;
-            // }
+                        if (min == mid)
+                        {
+                            int target_arr_index = rand() % num_of_sorted_arr;
+                            target_index = (bound_r[longest_arr] - bound_l[longest_arr]) / 2;
+                            mid = sorted_arrarys[longest_arr][target_index];
+                        }
+                        else
+                        {
+                            min = mid;
+                            mid = (max + mid) / 2;
+                            for (int i = 0; i < num_of_sorted_arr; ++i)
+                            {
+                                if (arr_for_indexes[i] >= 0)
+                                    bound_l[i] = arr_for_indexes[i];
+                                else
+                                    bound_l[i] = 0;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        max = mid;
+                        mid = (min + mid) / 2;
+                        for (int i = 0; i < num_of_sorted_arr; ++i)
+                        {
+                            if (arr_for_indexes[i] >= 0)
+                                bound_r[i] = arr_for_indexes[i];
+                            else
+                                bound_r[i] = 0;
+                        }
+                    }
+                }
+                // printf("%d", less_than_k);
+                less_than_k = 0;
+            }
         }
-        // print(list, 1);
+        print(list, 1);
         // print_sorted(list);
     }
     // print(list, 1);
     // print_sorted(list);
-    printf("MAX_LEN :%d\n", MAX_LEN);
-    count_node(list);
-    printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);
-    printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
-    float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
-    printf("memory usage: %f KB\n", memory);
+    // printf("MAX_LEN :%d\n", MAX_LEN);
+    // count_node(list);
+    // printf("total element: %d\neach node contains %f elements\n", list->total_element, (float)(list->total_element) / num_nodes);
+    // printf("full rate: %.2f%%\n", (float)(list->total_element) / num_nodes / MAX_LEN * 100);
+    // float memory = (float)(num_nodes) * (sizeof(int) * MAX_LEN + sizeof(Node)) / 1000;
+    // printf("memory usage: %f KB\n", memory);
 
     return 0;
 }

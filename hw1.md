@@ -41,8 +41,10 @@ Obivously, the statement is not true.
 
 
 8.(Prove or disprove) lg(n!) = Θ(nlgn)\
-![](https://i.imgur.com/H94noNz.png)
-9.$\Theta(n(lgn)^{2})$![](https://i.imgur.com/E78gPzZ.jpg)
+![](https://i.imgur.com/AFAaHZN.png)
+
+9.$\Theta(n(lgn)^{2})$![](https://i.imgur.com/Vj8xhVw.png)
+
 
 
 

@@ -142,7 +142,7 @@ int main()
 {
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)sqrt(n_len_int_seq) / 2;
+    MAX_LEN = (int)sqrt(n_len_int_seq);
     DList *list = createDList();
     list_tail = list_head = createNode();
     curNode = list_head;
@@ -150,7 +150,7 @@ int main()
     {
         temp = readInt();
 
-        if (!(curNode->array_size < MAX_LEN * 95 / 100))
+        if (!(curNode->array_size < MAX_LEN * 90 / 100))
         {
             newNode = createNode();
             list_tail = newNode;
@@ -635,9 +635,9 @@ int main()
 
             check_head(list);
             check_tail(list);
-            ++cnt_reverse;
-            if (cnt_reverse % 20 == 0)
-                traverse_merge();
+            // ++cnt_reverse;
+            // if (cnt_reverse % 20 == 0)
+            traverse_merge();
 
             break;
         case 'Q':

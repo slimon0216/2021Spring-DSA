@@ -1,13 +1,10 @@
-### 2021 SPRING DSA HW1
+# 2021 SPRING DSA HW1
 #### Problem 1
-1.假設while loop 總共會跑k次，$1+2+3+...+k =\frac{k(1+k)}{2} < n$，$\frac{(k+1)(1+(k+1))}{2} > n$; 得到$k^2 + k < 2n$， $(k+1)^2 + (k+1) > 2n$ \
-所以是$\Theta(\sqrt{n})$
+1.假設while loop 總共會跑k次，$1+2+3+...+k =\frac{k(1+k)}{2} < n$，$\frac{(k+1)(1+(k+1))}{2} > n$; 得到$k^2 + k < 2n$， $(k+1)^2 + (k+1) > 2n$, 所以是$\Theta(\sqrt{n})$
 
 2.$\Theta$(loglogn) ![](https://i.imgur.com/sU9ogmy.png)
 
-3.$O(4^n)$ ![](https://i.imgur.com/p3bxsFt.png)
-
-
+3.將函數遞迴展開可以知道是$\Theta(4^n)$，如附圖 ![](https://i.imgur.com/p3bxsFt.png)
 
 
 
@@ -25,8 +22,9 @@ we know that $f(n)+g(n) = \Omega( max(f(n), g(n)) )$.
 
 5.(Prove or disprove) If $f(n) = O (i(n))$ and $g(n) = O(j(n))$, then $f(n) · g(n) = O(i(n) · j(n))$.\
 Sol:
-* If $f(n) = O(i(n))$, there exist positive numbers c$_1$ and x$_1$ s.t. $|f(x)|$ $\leqslant$ c$_1$ $·i(n),  \forall x > x$$_1$ .
-* If $f(n) = Ω(i(n))$, there exist positive numbers c$_2$ and x$_2$ s.t. $|f(x)| \geqslant c$_2$·i(n), \forall x > x$$_2$ .
+* If $f(n) = O(i(n))$, there exists positive numbers c$_1$ and x$_1$ s.t. $|f(x)|$ $\leqslant$ c$_1$ $·i(n),  \forall x > x$$_1$ .
+* If $g(n) = O(j(n))$, there exists positive numbers c$_2$ and x$_2$ s.t. $|g(x)|$ $\leqslant$ c$_2$ $·j(n),  \forall x > x$$_2$ .
+* Then $|f(x)·g(x)| \leqslant |f(x)|·|g(x)| \leqslant c_1·i(n)·c_2·j(n) = c_3·i(n)·j(n)$ where $c_3 = c_1·c_2 , \forall x \geqslant max(x_1, x_2)$ ，and $f(n) · g(n) = O(i(n) · j(n))$. Q.E.D
 
 6.(Prove or disprove) If $f(n) = O ( g(n) )$ , then $2^{f(n)} = O ( 2^{g(n)} )$.\
 Sol:\
@@ -39,9 +37,11 @@ Obivously, the statement is not true.
 
 
 
-7.![sdfsdf](https://i.imgur.com/d66zdRj.png)
+7.![](https://i.imgur.com/KW7d6en.png)
 
-8.(Prove or disprove) lg(n!) = Θ(nlgn)![](https://i.imgur.com/H94noNz.png)
+
+8.(Prove or disprove) lg(n!) = Θ(nlgn)\
+![](https://i.imgur.com/H94noNz.png)
 9.$\Theta(n(lgn)^{2})$![](https://i.imgur.com/E78gPzZ.jpg)
 
 
@@ -110,7 +110,7 @@ int pop_back():
 Time complexity analysis:  
 4. O(1) &emsp; 5.O(1)  
 6. In the worse case, the while loop would repeat n times (n is the number of elements in right stack);hence O(n).   
-7. O(n) for the same reason as above\
+7. O(n) for the same reason above\
 8.![](https://i.imgur.com/5q0oecI.png)
 #### Problem 3
 1. Given the initial position of the frog, design an algorithm that computes whether the frog will stop somewhere or keep jumping forever.  
@@ -174,26 +174,25 @@ Sol:
 ```
 FIND-PAIR(A, n)  //A is a strictly increasing array with n integers
     i = 1
-    j = 2
     min = ∞
     min_i = 0
     min_j = 0
-    while j < n-1
-        for i = 0 to j-1
-            temp = f(i, j)
-            if temp < min
-                    min = temp
-                    min_i = i
-                    min_j = j
-                j += 1
+    while i+1 < n
+        j = i+1
+        temp = f(i, j)
+        if temp < min
+                min = temp
+                min_i = i
+                min_j = j
+        i += 1
     return min_i, min_j
 ```
 ##### Prove correctness:
-This is a brute-force search algorithm, which takes into account all possible candidates and would definitely give a correct solution.
+整個陣列被分為三個區間，如要最小化f(i, j)，那就要最小化max(M0,i, Mi,j , Mj,n)和最大化min(M0,i, Mi,j , Mj,n)，無論如何，M0,i $\leqslant$ Mi,j $\leqslant$  Mj,n 恆成立。所以問題就轉化為最小化Mj,n和最大化M0,i。j越小，Mj,n會越小；i越大，M0,i就越大，所以要最小化f(i, j)，i和j必然是相鄰的兩個整數，因此找出i,j相鄰的所有組合就能得到最佳解。
 
 ##### Analysis:
-f(i, j) takes constant time.(Finding the median in six intervals respectly and then doing the comparsion and subtraction have noting to do with the number of integers).\
-The exhaustive while loop takes about $1 + 2 + 3 + ... + n-1$ steps,so the time complexity is $O(n^2)$; and the extra-space complexity is $O(1)$.
+f(i, j) takes constant time(finding the median in six intervals respectly and then doing the comparsions and subtractions have nothing to do with the number of integers).\
+The while loop repeats for n-1 times, so the time complexity is $O(n)$; and the extra-space complexity is $O(1)$.
 
 4.(15 pts) \
 A **circularly linked list** is a linked list such that the last node of the linked list is
@@ -207,22 +206,26 @@ Sol:
 
 ```
 SORT(L)
-    curNode = L.head
-    while True
-        if curNode.next.value < curNode.value
-            while curNode.next.value < curNode.value
-                swap curNode and curNode
-                curNode = curNode.next
-            break
-        else
-            curNode = curNode.next
-    L.tail = curNode
-    L.head = curNode.next
+    1. Traverse the L to find the 1-st and the 2-nd decreasing node,
+       n1 and n2
+    2. Take n1.next as the head and n2 as the tail of a new singly 
+       linked list l1, and take n2.next as the head and n1 as the tail of 
+       another singly linked list l2 
+    3. Compare l1.head and l2.head, remove the larger one and set it as 
+       the head of the new singly linked list l3
+    4. Compare l1.head and l2.head, remove the larger one and set it as 
+       l3.tail
+    5. Repeat step 4 unitl one list is empty, and then concate l3.tail 
+       to the head of the remained list
+    6. Set l3.head as l3.tail.next 
 ```
 ##### Prove correctness:
-We traverse L from the head, then move  the first decreasing node we meet to the place at which it turns into "not decreasing". Then there remains only one decreasing node, and we could just set the 
-node as the tail and the next node as the head.
-Now the head of L points to a new circularly linked list with only one decreasing node.
+只有兩個decreasing node的 circularly linked list可以視為兩段升序排列的 singly linked list 頭尾相接，因此把他們拆開後再合併成一個升序的 list 再頭尾相接就會得到一個只有一個decreasing node的 circularly linked list
 
 ##### Analysis:
-In the worse case we go through 2n-1 nodes, the time complexity is O(n) and the extra-space complexity is O(1)
+找到兩個decreasing node 的worst case是遍歷所有node\
+需要O(n)的時間\
+將它們合併的worst case也需要O(n)的時間\
+因此時間複雜度為 O(n)\
+以上操作只需要既存的node進行遍歷和比較大小\
+額外空間複雜度為O(1)

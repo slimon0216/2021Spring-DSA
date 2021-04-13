@@ -7,7 +7,7 @@
 #include <string.h>
 #include <math.h>
 
-#define MAX_LEN 1000
+#define MAX_LEN 100000
 
 typedef struct Stack Stack;
 typedef struct operatorStack operatorStack;
@@ -17,7 +17,7 @@ struct Stack
     int top; // arr index of the top element
     int capacity;
     int size;    // # of elements
-    double *arr; // array of element
+    double *arr; // array of elements
 };
 
 struct Stack *createStack()

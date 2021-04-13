@@ -6,127 +6,16 @@ int MAX_LEN = 300;
 
 #define isReverse 0
 #define isNotReverse 1
-int binarySearch(int *arr, int l, int r, float target)
-{
-    if (r - l == 1) //只有一個元素
-    {
-        if (target > arr[l])
-            return &arr[l + 1] - arr;
-        else
-            return &arr[l] - arr;
-    }
-    if (r - l == 2) //有兩個元素
-    {
-        if (target < arr[l])
-            return &arr[l] - arr;
-        else if (target > arr[r - 1])
-            return &arr[r] - arr;
-        else
-            return &arr[l + 1] - arr;
-    }
-    int mid;
-    while (r - l + 1 > 3)
-    {
-        mid = (l + r) / 2;
-        if (arr[mid] == target)
-        {
-            // while (mid - 1 > 0)
-            // {
-            //     if (arr[mid - 1] == arr[mid])
-            //         mid--;
-            //     else
-            //         break;
-            // }
-            return &arr[mid] - arr;
-        }
 
-        else if (arr[mid] > target)
-            r = mid;
-        else if (arr[mid] < target)
-            l = mid;
-    }
-    // if (l == 0)
-    //     return -1; //代表說要放在頭
-    for (; l <= r; l++)
-    {
-        if (l > 0)
-            if (arr[l - 1] > target)
-                return &arr[l - 1] - arr;
-    }
-    return &arr[l - 1] - arr;
-}
+inline int binarySearch(int *arr, int l, int r, float target);
+
 int L[1000], R[1000];
-void MERGE(int *arr, int left, int mid, int right)
-{
-    int i, j, k;
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+inline void MERGE(int *arr, int left, int mid, int right);
 
-    for (i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
+inline void mergeSort(int *arr, int left, int right);
+inline void insertionSort(int *arr, int len);
 
-    i = 0;
-    j = 0;
-    k = left;
-    while (i < n1 && j < n2)
-    {
-        if (L[i] <= R[j])
-        {
-            arr[k] = L[i];
-            i++;
-        }
-        else
-        {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    while (i < n1)
-    {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    while (j < n2)
-    {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-
-void mergeSort(int *arr, int left, int right)
-{
-    if (left < right)
-    {
-
-        int mid = left + (right - left) / 2;
-
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-
-        MERGE(arr, left, mid, right);
-    }
-}
-void insertionSort(int *arr, int len)
-{
-    int cur;
-    for (int i = 1; i < len; ++i)
-    {
-        cur = arr[i];
-        int j = i - 1;
-        while ((j >= 0) && (arr[j] > cur))
-        {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = cur;
-    }
-}
+int cnt_reverse = 0;
 
 typedef struct Node
 {
@@ -152,98 +41,28 @@ DList *createDList()
     return D;
 }
 
-Node *createNode()
-{
-    Node *node = malloc(sizeof(Node));
-    node->next = node->prev = NULL;
-    node->array_size = 0;
-    node->array = malloc(sizeof(int) * MAX_LEN);
-    node->sorted_array = malloc(sizeof(int) * MAX_LEN);
-    node->tag = isNotReverse;
-    return node;
-}
-
+Node *createNode();
 // int cparr[MAX_LEN];
-void copy_arr(int *from, int *to, int len)
-{
-    for (int i = 0; i < len; ++i)
-        to[i] = from[i];
-}
+inline void copy_arr(int *from, int *to, int len);
 
-// void insert(int val){
+// inline void insert(int val){
 
 // }
 int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete, index_to_insert;
 char cmd[10], c;
-Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
+Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
 DList *list;
-int temp_arr[1000], temp_arr_l[1000], temp_arr_r[1000], *sorted_arrarys[1000], origin_lens[1000], bound_r[1000], arr_for_indexes[1000];
+int temp_arr[1000], temp_arr_l[1000], temp_arr_r[1000], *sorted_arrarys[1000], bound_r[1000], arr_for_indexes[1000];
 
-// void insert(int val){
-// int create = 0;
-// void deleteNode(Node *node)
-// {
-// --create;
-// free(node->array);
-// free(node->sorted_array);
-// free(node);
-// }
+inline void check_tail(DList *list);
 
-void check_tail(DList *list)
-{
-    while (list_tail->array_size == 0)
-    {
-        list_tail = list_tail->prev;
-        // deleteNode(list_tail->next);
-    }
-}
+inline void check_head(DList *list);
 
-void check_head(DList *list)
-{
-    while (list_head->array_size == 0)
-    {
-        list_head = list_head->next;
-        // deleteNode(list_head->prev);
-    }
-}
+inline void changeTag(Node *node);
 
-void changeTag(Node *node)
-{
-    if (node->array_size <= 1)
-        node->tag = isNotReverse;
-    else
-        node->tag = (node->tag == isReverse) ? isNotReverse : isReverse;
-}
+inline int readInt();
 
-int readInt()
-{
-    int num = 0;
-    int flag = 0;
-    char c = getchar();
-    while ((c < '0' || c > '9'))
-    {
-        if (c == '-')
-            flag = 1;
-        c = getchar();
-    }
-    while (c > ('0' - 1) && c < ('9' + 1))
-        num = num * 10 + (c - '0'), c = getchar();
-    if (flag == 0)
-        return num;
-    else
-        return num * (-1);
-}
-
-void delete_from_sorted(int *arr, int len, int x)
-{
-    int i = 0;
-    while (arr[i] != x && i < len)
-        ++i;
-    for (; i < len - 1; ++i)
-    {
-        arr[i] = arr[i + 1];
-    }
-}
+inline void delete_from_sorted(int *arr, int len, int x);
 
 void print(DList *list, int sep)
 {
@@ -312,124 +131,9 @@ void print_sorted(DList *list)
 }
 int num_nodes = 1;
 
-int merge(Node *prev, Node *next)
-{
-    int flag = 0;
-    if (next->array_size <= MAX_LEN - prev->array_size)
-    {
-        if (prev->tag == isNotReverse)
-        {
-            if (next->tag == isNotReverse)
-            {
-                int prev_index = prev->array_size;
-                int next_index = 0;
-                int up_index = next->array_size;
-                for (; next_index < up_index; ++next_index, ++prev_index)
-                {
-                    prev->array[prev_index] = next->array[next_index];
-                    ++prev->array_size;
-                    --next->array_size;
-                }
-            }
-            else
-            {
-                int prev_index = prev->array_size;
-                int next_index = next->array_size - 1;
-                // int up_index = next->array_size;
-                for (; next_index >= 0; --next_index, ++prev_index)
-                {
-                    prev->array[prev_index] = next->array[next_index];
-                    ++prev->array_size;
-                    --next->array_size;
-                }
-            }
-            prev->next = next->next;
-            if (next != list_tail)
-                next->next->prev = prev;
-            else
-            {
-                list_tail = prev;
-                list_tail->next = NULL;
-            }
-            // deleteNode(next);
-            flag = 1;
-        }
-        else if (prev->tag == isReverse)
-        {
-            if (next->tag == isNotReverse)
-            {
-                int up_index = next->array_size;
-                int index = 0;
-                int cnt = 0;
-                for (index = prev->array_size - 1; cnt < prev->array_size; --index, cnt++)
-                {
-                    prev->array[index + up_index] = prev->array[index];
-                }
-                for (index = 0; index < up_index; ++index)
-                {
-                    // prev->array[index + up_index] = prev->array[index];
-                    prev->array[index] = next->array[--next->array_size];
-                    ++prev->array_size;
-                }
-            }
-            else
-            {
-                int *newarr = malloc(sizeof(int) * MAX_LEN);
-                int i;
-                for (i = 0; i < next->array_size; ++i)
-                {
-                    newarr[i] = next->array[i];
-                }
-                int cnt = 0;
-                for (; cnt < prev->array_size; ++cnt, ++i)
-                {
-                    newarr[i] = prev->array[cnt];
-                }
-                // free(prev->array);
-                prev->array = newarr;
-                prev->array_size = i;
-            }
-            prev->next = next->next;
-            if (next != list_tail)
-                next->next->prev = prev;
-            else
-                list_tail = prev;
-            // deleteNode(next);
-            flag = 1;
-        }
-    }
-    return flag;
-}
+int merge(Node *prev, Node *next);
 
-void traverse_merge()
-{
-    int if_merge = 0;
-    curNode = list_head->next;
-    Node *ptr;
-    while (curNode->next != list_tail && curNode != list_tail && curNode->next != NULL && curNode->next != NULL)
-    {
-        if (curNode->array_size == 0)
-        {
-            ptr = curNode;
-            if (curNode != list_head)
-                curNode->prev->next = curNode->next;
-            else
-                list_head = curNode->next;
-            curNode->next->prev = curNode->prev;
-            curNode = ptr->next;
-            // deleteNode(ptr);
-        }
-        if_merge = merge(curNode, curNode->next);
-        if (if_merge == 1)
-        {
-            copy_arr(curNode->array, curNode->sorted_array, curNode->array_size);
-            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
-            continue;
-        }
-        curNode = curNode->next;
-    }
-    // check_tail(list);
-}
+inline void traverse_merge();
 
 int main()
 {
@@ -443,9 +147,9 @@ int main()
     {
         temp = readInt();
 
-        if (!(curNode->array_size < MAX_LEN * 90 / 100))
+        if (!(curNode->array_size < MAX_LEN * 95 / 100))
         {
-            Node *newNode = createNode();
+            newNode = createNode();
             list_tail = newNode;
             curNode->next = newNode;
             newNode->prev = curNode;
@@ -479,7 +183,7 @@ int main()
             }
             else if (i == 1)
             {
-                Node *newNode = createNode();
+                newNode = createNode();
                 newNode->array[newNode->array_size] = x;
                 newNode->sorted_array[newNode->array_size] = x;
                 ++newNode->array_size;
@@ -489,7 +193,7 @@ int main()
             }
             else if (i == list->total_element)
             {
-                Node *newNode = createNode();
+                newNode = createNode();
                 if (list_tail->tag == isNotReverse)
                 {
                     newNode->array[newNode->array_size] = list_tail->array[list_tail->array_size - 1];
@@ -521,7 +225,7 @@ int main()
             }
             else if (i - 1 == list->total_element)
             {
-                Node *newNode = createNode();
+                newNode = createNode();
                 newNode->array[newNode->array_size] = x;
                 newNode->sorted_array[newNode->array_size] = x;
                 ++newNode->array_size;
@@ -538,7 +242,7 @@ int main()
                     temp += curNode->array_size;
                     if (curNode->next == NULL)
                     {
-                        Node *newNode = createNode();
+                        newNode = createNode();
                         newNode->prev = curNode;
                         curNode->next = newNode;
                     }
@@ -565,7 +269,7 @@ int main()
                             }
                             else //放不下就在前面創一個node
                             {
-                                Node *newNode = createNode();
+                                newNode = createNode();
                                 newNode->array[newNode->array_size] = x;
                                 newNode->sorted_array[newNode->array_size] = x;
                                 ++newNode->array_size;
@@ -577,7 +281,7 @@ int main()
                         }
                         else //不然在後面創node，把東西往後推
                         {
-                            Node *newNode = createNode();
+                            newNode = createNode();
                             if (curNode != list_tail)
                             {
                                 newNode->next = curNode->next;
@@ -622,7 +326,7 @@ int main()
                             }
                             else //不然就新增node，因為順序是反的，新增的Node要放在這個前面
                             {
-                                Node *newNode = createNode();
+                                newNode = createNode();
                                 newNode->array[newNode->array_size] = x;
                                 newNode->sorted_array[newNode->array_size] = x;
                                 ++newNode->array_size;
@@ -635,7 +339,7 @@ int main()
                         }
                         else //滿了又要插在這個array的中間，且array是反的
                         {    //就往後新增Node，從這個array的插入點往前推一格(因為是反的)
-                            Node *newNode = createNode();
+                            newNode = createNode();
                             if (curNode != list_tail)
                             {
                                 newNode->next = curNode->next;
@@ -770,12 +474,12 @@ int main()
             if (l == r)
                 break;
             int temp_left = 0;
-            Node *leftNode = list_head;
+            leftNode = list_head;
             while (temp_left + leftNode->array_size < l)
             {
                 if (leftNode->array_size == 0 && leftNode->prev != NULL)
                 {
-                    Node *ptr = leftNode;
+                    ptr = leftNode;
                     leftNode->prev->next = leftNode->next;
                     leftNode = leftNode->next;
                     leftNode->prev = leftNode->prev->prev;
@@ -786,7 +490,7 @@ int main()
                 leftNode = leftNode->next;
             }
             int temp_right = temp_left;
-            Node *rightNode = leftNode;
+            rightNode = leftNode;
             while (temp_right + rightNode->array_size < r)
             {
 
@@ -819,8 +523,8 @@ int main()
 
             // int numOfL = l - temp_left; //從這個node的第幾個ele開始般
             // int numOfR = r - temp_right;
-            Node *leftNewNode = createNode();
-            Node *rightNewNode = createNode();
+            leftNewNode = createNode();
+            rightNewNode = createNode();
 
             if (leftNode->tag == isNotReverse)
             {
@@ -909,8 +613,8 @@ int main()
             rightNode->prev->next = rightNewNode;
             rightNode->prev = rightNewNode;
 
-            Node *ptr1 = leftNewNode;
-            Node *ptr2 = leftNewNode->next;
+            ptr1 = leftNewNode;
+            ptr2 = leftNewNode->next;
             ptr1->next = rightNode;
             ptr1->prev = ptr2;
             while (ptr2 != rightNode)
@@ -928,7 +632,9 @@ int main()
 
             check_head(list);
             check_tail(list);
-            traverse_merge();
+            ++cnt_reverse;
+            if (cnt_reverse % 20 == 0)
+                traverse_merge();
 
             break;
         case 'Q':
@@ -942,7 +648,7 @@ int main()
             {
                 if (leftNode->array_size == 0 && leftNode->prev != NULL)
                 {
-                    Node *ptr = leftNode;
+                    ptr = leftNode;
                     leftNode->prev->next = leftNode->next;
                     leftNode = leftNode->next;
                     leftNode->prev = leftNode->prev->prev;
@@ -1021,7 +727,6 @@ int main()
 
             sorted_arrarys[num_of_sorted_arr++] = temp_arr_l;
             bound_r[0] = len_temp_arr_l < k ? len_temp_arr_l : k;
-            origin_lens[0] = len_temp_arr_l < k ? len_temp_arr_l : k;
 
             leftNode = leftNode->next;
             while (leftNode != rightNode)
@@ -1043,7 +748,6 @@ int main()
                     max = leftNode->sorted_array[leftNode->array_size - 1];
                 sorted_arrarys[num_of_sorted_arr] = leftNode->sorted_array;
                 bound_r[num_of_sorted_arr] = leftNode->array_size < k ? leftNode->array_size : k;
-                origin_lens[num_of_sorted_arr] = leftNode->array_size < k ? leftNode->array_size : k;
                 ++num_of_sorted_arr;
                 leftNode = leftNode->next;
             }
@@ -1065,7 +769,6 @@ int main()
 
             sorted_arrarys[num_of_sorted_arr] = temp_arr_r;
             bound_r[num_of_sorted_arr] = len_temp_arr_r < k ? len_temp_arr_r : k;
-            origin_lens[num_of_sorted_arr] = len_temp_arr_r < k ? len_temp_arr_r : k;
             ++num_of_sorted_arr;
 
             // for (int i = 0; i < num_of_sorted_arr; ++i)
@@ -1082,7 +785,7 @@ int main()
             // }
             // printf("min: %d\nmax: %d\n", min, max);
 
-            int less_than_k = 0, more_than_k = 0;
+            int less_than_k = 0;
             float mid = (float)(max + min) / 2.0 + 0.3;
             // printf("%f\n", mid);
             int bound_l[1000] = {0};
@@ -1097,7 +800,6 @@ int main()
                     {
                         arr_for_indexes[i] = index;
                         less_than_k += index;
-                        more_than_k += origin_lens[i] - index;
                     }
                 }
 
@@ -1114,7 +816,6 @@ int main()
                     printf("%d\n", ans);
                     break;
                 }
-                // assert(!(less_than_k < k && more_than_k < k));
 
                 if (less_than_k == k)
                 {
@@ -1130,10 +831,9 @@ int main()
                 }
                 if (abs(max - min) <= 1)
                 {
-                    if (cnt < 3)
+                    if (cnt < 2)
                     {
                         ++cnt;
-                        // continue;
                     }
                     else
                     {
@@ -1168,7 +868,7 @@ int main()
                             bound_r[i] = 0;
                     }
                 }
-                less_than_k = more_than_k = 0;
+                less_than_k = 0;
             }
         }
         // print(list, 1);
@@ -1178,4 +878,308 @@ int main()
     // print_sorted(list);
 
     return 0;
+}
+
+void MERGE(int *arr, int left, int mid, int right)
+{
+    int i, j, k;
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    for (i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    i = 0;
+    j = 0;
+    k = left;
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+int binarySearch(int *arr, int l, int r, float target)
+{
+    if (r - l == 1) //只有一個元素
+    {
+        if (target > arr[l])
+            return &arr[l + 1] - arr;
+        else
+            return &arr[l] - arr;
+    }
+    if (r - l == 2) //有兩個元素
+    {
+        if (target < arr[l])
+            return &arr[l] - arr;
+        else if (target > arr[r - 1])
+            return &arr[r] - arr;
+        else
+            return &arr[l + 1] - arr;
+    }
+    int mid;
+    while (r - l + 1 > 3)
+    {
+        mid = (l + r) / 2;
+        if (arr[mid] == target)
+        {
+            return &arr[mid] - arr;
+        }
+
+        else if (arr[mid] > target)
+            r = mid;
+        else if (arr[mid] < target)
+            l = mid;
+    }
+    for (; l <= r; l++)
+    {
+        if (l > 0)
+            if (arr[l - 1] > target)
+                return &arr[l - 1] - arr;
+    }
+    return &arr[l - 1] - arr;
+}
+
+void mergeSort(int *arr, int left, int right)
+{
+    if (left < right)
+    {
+
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        MERGE(arr, left, mid, right);
+    }
+}
+
+void insertionSort(int *arr, int len)
+{
+    int cur;
+    for (int i = 1; i < len; ++i)
+    {
+        cur = arr[i];
+        int j = i - 1;
+        while ((j >= 0) && (arr[j] > cur))
+        {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = cur;
+    }
+}
+
+Node *createNode()
+{
+    Node *node = malloc(sizeof(Node));
+    node->next = node->prev = NULL;
+    node->array_size = 0;
+    node->array = malloc(sizeof(int) * MAX_LEN);
+    node->sorted_array = malloc(sizeof(int) * MAX_LEN);
+    node->tag = isNotReverse;
+    return node;
+}
+
+void copy_arr(int *from, int *to, int len)
+{
+    for (int i = 0; i < len; ++i)
+        to[i] = from[i];
+}
+void check_tail(DList *list)
+{
+    while (list_tail->array_size == 0)
+    {
+        list_tail = list_tail->prev;
+        // deleteNode(list_tail->next);
+    }
+}
+
+void check_head(DList *list)
+{
+    while (list_head->array_size == 0)
+    {
+        list_head = list_head->next;
+        // deleteNode(list_head->prev);
+    }
+}
+
+void changeTag(Node *node)
+{
+    if (node->array_size <= 1)
+        node->tag = isNotReverse;
+    else
+        node->tag = (node->tag == isReverse) ? isNotReverse : isReverse;
+}
+int readInt()
+{
+    int num = 0;
+    int flag = 0;
+    char c = getchar();
+    while ((c < '0' || c > '9'))
+    {
+        if (c == '-')
+            flag = 1;
+        c = getchar();
+    }
+    while (c > ('0' - 1) && c < ('9' + 1))
+        num = num * 10 + (c - '0'), c = getchar();
+    if (flag == 0)
+        return num;
+    else
+        return num * (-1);
+}
+
+void delete_from_sorted(int *arr, int len, int x)
+{
+    int i = 0;
+    while (arr[i] != x && i < len)
+        ++i;
+    for (; i < len - 1; ++i)
+    {
+        arr[i] = arr[i + 1];
+    }
+}
+
+int merge(Node *prev, Node *next)
+{
+    int flag = 0;
+    if (next->array_size <= MAX_LEN - prev->array_size)
+    {
+        if (prev->tag == isNotReverse)
+        {
+            if (next->tag == isNotReverse)
+            {
+                int prev_index = prev->array_size;
+                int next_index = 0;
+                int up_index = next->array_size;
+                for (; next_index < up_index; ++next_index, ++prev_index)
+                {
+                    prev->array[prev_index] = next->array[next_index];
+                    ++prev->array_size;
+                    --next->array_size;
+                }
+            }
+            else
+            {
+                int prev_index = prev->array_size;
+                int next_index = next->array_size - 1;
+                // int up_index = next->array_size;
+                for (; next_index >= 0; --next_index, ++prev_index)
+                {
+                    prev->array[prev_index] = next->array[next_index];
+                    ++prev->array_size;
+                    --next->array_size;
+                }
+            }
+            prev->next = next->next;
+            if (next != list_tail)
+                next->next->prev = prev;
+            else
+            {
+                list_tail = prev;
+                list_tail->next = NULL;
+            }
+            // deleteNode(next);
+            flag = 1;
+        }
+        else if (prev->tag == isReverse)
+        {
+            if (next->tag == isNotReverse)
+            {
+                int up_index = next->array_size;
+                int index = 0;
+                int cnt = 0;
+                for (index = prev->array_size - 1; cnt < prev->array_size; --index, cnt++)
+                {
+                    prev->array[index + up_index] = prev->array[index];
+                }
+                for (index = 0; index < up_index; ++index)
+                {
+                    // prev->array[index + up_index] = prev->array[index];
+                    prev->array[index] = next->array[--next->array_size];
+                    ++prev->array_size;
+                }
+            }
+            else
+            {
+                int *newarr = malloc(sizeof(int) * MAX_LEN);
+                int i;
+                for (i = 0; i < next->array_size; ++i)
+                {
+                    newarr[i] = next->array[i];
+                }
+                int cnt = 0;
+                for (; cnt < prev->array_size; ++cnt, ++i)
+                {
+                    newarr[i] = prev->array[cnt];
+                }
+                // free(prev->array);
+                prev->array = newarr;
+                prev->array_size = i;
+            }
+            prev->next = next->next;
+            if (next != list_tail)
+                next->next->prev = prev;
+            else
+                list_tail = prev;
+            // deleteNode(next);
+            flag = 1;
+        }
+    }
+    return flag;
+}
+
+void traverse_merge()
+{
+    int if_merge = 0;
+    curNode = list_head->next;
+    Node *ptr;
+    while (curNode->next != list_tail && curNode != list_tail && curNode->next != NULL && curNode->next != NULL)
+    {
+        if (curNode->array_size == 0)
+        {
+            ptr = curNode;
+            if (curNode != list_head)
+                curNode->prev->next = curNode->next;
+            else
+                list_head = curNode->next;
+            curNode->next->prev = curNode->prev;
+            curNode = ptr->next;
+            // deleteNode(ptr);
+        }
+        if_merge = merge(curNode, curNode->next);
+        if (if_merge == 1)
+        {
+            copy_arr(curNode->array, curNode->sorted_array, curNode->array_size);
+            mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
+            continue;
+        }
+        curNode = curNode->next;
+    }
+    // check_tail(list);
 }

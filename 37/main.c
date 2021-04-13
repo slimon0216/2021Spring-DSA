@@ -1,3 +1,8 @@
+//reference
+//https://www.youtube.com/watch?v=Q3JUfHpffIg&t=317s
+//https://blog.techbridge.cc/2016/09/24/binary-search-introduction/
+//https://blog.huli.tw/2016/09/23/binary-search-introduction/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,14 +35,14 @@ typedef struct DList
 {
     Node *head;
     Node *tail;
-    int total_element;
+    // int total_element;
 } DList;
 
 DList *createDList()
 {
     DList *D = (DList *)malloc(sizeof(DList));
     D->head = D->tail = NULL;
-    D->total_element = 0;
+    // D->total_element = 0;
     return D;
 }
 
@@ -45,10 +50,8 @@ Node *createNode();
 // int cparr[MAX_LEN];
 inline void copy_arr(int *from, int *to, int len);
 
-// inline void insert(int val){
-
-// }
-int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete, index_to_insert;
+int index_l, index_r;
+int n_len_int_seq, q_num_query, len, temp, i, x, l, r, k, index, index_to_delete, index_to_insert, list_total_element = 0;
 char cmd[10], c;
 Node *curNode, *leftNode, *rightNode, *leftNewNode, *rightNewNode, *ptr, *ptr1, *ptr2, *newNode, *list_tail, *list_head;
 DList *list;
@@ -139,7 +142,7 @@ int main()
 {
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)sqrt(n_len_int_seq);
+    MAX_LEN = (int)sqrt(n_len_int_seq) / 2;
     DList *list = createDList();
     list_tail = list_head = createNode();
     curNode = list_head;
@@ -159,7 +162,7 @@ int main()
         curNode->sorted_array[curNode->array_size] = temp;
         ++curNode->array_size;
         mergeSort(curNode->sorted_array, 0, curNode->array_size - 1);
-        ++list->total_element;
+        ++list_total_element;
     }
 
     while ((c = getchar()) != EOF)
@@ -175,7 +178,7 @@ int main()
             // If i − 1 equals the length of the sequence, then insert x at the end of it.
             i = readInt();
             x = readInt();
-            if (list->total_element == 0)
+            if (list_total_element == 0)
             {
                 list_head->array[0] = x;
                 list_head->sorted_array[0] = x;
@@ -191,7 +194,7 @@ int main()
                 list_head->prev = newNode;
                 list_head = newNode;
             }
-            else if (i == list->total_element)
+            else if (i == list_total_element)
             {
                 newNode = createNode();
                 if (list_tail->tag == isNotReverse)
@@ -223,7 +226,7 @@ int main()
                 newNode->prev = list_tail;
                 list_tail = newNode;
             }
-            else if (i - 1 == list->total_element)
+            else if (i - 1 == list_total_element)
             {
                 newNode = createNode();
                 newNode->array[newNode->array_size] = x;
@@ -413,20 +416,20 @@ int main()
                     }
                 }
             }
-            ++list->total_element;
+            ++list_total_element;
             check_head(list);
             check_tail(list);
             break;
         case 'D':
             i = readInt();
-            if (list->total_element == 0)
+            if (!list_total_element) // 是零
                 break;
-            if (list->total_element == 1)
+            if (list_total_element == 1)
             {
                 // free(list_head);
                 list_head = createNode();
                 list_tail = list_head;
-                list->total_element = 0;
+                list_total_element = 0;
                 break;
             }
             temp = 0;
@@ -464,7 +467,7 @@ int main()
                 --curNode->array_size;
             }
 
-            --list->total_element;
+            --list_total_element;
             check_head(list);
             check_tail(list);
             break;
@@ -504,14 +507,14 @@ int main()
             {
                 int temp;
                 if (leftNode->tag == isNotReverse)
-                    for (int index_l = l - temp_left - 1, index_r = r - temp_right - 1; index_l < index_r; ++index_l, --index_r)
+                    for (index_l = l - temp_left - 1, index_r = r - temp_right - 1; index_l < index_r; ++index_l, --index_r)
                     {
                         temp = leftNode->array[index_l];
                         leftNode->array[index_l] = leftNode->array[index_r];
                         leftNode->array[index_r] = temp;
                     }
                 else
-                    for (int index_l = leftNode->array_size - (l - temp_left), index_r = leftNode->array_size - (r - temp_right);
+                    for (index_l = leftNode->array_size - (l - temp_left), index_r = leftNode->array_size - (r - temp_right);
                          index_r < index_l; ++index_r, --index_l)
                     {
                         temp = leftNode->array[index_l];
@@ -666,7 +669,6 @@ int main()
                 rightNode = rightNode->next;
             }
 
-            int index_l, index_r;
             int len_temp_arr = 0;
 
             if (leftNode == rightNode) //reverse的區間都再同一個node

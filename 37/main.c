@@ -142,7 +142,7 @@ int main()
 {
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)(sqrt(n_len_int_seq)*1.5);
+    MAX_LEN = (int)(sqrt(n_len_int_seq)*2);
     DList *list = createDList();
     list_tail = list_head = createNode();
     curNode = list_head;
@@ -1106,7 +1106,9 @@ int merge(Node *prev, Node *next)
                 list_tail = prev;
                 list_tail->next = NULL;
             }
-            // deleteNode(next);
+            free(next->sorted_array);
+            free(next->array);
+            free(next);
             flag = 1;
         }
         else if (prev->tag == isReverse)
@@ -1149,7 +1151,9 @@ int merge(Node *prev, Node *next)
                 next->next->prev = prev;
             else
                 list_tail = prev;
-            // deleteNode(next);
+            free(next->sorted_array);
+            free(next->array);
+            free(next);
             flag = 1;
         }
     }

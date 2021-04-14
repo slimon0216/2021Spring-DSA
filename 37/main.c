@@ -142,7 +142,7 @@ int main()
 {
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)sqrt(n_len_int_seq)/2;
+    MAX_LEN = (int)sqrt(n_len_int_seq)*2;
     DList *list = createDList();
     list_tail = list_head = createNode();
     curNode = list_head;

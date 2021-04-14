@@ -47,7 +47,7 @@ DList *createDList()
 }
 
 Node *createNode();
-// int cparr[MAX_LEN];
+
 inline void copy_arr(int *from, int *to, int len);
 
 int index_l, index_r;
@@ -142,7 +142,7 @@ int main()
 {
     n_len_int_seq = readInt();
     q_num_query = readInt();
-    MAX_LEN = (int)sqrt(n_len_int_seq);
+    MAX_LEN = (int)sqrt(n_len_int_seq)/2;
     DList *list = createDList();
     list_tail = list_head = createNode();
     curNode = list_head;

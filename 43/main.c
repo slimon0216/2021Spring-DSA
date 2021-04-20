@@ -85,18 +85,18 @@ int main()
     }
     Node *root = buildTree(0);
     // inOrder(root);
-    for (int i = 0; i < N; ++i)
-    {
-        if (adj_list[i][0] < MAX_LEN)
-        {    
-            if (table[adj_list[i][0]] == 1)
-                continue;
-            else
-                table[adj_list[i][0]] = 1;
-        }
-        if (search(root, adj_list[i][0]))
-            cnt++;
-    }
+    // for (int i = 0; i < N; ++i)
+    // {
+    //     if (adj_list[i][0] < MAX_LEN)
+    //     {    
+    //         if (table[adj_list[i][0]] == 1)
+    //             continue;
+    //         else
+    //             table[adj_list[i][0]] = 1;
+    //     }
+    //     if (search(root, adj_list[i][0]))
+    //         cnt++;
+    // }
     printf("%d\n", cnt);
 
     // for (int i = 0; i < N; ++i)

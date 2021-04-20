@@ -30,7 +30,8 @@ typedef struct Node{
 } Node;
 
 int N;
-int adj_list[MAX_LEN][3];
+// int adj_list[MAX_LEN][3];
+int **adj_list;
 
 Node* buildTree(int index) {
     if (index == -2)
@@ -74,8 +75,10 @@ int main()
 {
 
     N = readInt();
+    adj_list = malloc(sizeof(int*)*N);
     for (int i = 0; i < N; ++i)
     {
+        adj_list[i] = malloc(sizeof(int) * 3);
         for ( int j = 0; j < 3; ++j)
             adj_list[i][j] = readInt();
     }

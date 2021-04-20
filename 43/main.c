@@ -48,13 +48,13 @@ Node* buildTree(int index) {
     return node;
 }
 
-void inOrder(Node *node){
-    if (node == NULL)
-        return;
-    inOrder(node->left);
-    printf("%d ", node->key);
-    inOrder(node->right);
-}
+// void inOrder(Node *node){
+//     if (node == NULL)
+//         return;
+//     inOrder(node->left);
+//     printf("%d ", node->key);
+//     inOrder(node->right);
+// }
 
 int cnt = 0;
 int search(Node *node, int key){
@@ -70,6 +70,7 @@ int search(Node *node, int key){
         return search(node->right, key);
 }
 
+int table[MAX_LEN+10] = {0};
 
 int main()
 {
@@ -86,6 +87,13 @@ int main()
     // inOrder(root);
     for (int i = 0; i < N; ++i)
     {
+        if (adj_list[i][0] < MAX_LEN)
+        {    
+            if (table[adj_list[i][0]] == 1)
+                continue;
+            else
+                table[adj_list[i][0]] = 1;
+        }
         if (search(root, adj_list[i][0]))
             cnt++;
     }

@@ -37,7 +37,7 @@ int **adj_list;
 Node* buildTree(int index) {
     if (index == -2)
         return NULL;
-        
+
     Node *node = malloc(sizeof(Node));
     node->visited = 0;
     node->key = adj_list[index][0];
@@ -83,7 +83,7 @@ void inOrder(Node *node, int min, int max){
 
     if (node->visited == 0 )
         if (node->key > min && node->key < max)
-           {    
+           {
             //    printf("here is %d, min: %d, max: %d\n", node->key, min, max);
                 cnt++;
             }
@@ -104,7 +104,7 @@ void inOrder(Node *node, int min, int max){
 int search(Node *node, int key){
     if (node == NULL)
         return 0;
-    
+
     if (node->key == key)
         return 1;
 
@@ -129,8 +129,8 @@ int main()
     }
     Node *root = buildTree(0);
     root->visited = 0;
-    inOrder(root, -1000000000, 1000000000);
-    
+    inOrder(root, -1000000000, 2000000000);
+
 
 
     printf("%d\n", cnt);

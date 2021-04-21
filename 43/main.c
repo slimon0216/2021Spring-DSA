@@ -1,33 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_LEN 100000
+#define THREASHOLD 50000
 
-int readInt()
-{
-    int num = 0;
-    int flag = 0;
-    char c = getchar();
-    while ((c < '0' || c > '9'))
-    {
-        if (c == '-')
-            flag = 1;
-        c = getchar();
-    }
-    while (c > ('0' - 1) && c < ('9' + 1))
-        num = num * 10 + (c - '0'), c = getchar();
-    if (flag == 0)
-        return num;
-    else
-        return num * (-1);
-}
+inline int readInt();
 
 typedef struct Node{
     int key;
     int left_index;
     int right_index;
  
-    // int visited;
 } Node;
 
 int N, cnt = 0;
@@ -35,15 +17,11 @@ Node **tree;
 
 
 void inOrder(int node_index, int min, int max){
-    // if (node == NULL)
-    //     return;
- 
+
 
     if (tree[node_index]->key > min && tree[node_index]->key  < max)
-    {
         cnt++;
-        // printf("here: %d, min: %d, max: %d\n", tree[node_index]->key ,min, max);
-    }
+
 
     if (tree[node_index]->left_index != -2)
     {
@@ -63,6 +41,9 @@ void inOrder(int node_index, int min, int max){
 
 
 
+
+
+
 int main()
 {
     N = readInt();
@@ -70,7 +51,6 @@ int main()
     Node *node;
     for (int i = 0; i < N; ++i)
     {
-        // tree[i] = malloc(sizeof(int) * 3);
         node = malloc(sizeof(Node));
         node->key = readInt();
         node->left_index = readInt() -1;
@@ -86,4 +66,24 @@ int main()
     printf("%d\n", cnt);
 
 
+}
+
+
+int readInt()
+{
+    int num = 0;
+    int flag = 0;
+    char c = getchar();
+    while ((c < '0' || c > '9'))
+    {
+        if (c == '-')
+            flag = 1;
+        c = getchar();
+    }
+    while (c > ('0' - 1) && c < ('9' + 1))
+        num = num * 10 + (c - '0'), c = getchar();
+    if (flag == 0)
+        return num;
+    else
+        return num * (-1);
 }

@@ -16,29 +16,51 @@ int N, cnt = 0;
 Node **tree;
 
 
-void inOrder(int node_index, int min, int max){
+void inOrder(Node* node, int min, int max){
+
+    int key = node->key;
+    if (key > min && key  < max)
+        ++cnt;
 
 
-    if (tree[node_index]->key > min && tree[node_index]->key  < max)
-        cnt++;
-
-
-    if (tree[node_index]->left_index != -2)
+    if (node->left_index != -2)
     {
-        if (tree[node_index]->key < max)
-            inOrder(tree[node_index]->left_index, min, tree[node_index]->key);
+        if (key < max)
+            inOrder(tree[node->left_index], min, key);
         else
-            inOrder(tree[node_index]->left_index, min, max);
+            inOrder(tree[node->left_index], min, max);
     }
-    if (tree[node_index]->right_index != -2)
+    if (node->right_index != -2)
     {
-        if (tree[node_index]->key > min)
-            inOrder(tree[node_index]->right_index, tree[node_index]->key, max);
+        if (key > min)
+            inOrder(tree[node->right_index], key, max);
         else
-            inOrder(tree[node_index]->right_index, min, max);
+            inOrder(tree[node->right_index], min, max);
     }
 }
+Node* tree_2[THREASHOLD];
+void inOrder_2(Node* node, int min, int max){
 
+    int key = node->key;
+    if (key > min && key  < max)
+        ++cnt;
+
+
+    if (node->left_index != -2)
+    {
+        if (key < max)
+            inOrder_2(tree_2[node->left_index], min, key);
+        else
+            inOrder_2(tree_2[node->left_index], min, max);
+    }
+    if (node->right_index != -2)
+    {
+        if (key > min)
+            inOrder_2(tree_2[node->right_index], key, max);
+        else
+            inOrder_2(tree_2[node->right_index], min, max);
+    }
+}
 
 
 
@@ -49,23 +71,36 @@ int main()
     N = readInt();
     tree = malloc(sizeof(Node*)*N);
     Node *node;
-    for (int i = 0; i < N; ++i)
+    if (N > THREASHOLD)
     {
-        node = malloc(sizeof(Node));
-        node->key = readInt();
-        node->left_index = readInt() -1;
-        node->right_index = readInt() -1;
-        tree[i] = node;
+        for (int i = 0; i < N; ++i)
+        {
+            node = malloc(sizeof(Node));
+            node->key = readInt();
+            node->left_index = readInt() -1;
+            node->right_index = readInt() -1;
+            tree[i] = node;
+        }
+
+        inOrder(tree[0], -1, 2000000000);
+        printf("%d\n", cnt);
     }
-    // Node *root = tree[0];
-    // root->visited = 0;
-    inOrder(0, -1, 2000000000);
+    else
+    {
+        for (int i = 0; i < N; ++i)
+        {
+            node = malloc(sizeof(Node));
+            node->key = readInt();
+            node->left_index = readInt() -1;
+            node->right_index = readInt() -1;
+            tree_2[i] = node;
+        }
 
+        inOrder_2(tree_2[0], -1, 2000000000);
+        printf("%d\n", cnt);
+    }
 
-
-    printf("%d\n", cnt);
-
-
+    return 0;
 }
 
 

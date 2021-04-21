@@ -27,9 +27,10 @@ typedef struct Node{
     struct Node *left;
     struct Node *right;
     struct Node *parent;
+    int visited;
 } Node;
 
-int N;
+int N, cnt = 0;
 // int adj_list[MAX_LEN][3];
 int **adj_list;
 
@@ -38,7 +39,7 @@ Node* buildTree(int index) {
         return NULL;
         
     Node *node = malloc(sizeof(Node));
-
+    node->visited = 0;
     node->key = adj_list[index][0];
     node->left = buildTree(adj_list[index][1]-1) ;
     if (node->left != NULL) node->left->parent = node;
@@ -48,15 +49,58 @@ Node* buildTree(int index) {
     return node;
 }
 
-// void inOrder(Node *node){
-//     if (node == NULL)
-//         return;
-//     inOrder(node->left);
-//     printf("%d ", node->key);
-//     inOrder(node->right);
-// }
 
-int cnt = 0;
+typedef struct Stack{
+    int top;
+    Node **arr;
+} Stack;
+
+struct Stack *createStack() {
+    struct Stack *S = malloc(sizeof(struct Stack));
+    S->top = -1;
+    S->arr = (Node**)malloc(MAX_LEN * sizeof(Node*));
+    return S;
+}
+
+int isEmpty(struct Stack *S){
+    return S->top == -1;
+}
+void push(struct Stack *S, Node *node) {
+    S->arr[++S->top] = node;
+}
+
+Node* peek( Stack * s){
+    return s->arr[s->top];
+}
+int pop(Stack * s){
+    --s->top;
+}
+
+// int cnt = 0;
+void inOrder(Node *node, int min, int max){
+    if (node == NULL)
+        return;
+
+    if (node->visited == 0 )
+        if (node->key > min && node->key < max)
+           {    
+            //    printf("here is %d, min: %d, max: %d\n", node->key, min, max);
+                cnt++;
+            }
+    node->visited = 1;
+    if (node->key < max)
+        inOrder(node->left, min, node->key);
+    else
+        inOrder(node->left, min, max);
+    // printf("%d \n", node->key);
+    if (node->key > min)
+        inOrder(node->right, node->key, max);
+    else
+        inOrder(node->right, min, max);
+}
+
+
+
 int search(Node *node, int key){
     if (node == NULL)
         return 0;
@@ -74,7 +118,7 @@ int table[MAX_LEN+10] = {0};
 
 int main()
 {
-
+    Stack *s = createStack();
     N = readInt();
     adj_list = malloc(sizeof(int*)*N);
     for (int i = 0; i < N; ++i)
@@ -84,19 +128,11 @@ int main()
             adj_list[i][j] = readInt();
     }
     Node *root = buildTree(0);
-    // inOrder(root);
-    // for (int i = 0; i < N; ++i)
-    // {
-    //     if (adj_list[i][0] < MAX_LEN)
-    //     {    
-    //         if (table[adj_list[i][0]] == 1)
-    //             continue;
-    //         else
-    //             table[adj_list[i][0]] = 1;
-    //     }
-    //     if (search(root, adj_list[i][0]))
-    //         cnt++;
-    // }
+    root->visited = 0;
+    inOrder(root, -1000000000, 1000000000);
+    
+
+
     printf("%d\n", cnt);
 
     // for (int i = 0; i < N; ++i)
@@ -105,7 +141,7 @@ int main()
     //     {
     //         printf("%d ", adj_list[i][j]);
     //     }
-    //     printf("\n");
+        // printf("%d\n", 1000000000);
     // }
 
 

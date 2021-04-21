@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define THREASHOLD 50000
+#define THREASHOLD 30000
 
 inline int readInt();
 

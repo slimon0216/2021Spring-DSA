@@ -24,93 +24,66 @@ int readInt()
 
 typedef struct Node{
     int key;
-    struct Node *left;
-    struct Node *right;
+    int left_index;
+    int right_index;
  
     // int visited;
 } Node;
 
 int N, cnt = 0;
-// int adj_list[MAX_LEN][3];
-int **adj_list;
+Node **tree;
 
-Node* buildTree(int index) {
-    if (index == -2)
-        return NULL;
 
-    Node *node = malloc(sizeof(Node));
-    // node->visited = 0;
-    node->key = adj_list[index][0];
-    node->left = buildTree(adj_list[index][1]-1) ;
-    node->right = buildTree(adj_list[index][2]-1);
+void inOrder(int node_index, int min, int max){
+    // if (node == NULL)
+    //     return;
+ 
 
-    return node;
+    if (tree[node_index]->key > min && tree[node_index]->key  < max)
+    {
+        cnt++;
+        // printf("here: %d, min: %d, max: %d\n", tree[node_index]->key ,min, max);
+    }
+
+    if (tree[node_index]->left_index != -2)
+    {
+        if (tree[node_index]->key < max)
+            inOrder(tree[node_index]->left_index, min, tree[node_index]->key);
+        else
+            inOrder(tree[node_index]->left_index, min, max);
+    }
+    if (tree[node_index]->right_index != -2)
+    {
+        if (tree[node_index]->key > min)
+            inOrder(tree[node_index]->right_index, tree[node_index]->key, max);
+        else
+            inOrder(tree[node_index]->right_index, min, max);
+    }
 }
 
-void inOrder(Node *node, int min, int max){
-    if (node == NULL)
-        return;
-
-    // if (node->visited == 0 )
-        if (node->key > min && node->key < max)
-           {
-            //    printf("here is %d, min: %d, max: %d\n", node->key, min, max);
-                cnt++;
-            }
-    // node->visited = 1;
-    if (node->key < max)
-        inOrder(node->left, min, node->key);
-    else
-        inOrder(node->left, min, max);
-    // printf("%d \n", node->key);
-    if (node->key > min)
-        inOrder(node->right, node->key, max);
-    else
-        inOrder(node->right, min, max);
-}
-
-
-
-int search(Node *node, int key){
-    if (node == NULL)
-        return 0;
-
-    if (node->key == key)
-        return 1;
-
-    if (node->key > key)
-        return search(node->left, key);
-    else
-        return search(node->right, key);
-}
 
 
 int main()
 {
     N = readInt();
-    adj_list = malloc(sizeof(int*)*N);
+    tree = malloc(sizeof(Node*)*N);
+    Node *node;
     for (int i = 0; i < N; ++i)
     {
-        adj_list[i] = malloc(sizeof(int) * 3);
-        for ( int j = 0; j < 3; ++j)
-            adj_list[i][j] = readInt();
+        // tree[i] = malloc(sizeof(int) * 3);
+        node = malloc(sizeof(Node));
+        node->key = readInt();
+        node->left_index = readInt() -1;
+        node->right_index = readInt() -1;
+        tree[i] = node;
     }
-    Node *root = buildTree(0);
+    // Node *root = tree[0];
     // root->visited = 0;
-    inOrder(root, -1, 2000000000);
+    inOrder(0, -1, 2000000000);
 
 
 
     printf("%d\n", cnt);
-
-    // for (int i = 0; i < N; ++i)
-    // {
-    //     for ( int j = 0; j < 3; ++j)
-    //     {
-    //         printf("%d ", adj_list[i][j]);
-    //     }
-        // printf("%d\n", 1000000000);
-    // }
 
 
 }

@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-inline int readInt();
+inline unsigned readInt();
 
 typedef struct Node{
-    int key;
+    unsigned key;
     int left_index;
     int right_index;
 
@@ -66,9 +66,9 @@ int main()
 }
 
 
-int readInt()
+unsigned readInt()
 {
-    int num = 0;
+    unsigned num = 0;
     char c = getchar();
     while ((c < '0' || c > '9'))
     {

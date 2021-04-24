@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX 1000000000
 
 inline unsigned readInt();
 
 typedef struct Node{
     unsigned key;
-    int left_index;
-    int right_index;
+    unsigned left_index;
+    unsigned right_index;
 
 } Node;
 
@@ -14,21 +15,21 @@ unsigned N, cnt = 0;
 Node **tree;
 
 
-void inOrder(int node_index, unsigned min, unsigned max){
+void inOrder(unsigned node_index, unsigned min, unsigned max){
 
 
     if (tree[node_index]->key > min && tree[node_index]->key  < max)
         cnt++;
 
 
-    if (tree[node_index]->left_index != -2)
+    if (tree[node_index]->left_index <= MAX)
     {
         if (tree[node_index]->key < max)
             inOrder(tree[node_index]->left_index, min, tree[node_index]->key);
         else
             inOrder(tree[node_index]->left_index, min, max);
     }
-    if (tree[node_index]->right_index != -2)
+    if (tree[node_index]->right_index <= MAX)
     {
         if (tree[node_index]->key > min)
             inOrder(tree[node_index]->right_index, tree[node_index]->key, max);
@@ -60,7 +61,7 @@ int main()
 
 
 
-    printf("%d\n", cnt);
+    printf("%u\n", cnt);
 
 
 }
@@ -75,7 +76,7 @@ unsigned readInt()
         if (c == '-')
         {   
             c = getchar();
-                return -1;
+                return 3000000000;
         }
         c = getchar();
     }

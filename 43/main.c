@@ -12,10 +12,10 @@ typedef struct Node{
 } Node;
 
 unsigned N, cnt = 0;
-Node **tree;
 
 
-void inOrder(unsigned node_index, unsigned min, unsigned max){
+
+void inOrder(Node **tree,unsigned node_index, unsigned min, unsigned max){
 
 
     if (tree[node_index]->key > min && tree[node_index]->key  < max)
@@ -25,16 +25,16 @@ void inOrder(unsigned node_index, unsigned min, unsigned max){
     if (tree[node_index]->left_index <= MAX)
     {
         if (tree[node_index]->key < max)
-            inOrder(tree[node_index]->left_index, min, tree[node_index]->key);
+            inOrder(tree, tree[node_index]->left_index, min, tree[node_index]->key);
         else
-            inOrder(tree[node_index]->left_index, min, max);
+            inOrder(tree, tree[node_index]->left_index, min, max);
     }
     if (tree[node_index]->right_index <= MAX)
     {
         if (tree[node_index]->key > min)
-            inOrder(tree[node_index]->right_index, tree[node_index]->key, max);
+            inOrder(tree, tree[node_index]->right_index, tree[node_index]->key, max);
         else
-            inOrder(tree[node_index]->right_index, min, max);
+            inOrder(tree, tree[node_index]->right_index, min, max);
     }
 }
 
@@ -46,7 +46,7 @@ void inOrder(unsigned node_index, unsigned min, unsigned max){
 int main()
 {
     N = readInt();
-    tree = malloc(sizeof(Node*)*N);
+    Node ** tree = malloc(sizeof(Node*)*N);
     Node *node;
     for (unsigned i = 0; i < N; ++i)
     {
@@ -57,7 +57,7 @@ int main()
         tree[i] = node;
     }
 
-    inOrder(0, 0, 2000000000);
+    inOrder(tree, 0, 0, 2000000000);
 
 
 

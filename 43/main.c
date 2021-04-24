@@ -1,40 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX 1000000000
 
-inline unsigned readInt();
+
+inline int readInt();
 
 typedef struct Node{
-    unsigned key;
-    unsigned left_index;
-    unsigned right_index;
+    int key;
+    int left_index;
+    int right_index;
 
 } Node;
 
 unsigned N, cnt = 0;
+Node **tree;
 
 
-
-void inOrder(Node **tree,unsigned node_index, unsigned min, unsigned max){
+void inOrder(int node_index, unsigned min, unsigned max){
 
 
     if (tree[node_index]->key > min && tree[node_index]->key  < max)
-        cnt++;
+        ++cnt;
 
 
-    if (tree[node_index]->left_index <= MAX)
+    if (tree[node_index]->left_index != -2)
     {
         if (tree[node_index]->key < max)
-            inOrder(tree, tree[node_index]->left_index, min, tree[node_index]->key);
+            inOrder(tree[node_index]->left_index, min, tree[node_index]->key);
         else
-            inOrder(tree, tree[node_index]->left_index, min, max);
+            inOrder(tree[node_index]->left_index, min, max);
     }
-    if (tree[node_index]->right_index <= MAX)
+    if (tree[node_index]->right_index != -2)
     {
         if (tree[node_index]->key > min)
-            inOrder(tree, tree[node_index]->right_index, tree[node_index]->key, max);
+            inOrder(tree[node_index]->right_index, tree[node_index]->key, max);
         else
-            inOrder(tree, tree[node_index]->right_index, min, max);
+            inOrder(tree[node_index]->right_index, min, max);
     }
 }
 
@@ -46,7 +46,7 @@ void inOrder(Node **tree,unsigned node_index, unsigned min, unsigned max){
 int main()
 {
     N = readInt();
-    Node ** tree = malloc(sizeof(Node*)*N);
+    tree = malloc(sizeof(Node*)*N);
     Node *node;
     for (unsigned i = 0; i < N; ++i)
     {
@@ -57,26 +57,26 @@ int main()
         tree[i] = node;
     }
 
-    inOrder(tree, 0, 0, 2000000000);
+    inOrder(0, 0, 2000000000);
 
 
 
-    printf("%u\n", cnt);
+    printf("%d\n", cnt);
 
 
 }
 
 
-unsigned readInt()
+int readInt()
 {
-    unsigned num = 0;
+    int num = 0;
     char c = getchar();
     while ((c < '0' || c > '9'))
     {
         if (c == '-')
         {   
             c = getchar();
-                return 3000000000;
+                return -1;
         }
         c = getchar();
     }

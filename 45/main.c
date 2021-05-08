@@ -116,10 +116,11 @@ int main()
                 triangle_list[i] = createTriangle(p[i], q[i], r[i]);
         }
         mergeSort(triangle_list, 0, n-1);
-        for (int i = 0; i < n; i++)
-        {
-            printf("%d %d %d\n", triangle_list[i]->p, triangle_list[i]->q, triangle_list[i]->r);
-        }
+        // for (int i = 0; i < n; i++)
+        // {
+            
+        //     printf("%d %d %d\n", triangle_list[i]->p, triangle_list[i]->q, triangle_list[i]->r);
+        // }
         // for (int i = 0; i < n; i++) 
         //     printf("%d ", p[i]);
         //     printf("\n");

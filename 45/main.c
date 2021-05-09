@@ -286,7 +286,8 @@ int main()
     // printf("%d \n", t);
     while (t--) 
     {
-        int n, *p, *q, *r, ans = 0;
+        int n, *p, *q, *r;
+        ll ans = 0;
         generator.getData(&n, &p, &q, &r);
         for(int i = 0; i < n; i++)
         { 
@@ -318,7 +319,7 @@ int main()
             // }
             // printf("\n");
         }
-        printf("%d\n", ans);
+        printf("%ld\n", ans);
         for (int i = 0; i < MAX_PQR; i++)
         {
             BIT[i] = 0;

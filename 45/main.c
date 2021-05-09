@@ -105,7 +105,7 @@ Triangle *triangle_list[MAX_TRIANGLES];
 int BIT[MAX_PQR*2 + 10]={0}, counts_R[MAX_PQR*2 + 10]={0};
 void update(int x, int delta)
 {
-      for(; x <= MAX_PQR; x += x&-x)
+      for(; x <= MAX_PQR*2 + 10; x += x&-x)
         BIT[x] += delta;
 }
 
@@ -161,7 +161,7 @@ int main()
             // printf("\n");
         }
         printf("%ld\n", ans);
-        for (int i = 0; i < MAX_PQR; i++)
+        for (int i = 0; i < MAX_PQR*2 + 10; i++)
         {
             BIT[i] = 0;
             counts_R[i] = 0;

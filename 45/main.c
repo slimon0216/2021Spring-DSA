@@ -22,7 +22,7 @@ bool smaller_than(Triangle* a, Triangle* b)
         return true;
     else if (a->p == b->p)
     {
-        if (a->r < b->r)
+        if (a->r > b->r)
             return true;
         else if (a->r == b->r)
         {
@@ -289,7 +289,7 @@ int main()
         int n, *p, *q, *r, ans = 0;
         generator.getData(&n, &p, &q, &r);
         for(int i = 0; i < n; i++)
-        {
+        { 
             if (q[i] > r[i])
                 triangle_list[i] = createTriangle(p[i]+MAX_PQR, r[i]+MAX_PQR, q[i]+MAX_PQR);
             else
@@ -298,7 +298,7 @@ int main()
         mergeSort(triangle_list, 0, n-1);
         // for (int i = 0; i < n; i++)
         // {
-        //     printf("%d %d %d\n", triangle_list[i]->p, triangle_list[i]->q, triangle_list[i]->r);
+        //     printf("%d %d %d\n", triangle_list[i]->p-MAX_PQR, triangle_list[i]->q-MAX_PQR, triangle_list[i]->r-MAX_PQR);
         // }
         int num_of_r_in_bit = 0;
         for (int i = 0; i < n; ++i)
@@ -307,6 +307,7 @@ int main()
 
             // printf("q: %d\n", (triangle_list[i]->q)-MAX_PQR);
             ans += num_of_r_in_bit - query(triangle_list[i]->q ) ;
+            // printf("ans += %d - %d\n", num_of_r_in_bit , query(triangle_list[i]->q));
             // printf("ans: %d\n", ans);
             counts_R[triangle_list[i]->r]++;
             update(triangle_list[i]->r, counts_R[triangle_list[i]->r]);

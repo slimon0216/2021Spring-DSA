@@ -102,7 +102,7 @@ void mergeSort(Triangle **arr, int left, int right)
 
 Triangle *triangle_list[MAX_TRIANGLES];
 
-int BIT[MAX_PQR]={0}, counts_R[MAX_PQR]={0};
+int BIT[MAX_PQR*2 + 10]={0}, counts_R[MAX_PQR*2 + 10]={0};
 void update(int x, int delta)
 {
       for(; x <= MAX_PQR; x += x&-x)

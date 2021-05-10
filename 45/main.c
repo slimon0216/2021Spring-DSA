@@ -121,25 +121,24 @@ Triangle *triangle_list[MAX_TRIANGLES];
 
 int main() 
 {
-    // generator.init();
-    // int t = generator.getT();
-    int t;
-    scanf("%d", &t);
+    generator.init();
+    int t = generator.getT();
+    // int t;
+    // scanf("%d", &t);
     // printf("%d\n", t);
     while (t--) 
     {
-        // int n, *p, *q, *r;
-        // generator.getData(&n, &p, &q, &r);
+        int n, *p, *q, *r;
+        generator.getData(&n, &p, &q, &r);
 
-        int n, p[100], q[100], r[100];
-        scanf("%d", &n);
-
-        for (int i = 0; i < n; ++i)
-            scanf("%d", &p[i]);
-        for (int i = 0; i < n; ++i)
-            scanf("%d", &q[i]);
-        for (int i = 0; i < n; ++i)
-            scanf("%d", &r[i]);
+        // int n, p[100], q[100], r[100];
+        // scanf("%d", &n);
+        // for (int i = 0; i < n; ++i)
+        //     scanf("%d", &p[i]);
+        // for (int i = 0; i < n; ++i)
+        //     scanf("%d", &q[i]);
+        // for (int i = 0; i < n; ++i)
+        //     scanf("%d", &r[i]);
 
         ll ans = 0;
         for(int i = 0; i < n; i++)

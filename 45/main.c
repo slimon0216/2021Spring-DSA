@@ -100,7 +100,6 @@ void mergeSort(Triangle **arr, int left, int right)
     }
 }
 
-Triangle *triangle_list[MAX_TRIANGLES];
 
 int BIT[MAX_PQR*2 + 10]={0}, counts_R[MAX_PQR*2 + 10]={0};
 void update(int x, int delta)
@@ -118,6 +117,7 @@ int query(int x)
 }
 
 
+Triangle *triangle_list[MAX_TRIANGLES];
 
 int main() 
 {
@@ -148,7 +148,7 @@ int main()
             // 去看左頂點 q 跨過多少 r
 
             // printf("q: %d\n", (triangle_list[i]->q)-MAX_PQR);
-            ans += num_of_r_in_bit - query(triangle_list[i]->q ) ;
+            ans += num_of_r_in_bit - query(triangle_list[i]->q-1) ;
             // printf("ans += %d - %d\n", num_of_r_in_bit , query(triangle_list[i]->q));
             // printf("ans: %d\n", ans);
             counts_R[triangle_list[i]->r]++;

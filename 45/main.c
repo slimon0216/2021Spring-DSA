@@ -121,15 +121,27 @@ Triangle *triangle_list[MAX_TRIANGLES];
 
 int main() 
 {
-    // printf("%d\n", MAX_PQR);
-    generator.init();
-    int t = generator.getT();
-    // printf("%d \n", t);
+    // generator.init();
+    // int t = generator.getT();
+    int t;
+    scanf("%d", &t);
+    // printf("%d\n", t);
     while (t--) 
     {
-        int n, *p, *q, *r;
+        // int n, *p, *q, *r;
+        // generator.getData(&n, &p, &q, &r);
+
+        int n, p[100], q[100], r[100];
+        scanf("%d", &n);
+
+        for (int i = 0; i < n; ++i)
+            scanf("%d", &p[i]);
+        for (int i = 0; i < n; ++i)
+            scanf("%d", &q[i]);
+        for (int i = 0; i < n; ++i)
+            scanf("%d", &r[i]);
+
         ll ans = 0;
-        generator.getData(&n, &p, &q, &r);
         for(int i = 0; i < n; i++)
         { 
             if (q[i] > r[i])
@@ -147,12 +159,22 @@ int main()
         {  
             // 去看左頂點 q 跨過多少 r
 
-            // printf("q: %d\n", (triangle_list[i]->q)-MAX_PQR);
             ans += num_of_r_in_bit - query(triangle_list[i]->q-1) ;
-            // printf("ans += %d - %d\n", num_of_r_in_bit , query(triangle_list[i]->q));
+            // printf("q: %d\n", (triangle_list[i]->q)-MAX_PQR);
+            // printf("ans += %d - %d\n", num_of_r_in_bit , query(triangle_list[i]->q-1));
             // printf("ans: %d\n", ans);
+            // for (int j = 1; j < 10; j++)
+            // {
+            //     printf("%d ", j);
+            // }
+            // printf("\n");
+            // for (int j = MAX_PQR+1; j < MAX_PQR+10; j++)
+            // {
+            //     printf("%d ", query(j));
+            // }
+            // printf("\n");
             counts_R[triangle_list[i]->r]++;
-            update(triangle_list[i]->r, counts_R[triangle_list[i]->r]);
+            update(triangle_list[i]->r,1);
             ++num_of_r_in_bit;
             // for (ll j = 1048579; j <= 1048599;++j)
             // {

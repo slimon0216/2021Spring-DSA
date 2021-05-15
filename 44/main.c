@@ -139,6 +139,8 @@ int main()
         //     print_list(prod_lines[i]);
         // }
         // printf("\n");
+        for (int i = 0; i < num_of_lines; ++i)
+            free(heap[i]);
     }
 }
 

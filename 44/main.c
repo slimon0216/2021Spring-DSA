@@ -56,6 +56,7 @@ int operations[MAX * 2 + 2][3];
 int target_line[MAX] = {0};
 int status[MAX] = {0};
 List *prod_lines[MAX] = {NULL};
+int *heap[MAX] = {NULL};
 int main()
 {
 
@@ -74,6 +75,7 @@ int main()
         {
             prod_lines[i] = malloc(sizeof(List));
             prod_lines[i]->head = prod_lines[i]->tail = NULL;
+            heap[i] = malloc(sizeof(int) * num_of_packages);
         }
         for (int i = 0; i < num_of_operations; ++i)
         {

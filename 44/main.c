@@ -75,7 +75,7 @@ int main()
         {
             prod_lines[i] = malloc(sizeof(List));
             prod_lines[i]->head = prod_lines[i]->tail = NULL;
-            heap[i] = malloc(sizeof(int) * num_of_packages);
+            // heap[i] = malloc(sizeof(int) * num_of_packages);
         }
         for (int i = 0; i < num_of_operations; ++i)
         {
@@ -106,6 +106,8 @@ int main()
                 int height = operations[op_index][1];
                 int line_index = operations[op_index][2];
                 insert_list(prod_lines[line_index], height);
+                if (heap[line_index] == NULL)
+                    heap[line_index] = malloc(sizeof(int) * num_of_packages);
             }
             else if (operations[op_index][0] == MERGE)
             {
@@ -140,7 +142,8 @@ int main()
         // }
         // printf("\n");
         for (int i = 0; i < num_of_lines; ++i)
-            free(heap[i]);
+            if (heap[i] != NULL)
+                free(heap[i]);
     }
 }
 

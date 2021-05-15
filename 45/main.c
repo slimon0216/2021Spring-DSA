@@ -149,10 +149,10 @@ int main()
                 triangle_list[i] = createTriangle(p[i]+MAX_PQR, q[i]+MAX_PQR, r[i]+MAX_PQR);
         }
         mergeSort(triangle_list, 0, n-1);
-        // for (int i = 0; i < n; i++)
-        // {
-        //     printf("%d %d %d\n", triangle_list[i]->p-MAX_PQR, triangle_list[i]->q-MAX_PQR, triangle_list[i]->r-MAX_PQR);
-        // }
+        for (int i = 0; i < n; i++)
+        {
+            printf("%d %d %d\n", triangle_list[i]->p-MAX_PQR, triangle_list[i]->q-MAX_PQR, triangle_list[i]->r-MAX_PQR);
+        }
         int num_of_r_in_bit = 0;
         for (int i = 0; i < n; ++i)
         {  

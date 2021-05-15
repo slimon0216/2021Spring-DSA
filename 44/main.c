@@ -57,6 +57,7 @@ int target_line[MAX] = {0};
 int status[MAX] = {0};
 List *prod_lines[MAX] = {NULL};
 int *heap[MAX] = {NULL};
+int freeHeap[MAX] = {0};
 int main()
 {
 
@@ -107,7 +108,10 @@ int main()
                 int line_index = operations[op_index][2];
                 insert_list(prod_lines[line_index], height);
                 if (heap[line_index] == NULL)
+                {
                     heap[line_index] = malloc(sizeof(int) * num_of_packages);
+                    freeHeap[line_index] = 1;
+                }
             }
             else if (operations[op_index][0] == MERGE)
             {
@@ -142,8 +146,11 @@ int main()
         // }
         // printf("\n");
         for (int i = 0; i < num_of_lines; ++i)
-            if (heap[i] != NULL)
+            if (freeHeap[i] = 1)
+            {
                 free(heap[i]);
+                freeHeap[i] = 0;
+            }
     }
 }
 

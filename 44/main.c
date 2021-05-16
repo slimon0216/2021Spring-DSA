@@ -4,7 +4,7 @@
 #define MAX 100000
 #define PUSH 0
 #define MERGE 1
-
+int sc ;
 typedef struct Node
 {
     int value;
@@ -112,12 +112,11 @@ LNode *pop(LNode *root)
     return root;
 }
 
-
 int ReadInt();
 
 int operations[MAX * 2 + 2][3];
 int target_line[MAX] = {0};
-int status[MAX] = {0};
+int status[MAX] = {0};  // -1 已經pop, 0 pop不出來, 1 代表頭尾 , 2代表最高, 3代表 1 and 2
 List *prod_lines[MAX] = {NULL};
 LNode *heap[MAX] = {NULL};
 // int freeHeap[MAX] = {0};
@@ -144,7 +143,7 @@ int main()
         }
         for (int i = 0; i < num_of_operations; ++i)
         {
-            scanf("%s %d %d", &str, &a, &b);
+            sc = scanf("%s %d %d", &str, &a, &b);
             // printf("%s\n", str);
             if (str[0] == 'p')
                 operations[i][0] = PUSH;
@@ -155,29 +154,46 @@ int main()
         }
         for (int i = 0; i < num_of_packages; i++)
             target_line[i] = ReadInt();
-        int op_index = 0;
+        
         int tar_index = 0;
-        while (op_index < num_of_operations && tar_index < num_of_packages)
+        for(int op_index = 0; op_index < num_of_operations; ++op_index)
         {
-            target = target_line[tar_index];
-            // if (target == operations)
-            if (status[target] == 1)
-            {
-                continue;
-            }
             if (operations[op_index][0] == PUSH)
             {
                 int height = operations[op_index][1];
+                if (height == target_line[tar_index])
+                {   
+                    status[height] = -1;
+                    ++tar_index;
+                    continue;
+                }
                 int line_index = operations[op_index][2];
+                //push 進去
+                if (prod_lines[line_index]->tail != NULL)
+                    if (status[prod_lines[line_index]->tail->value] == 1)
+                        status[prod_lines[line_index]->tail->value] = 0;
+                status[height] = 1;
                 insert_list(prod_lines[line_index], height);
-                // if (heap[line_index] == NULL)
-                // {
-                //     heap[line_index] = create_LNode();
-                //     heap[line_index]->value = height;
-                // }
-                // else
-                heap[line_index] = insert_lheap(heap[line_index], height);
-      
+                
+                // heap
+                if (heap[line_index] != NULL)
+                    if (status[heap[line_index]->value] == 2)   //heap 的root只該是 2 or 3
+                        status[heap[line_index]->value] = 0;
+                    else if (status[heap[line_index]->value] == 3)
+                        status[heap[line_index]->value] = 1;
+
+                if (heap[line_index] == NULL)
+                {
+                    heap[line_index] = create_LNode();
+                    heap[line_index]->value = height;
+                }
+                else
+                    heap[line_index] = insert_lheap(heap[line_index], height);
+                if (status[heap[line_index]->value] == 1)
+                    status[heap[line_index]->value] = 3;
+                else if (status[heap[line_index]->value] == 0)
+                    status[heap[line_index]->value] = 2;
+                
             }
             else if (operations[op_index][0] == MERGE)
             {
@@ -189,38 +205,65 @@ int main()
                     {
                         prod_lines[destination]->head = prod_lines[broken]->head;
                         prod_lines[destination]->tail = prod_lines[broken]->tail;
+                        // status[prod_lines[destination]->head->value] = 1;
+                        // status[prod_lines[broken]->tail->value] = 1;
                     }
                 }
                 else
                 {
                     if (prod_lines[broken]->head != NULL)
                     {
+                        if (prod_lines[broken]->head != prod_lines[broken]->tail)
+                            if (status[prod_lines[broken]->head->value] == 1)
+                                status[prod_lines[broken]->head->value] = 0;
+                            else if (status[prod_lines[broken]->head->value] == 3)
+                                status[prod_lines[broken]->head->value] = 2;
+
+                        if (prod_lines[destination]->head != prod_lines[destination]->tail)
+                            if (status[prod_lines[destination]->tail->value] == 1)
+                                status[prod_lines[destination]->tail->value] = 0;
+                            else if (status[prod_lines[destination]->tail->value] == 3)
+                                status[prod_lines[destination]->tail->value] = 2;
                         prod_lines[destination]->tail->next = prod_lines[broken]->head;
                         prod_lines[destination]->tail = prod_lines[broken]->tail;
+                                    
                     }
                 }
                 prod_lines[broken]->head = prod_lines[broken]->tail = NULL;
-                if (heap[destination] != NULL && heap[broken] != NULL)
+                
+                if (heap[destination] != NULL || heap[broken] != NULL)
+                {
+                    if (heap[destination] != NULL )
+                        if (status[heap[destination]->value] == 2)
+                            status[heap[destination]->value] = 0;
+                        else if (status[heap[destination]->value] == 3)
+                            status[heap[destination]->value] = 1;
+                    if (heap[broken] != NULL )
+                        if (status[heap[broken]->value] == 2)
+                            status[heap[broken]->value] = 0;
+                        else if (status[heap[broken]->value] == 3)
+                            status[heap[broken]->value] = 1;
                     heap[destination] = merge_lheap(heap[broken], heap[destination]);
+                    if (status[heap[destination]->value] == 0)
+                        status[heap[destination]->value] = 2;
+                    else if (status[heap[destination]->value] == 1)
+                        status[heap[destination]->value] = 3;
+                    heap[broken] = NULL;
+                }
+
+
             }
-            ++op_index;
-
-
+            // ++op_index;
 
             // printf("%d ", target);
         }
-        // for (int i = 0; i < num_of_lines; i++)
-        // {
-        //     printf("line %d:", i);
-        //     print_list(prod_lines[i]);
-        // }
-        // printf("\n");s
-        // for (int i = 0; i < num_of_lines; ++i)
-        //     if (freeHeap[i] == 1)
-        //     {
-        //         free(heap[i]);
-        //         freeHeap[i] = 0;
-        //     }
+        for (int i = 0; i < num_of_lines; i++)
+        {
+            printf("line %d:", i);
+            print_list(prod_lines[i]);
+        }
+        for (int i = 0; i < num_of_lines; i++)
+            heap[i] = NULL;
     }
 }
 

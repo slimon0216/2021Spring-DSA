@@ -112,7 +112,6 @@ LNode *pop(LNode *root)
     return root;
 }
 
-
 int ReadInt();
 
 int operations[MAX * 2 + 2][3];
@@ -170,14 +169,13 @@ int main()
                 int height = operations[op_index][1];
                 int line_index = operations[op_index][2];
                 insert_list(prod_lines[line_index], height);
-                // if (heap[line_index] == NULL)
-                // {
-                //     heap[line_index] = create_LNode();
-                //     heap[line_index]->value = height;
-                // }
-                // else
-                heap[line_index] = insert_lheap(heap[line_index], height);
-      
+                if (heap[line_index] == NULL)
+                {
+                    heap[line_index] = create_LNode();
+                    heap[line_index]->value = height;
+                }
+                else
+                    heap[line_index] = insert_lheap(heap[line_index], height);
             }
             else if (operations[op_index][0] == MERGE)
             {
@@ -204,8 +202,6 @@ int main()
                     heap[destination] = merge_lheap(heap[broken], heap[destination]);
             }
             ++op_index;
-
-
 
             // printf("%d ", target);
         }

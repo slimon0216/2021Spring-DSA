@@ -214,7 +214,7 @@ int main()
         //     printf("line %d:", i);
         //     print_list(prod_lines[i]);
         // }
-        // printf("\n");
+        // printf("\n");s
         // for (int i = 0; i < num_of_lines; ++i)
         //     if (freeHeap[i] == 1)
         //     {

@@ -11,12 +11,21 @@ typedef struct Node
     struct Node *next;
     struct Node *prev;
 } Node;
+typedef struct LNode
+{
+    int value, dist;
+    struct LNode *right, *left, *parent;
+} LNode;
 
 typedef struct List
 {
     Node *head;
     Node *tail;
 } List;
+
+
+Node *list_node[MAX] = {NULL};
+LNode *heap_node[MAX] = {NULL};
 
 Node *createNode(int val)
 {
@@ -29,6 +38,7 @@ Node *createNode(int val)
 void insert_list(List *list, int val)
 {
     Node *node = createNode(val);
+    list_node[val] = node;
     if (list->head == NULL)
         list->head = list->tail = node;
     else
@@ -49,18 +59,15 @@ void print_list(List *l)
     }
     printf("\n");
 }
-typedef struct LNode
-{
-    int value, dist;
-    struct LNode *right, *left, *parent;
-} LNode;
 
-LNode *create_LNode()
+LNode *create_LNode(int val)
 {
     LNode *node;
     node = (LNode *)malloc(sizeof(LNode));
     node->right = node->left = node->parent = NULL;
-    node->dist = node->value = 0;
+    node->dist = 0;
+    node->value = val;
+
     return node;
 }
 
@@ -98,8 +105,8 @@ LNode *merge_lheap(LNode *a, LNode *b)
 }
 LNode *insert_lheap(LNode *root, int val)
 {
-    LNode *node = create_LNode();
-    node->value = val;
+    LNode *node = create_LNode(val);
+    heap_node[val] = node;
     root = merge_lheap(root, node);
     return root;
 }
@@ -119,6 +126,7 @@ int target_line[MAX] = {0};
 int status[MAX] = {0};  // -1 已經pop, 0 pop不出來, 1 代表頭尾 , 2代表最高, 3代表 1 and 2
 List *prod_lines[MAX] = {NULL};
 LNode *heap[MAX] = {NULL};
+
 // int freeHeap[MAX] = {0};
 // int a[MAX][MAX];
 
@@ -160,13 +168,24 @@ int main()
         {
             if (operations[op_index][0] == PUSH)
             {
+                int target = target_line[tar_index];
                 int height = operations[op_index][1];
-                if (height == target_line[tar_index])
+                if (height == target)
                 {   
                     status[height] = -1;
                     ++tar_index;
                     continue;
                 }
+
+                if (status[target] == 1)
+                {
+                    
+                }
+                else if (status[target] == 2)
+                {}
+                else if (status[target] == 3)
+                {}
+
                 int line_index = operations[op_index][2];
                 //push 進去
                 if (prod_lines[line_index]->tail != NULL)
@@ -184,8 +203,7 @@ int main()
 
                 if (heap[line_index] == NULL)
                 {
-                    heap[line_index] = create_LNode();
-                    heap[line_index]->value = height;
+                    heap[line_index] = create_LNode(height);
                 }
                 else
                     heap[line_index] = insert_lheap(heap[line_index], height);
@@ -194,6 +212,8 @@ int main()
                 else if (status[heap[line_index]->value] == 0)
                     status[heap[line_index]->value] = 2;
                 
+                // push 結束 可以再看看
+
             }
             else if (operations[op_index][0] == MERGE)
             {
@@ -264,6 +284,11 @@ int main()
         }
         for (int i = 0; i < num_of_lines; i++)
             heap[i] = NULL;
+        for (int i = 0; i < num_of_packages; ++i)
+        {
+            heap_node[i] =NULL; 
+            list_node[i] = NULL;
+        }
     }
 }
 

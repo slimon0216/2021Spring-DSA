@@ -160,6 +160,7 @@ int main()
         while (op_index < num_of_operations && tar_index < num_of_packages)
         {
             target = target_line[tar_index];
+            // if (target == operations)
             if (status[target] == 1)
             {
                 continue;
@@ -208,12 +209,12 @@ int main()
 
             // printf("%d ", target);
         }
-        for (int i = 0; i < num_of_lines; i++)
-        {
-            printf("line %d:", i);
-            print_list(prod_lines[i]);
-        }
-        printf("\n");
+        // for (int i = 0; i < num_of_lines; i++)
+        // {
+        //     printf("line %d:", i);
+        //     print_list(prod_lines[i]);
+        // }
+        // printf("\n");
         // for (int i = 0; i < num_of_lines; ++i)
         //     if (freeHeap[i] == 1)
         //     {

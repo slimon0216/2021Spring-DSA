@@ -50,14 +50,78 @@ void print_list(List *l)
     printf("\n");
 }
 
+typedef struct LNode
+{
+    int value, dist;
+    struct LNode *right, *left, *parent;
+} LNode;
+
+LNode *create_LNode()
+{
+    LNode *node;
+    node = (LNode *)malloc(sizeof(LNode));
+    node->right = node->left = node->parent = NULL;
+    node->dist = node->value = 0;
+}
+
+int distance(LNode *node)
+{
+    if (node == NULL)
+        return -1;
+    else
+        return node->dist;
+}
+LNode *merge_lheap(LNode *a, LNode *b)
+{
+    if (a == NULL)
+        return b;
+    if (b == NULL)
+        return a;
+    if (b->value > a->value)
+    {
+        LNode *temp = b;
+        b = a;
+        a = temp;
+    }
+    a->right = merge_lheap(a->right, b);
+    if (distance(a->right) > distance(a->left))
+    {
+        LNode *temp = a->right;
+        a->right = a->left;
+        a->left = temp;
+    }
+    if (a->right == NULL)
+        a->dist = 0;
+    else
+        a->dist = 1 + (a->right->dist);
+    return a;
+}
+LNode *pop(LNode *root)
+{
+    printf("deleted element is %d\n", root->value);
+    LNode *temp = root;
+    root = merge_lheap(root->right, root->left);
+    // free(temp);
+    return root;
+}
+LNode *insert_lheap(LNode *root, int val)
+{
+    LNode *node = create_LNode();
+    node->value = val;
+    root = merge_lheap(root, node);
+    return root;
+}
+
 int ReadInt();
 
 int operations[MAX * 2 + 2][3];
 int target_line[MAX] = {0};
 int status[MAX] = {0};
 List *prod_lines[MAX] = {NULL};
-int *heap[MAX] = {NULL};
-int freeHeap[MAX] = {0};
+LNode *heap[MAX] = {NULL};
+// int freeHeap[MAX] = {0};
+// int a[MAX][MAX];
+
 int main()
 {
 
@@ -107,11 +171,8 @@ int main()
                 int height = operations[op_index][1];
                 int line_index = operations[op_index][2];
                 insert_list(prod_lines[line_index], height);
-                if (heap[line_index] == NULL)
-                {
-                    heap[line_index] = malloc(sizeof(int) * num_of_packages);
-                    freeHeap[line_index] = 1;
-                }
+
+                heap[line_index] = insert_lheap(heap[line_index], height);
             }
             else if (operations[op_index][0] == MERGE)
             {
@@ -134,23 +195,18 @@ int main()
                     }
                 }
                 prod_lines[broken]->head = prod_lines[broken]->tail = NULL;
+                heap[destination] = merge_lheap(heap[broken], heap[destination]);
             }
             ++op_index;
 
             // printf("%d ", target);
         }
-        // for (int i = 0; i < num_of_lines; i++)
-        // {
-        //     printf("line %d:", i);
-        //     print_list(prod_lines[i]);
-        // }
-        // printf("\n");
-        for (int i = 0; i < num_of_lines; ++i)
-            if (freeHeap[i] == 1)
-            {
-                free(heap[i]);
-                freeHeap[i] = 0;
-            }
+        for (int i = 0; i < num_of_lines; i++)
+        {
+            printf("line %d:", i);
+            print_list(prod_lines[i]);
+        }
+        printf("\n");
     }
 }
 

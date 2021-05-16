@@ -12,6 +12,7 @@ LNode *create_LNode()
     node = (LNode *)malloc(sizeof(LNode));
     node->right = node->left = node->parent = NULL;
     node->dist = node->value = 0;
+    return node;
 }
 
 int distance(LNode *node)
@@ -63,50 +64,50 @@ LNode *insert_lheap(LNode *root, int val)
 }
 
 // LNode top()
-
+LNode * lheap[5] = {NULL};
 int main()
 {
-    LNode *lheap1 = NULL;
-    lheap1 = insert_lheap(lheap1, 12);
-    lheap1 = insert_lheap(lheap1, 190);
-    lheap1 = insert_lheap(lheap1, 7);
-    lheap1 = insert_lheap(lheap1, 8);
-    lheap1 = insert_lheap(lheap1, 2);
-    // printf("%d\n", lheap1->value);
-    // lheap1 = pop(lheap1);
-    // printf("%d\n", lheap1->value);
-    // lheap1 = pop(lheap1);
-    // printf("%d\n", lheap1->value);
-    // lheap1 = pop(lheap1);
-    // printf("%d\n", lheap1->value);
-    // lheap1 = pop(lheap1);
-    // printf("%d\n", lheap1->value);
+    lheap[1] = NULL;
+    lheap[1] = insert_lheap(lheap[1], 12);
+    lheap[1] = insert_lheap(lheap[1], 190);
+    lheap[1] = insert_lheap(lheap[1], 7);
+    lheap[1] = insert_lheap(lheap[1], 8);
+    lheap[1] = insert_lheap(lheap[1], 2);
+    // printf("%d\n", lheap[1]->value);
+    // lheap[1] = pop(lheap[1]);
+    // printf("%d\n", lheap[1]->value);
+    // lheap[1] = pop(lheap[1]);
+    // printf("%d\n", lheap[1]->value);
+    // lheap[1] = pop(lheap[1]);
+    // printf("%d\n", lheap[1]->value);
+    // lheap[1] = pop(lheap[1]);
+    // printf("%d\n", lheap[1]->value);
 
-    LNode *lheap2 = NULL;
-    lheap2 = insert_lheap(lheap2, 33);
-    lheap2 = insert_lheap(lheap2, 13);
-    lheap2 = insert_lheap(lheap2, 27);
-    lheap2 = insert_lheap(lheap2, 1);
-    // printf("%d\n", lheap2->value);
-    // lheap2 = pop(lheap2);
+    lheap[2] = NULL;
+    lheap[2] = insert_lheap(lheap[2], 33);
+    lheap[2] = insert_lheap(lheap[2], 13);
+    lheap[2] = insert_lheap(lheap[2], 27);
+    lheap[2] = insert_lheap(lheap[2], 1);
+    // printf("%d\n", lheap[2]->value);
+    // lheap[2] = pop(lheap[2]);
 
-    LNode *lheap3 = merge(lheap1, lheap2);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
-    printf("%d\n", lheap3->value);
-    lheap3 = pop(lheap3);
+    lheap[3] = merge(lheap[1], lheap[2]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
+    printf("%d\n", lheap[3]->value);
+    lheap[3] = pop(lheap[3]);
 }
 
 // void print(LNode *p)

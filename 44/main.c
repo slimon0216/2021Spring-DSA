@@ -195,7 +195,8 @@ int main()
                     }
                 }
                 prod_lines[broken]->head = prod_lines[broken]->tail = NULL;
-                heap[destination] = merge_lheap(heap[broken], heap[destination]);
+                if (heap[destination] != NULL && heap[broken] != NULL)
+                    heap[destination] = merge_lheap(heap[broken], heap[destination]);
             }
             ++op_index;
 

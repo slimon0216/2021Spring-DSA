@@ -153,6 +153,8 @@ int disjoint_set_merged[MAX] = {0};
 // int disjoint_set_origin[MAX] = {0};
 int T, num_of_packages, num_of_operations, num_of_lines;
 
+int compression[MAX] = {0};
+
 int main()
 {
     T = ReadInt();
@@ -200,9 +202,15 @@ int main()
                 //pop
                 status[target] = -2;
                 int pid = list_node[target]->prod_id;
+                int cnt = 0;
                 while (disjoint_set_merged[pid] != pid)
+                {
+                    compression[cnt] = pid;
+                    ++cnt;
                     pid = disjoint_set_merged[pid];
-                disjoint_set_merged[list_node[target]->prod_id] = pid;
+                }
+                for (int i = 0; i < cnt; ++i)
+                    disjoint_set_merged[compression[i]] = pid;
 
                 if (prod_lines[pid]->head == prod_lines[pid]->tail) //只有一個node
                 {

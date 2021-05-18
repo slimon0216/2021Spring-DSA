@@ -218,6 +218,7 @@ int main()
                     Node *node = heap_node[target]->copy;
                     while (status[heap[pid]->value] == -2)
                         heap[pid] = pop(heap[pid]);
+                    status[heap[pid]->value] = 1;
                     if (heap[pid]->value == target) //剛好在 root
                     {
                         assert(heap[pid]->copy == node);
@@ -275,6 +276,8 @@ int main()
                         node->prev->next = node->next;
                         node->next->prev = node->prev;
                     }
+                    // while (status[heap[line_index]->value] == -2)
+                    //     heap[line_index] = pop(heap[line_index]);
                 }
                 ++tar_index;
                 target = target_line[tar_index];

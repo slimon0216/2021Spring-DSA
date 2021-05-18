@@ -29,118 +29,18 @@ typedef struct List
 
 Node *list_node[MAX] = {NULL};
 LNode *heap_node[MAX] = {NULL};
-// int which_list[MAX] = {0};
 
-Node *createNode(int val)
-{
-    Node *node = malloc(sizeof(Node));
-    node->value = node->prod_id = val;
-    node->next = node->prev = NULL;
-    return node;
-}
+inline Node *createNode(int val);
 
-void insert_list(List *list, int val, int line_index)
-{
-    Node *node = createNode(val);
-    node->prod_id = line_index;
-    list_node[val] = node;
-    if (list->head == NULL)
-    {
-        assert(list->tail == NULL);
-        list->head = list->tail = node;
-    }
-    else
-    {
-        list->tail->next = node;
-        node->prev = list->tail;
-        list->tail = node;
-    }
-}
+inline void insert_list(List *list, int val, int line_index);
 
-void print_list(List *l, int mode)
-{
-    if (mode == 1)
-    {
-        Node *node = l->head;
-        while (node != NULL)
-        {
-            printf("%d ", node->value);
-            node = node->next;
-        }
-        printf("\n");
-    }
-    else
-    {
-        Node *node = l->tail;
-        while (node != NULL)
-        {
-            printf("%d ", node->value);
-            node = node->prev;
-        }
-        printf("\n");
-    }
-}
+inline LNode *create_LNode(int val, Node *copy);
 
-LNode *create_LNode(int val, Node *copy)
-{
-    LNode *node;
-    node = (LNode *)malloc(sizeof(LNode));
-    node->right = node->left = node->parent = NULL;
-    node->copy = copy;
-    node->dist = 0;
-    node->value = val;
-    return node;
-}
+inline int distance(LNode *node);
+inline LNode *merge_lheap(LNode *a, LNode *b);
 
-int distance(LNode *node)
-{
-    if (node == NULL)
-        return -1;
-    else
-        return node->dist;
-}
-LNode *merge_lheap(LNode *a, LNode *b)
-{
-    if (a == NULL)
-        return b;
-    if (b == NULL)
-        return a;
-    if (b->value > a->value)
-    {
-        LNode *temp = b;
-        b = a;
-        a = temp;
-    }
-    a->right = merge_lheap(a->right, b);
-    if (a->right != NULL)
-        a->right->parent = a;
-    if (distance(a->right) > distance(a->left))
-    {
-        LNode *temp = a->right;
-        a->right = a->left;
-        a->left = temp;
-    }
-    if (a->right == NULL)
-        a->dist = 0;
-    else
-        a->dist = 1 + (a->right->dist);
-    return a;
-}
-LNode *insert_lheap(LNode *root, int val, Node *copy)
-{
-    LNode *node = create_LNode(val, copy);
-    heap_node[val] = node;
-    root = merge_lheap(root, node);
-    return root;
-}
-LNode *pop(LNode *root)
-{
-    // printf("deleted element is %d\n", root->value);
-    LNode *temp = root;
-    root = merge_lheap(root->right, root->left);
-    free(temp);
-    return root;
-}
+inline LNode *insert_lheap(LNode *root, int val, Node *copy);
+inline LNode *pop(LNode *root);
 
 int ReadInt();
 
@@ -150,11 +50,9 @@ int status[MAX] = {0}; // -2 已經pop, -1 存在但pop不出來, 0 還沒進來
 List *prod_lines[MAX] = {NULL};
 LNode *heap[MAX] = {NULL};
 int disjoint_set_merged[MAX] = {0};
-// int disjoint_set_origin[MAX] = {0};
-int T, num_of_packages, num_of_operations, num_of_lines;
-
+int T, num_of_packages, num_of_operations, num_of_lines, target, pid, cnt;
 int compression[MAX] = {0};
-
+Node *node;
 int main()
 {
     T = ReadInt();
@@ -173,10 +71,10 @@ int main()
         }
         for (int i = 0; i < num_of_operations; ++i)
         {
-            sc = scanf("%s", &str);
+            sc = getchar();
             operations[i][1] = ReadInt();
             operations[i][2] = ReadInt();
-            if (str[0] == 'p')
+            if (sc == 'p')
                 operations[i][0] = PUSH;
             else
                 operations[i][0] = MERGE;
@@ -190,8 +88,7 @@ int main()
         int impossible = false;
         while (true)
         {
-
-            int target = target_line[tar_index];
+            target = target_line[tar_index];
             if (status[target] == -1)
                 impossible = true;
             if (impossible)
@@ -201,8 +98,8 @@ int main()
             {
                 //pop
                 status[target] = -2;
-                int pid = list_node[target]->prod_id;
-                int cnt = 0;
+                pid = list_node[target]->prod_id;
+                cnt = 0;
                 while (disjoint_set_merged[pid] != pid)
                 {
                     compression[cnt] = pid;
@@ -221,7 +118,7 @@ int main()
                 }
                 else
                 { // product line 有兩個以上 node
-                    Node *node = heap_node[target]->copy;
+                    node = heap_node[target]->copy;
                     while (status[heap[pid]->value] == -2)
                         heap[pid] = pop(heap[pid]);
                     status[heap[pid]->value] = 1;
@@ -276,22 +173,12 @@ int main()
                 }
                 else
                 {
-                    // printf("push %d %d\n", operations[op_index][1], operations[op_index][2]);
-                    //push 進去
-
                     int line_index = operations[op_index][2];
                     if (prod_lines[line_index]->tail != NULL)
                         status[prod_lines[line_index]->tail->value] = -1;
 
                     insert_list(prod_lines[line_index], height, line_index);
                     status[prod_lines[line_index]->head->value] = 1;
-
-                    // 處理 heap
-                    // if (heap[line_index] == NULL)
-                    // {
-                    //     heap[line_index] = create_LNode(height, prod_lines[line_index]->tail);
-                    // }
-                    // else
 
                     if (heap[line_index] != NULL)
                     {
@@ -309,8 +196,6 @@ int main()
 
             else if (operations[op_index][0] == MERGE)
             {
-                // printf("merge %d %d\n", operations[op_index][1], operations[op_index][2]);
-
                 int broken = operations[op_index][1];
                 int destination = operations[op_index][2];
 
@@ -379,11 +264,6 @@ int main()
         else
             printf("impossible\n");
 
-        // for (int i = 0; i < num_of_lines; i++)
-        // {
-        //     printf("line %d:", i);
-        //     print_list(prod_lines[i], 1);
-        // }
         for (int i = 0; i < num_of_lines; i++)
         {
             heap[i] = NULL;
@@ -408,4 +288,94 @@ int ReadInt()
     while (c > ('0' - 1) && c < ('9' + 1))
         num = num * 10 + (c - '0'), c = getchar();
     return num;
+}
+
+Node *createNode(int val)
+{
+    Node *node = malloc(sizeof(Node));
+    node->value = node->prod_id = val;
+    node->next = node->prev = NULL;
+    return node;
+}
+
+void insert_list(List *list, int val, int line_index)
+{
+    Node *node = createNode(val);
+    node->prod_id = line_index;
+    list_node[val] = node;
+    if (list->head == NULL)
+    {
+        assert(list->tail == NULL);
+        list->head = list->tail = node;
+    }
+    else
+    {
+        list->tail->next = node;
+        node->prev = list->tail;
+        list->tail = node;
+    }
+}
+
+LNode *create_LNode(int val, Node *copy)
+{
+    LNode *node;
+    node = (LNode *)malloc(sizeof(LNode));
+    node->right = node->left = node->parent = NULL;
+    node->copy = copy;
+    node->dist = 0;
+    node->value = val;
+    return node;
+}
+
+int distance(LNode *node)
+{
+    if (node == NULL)
+        return -1;
+    else
+        return node->dist;
+}
+
+LNode *merge_lheap(LNode *a, LNode *b)
+{
+    if (a == NULL)
+        return b;
+    if (b == NULL)
+        return a;
+    if (b->value > a->value)
+    {
+        LNode *temp = b;
+        b = a;
+        a = temp;
+    }
+    a->right = merge_lheap(a->right, b);
+    if (a->right != NULL)
+        a->right->parent = a;
+    if (distance(a->right) > distance(a->left))
+    {
+        LNode *temp = a->right;
+        a->right = a->left;
+        a->left = temp;
+    }
+    if (a->right == NULL)
+        a->dist = 0;
+    else
+        a->dist = 1 + (a->right->dist);
+    return a;
+}
+
+LNode *insert_lheap(LNode *root, int val, Node *copy)
+{
+    LNode *node = create_LNode(val, copy);
+    heap_node[val] = node;
+    root = merge_lheap(root, node);
+    return root;
+}
+
+LNode *pop(LNode *root)
+{
+    // printf("deleted element is %d\n", root->value);
+    LNode *temp = root;
+    root = merge_lheap(root->right, root->left);
+    free(temp);
+    return root;
 }

@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <stdbool.h>
+#define NDEBUG
+#include <assert.h>
 
 #define MAX 100005
 #define PUSH 0
 #define MERGE 1
-
 int sc;
 typedef struct Node
 {
@@ -112,6 +112,8 @@ LNode *merge_lheap(LNode *a, LNode *b)
         a = temp;
     }
     a->right = merge_lheap(a->right, b);
+    if (a->right != NULL)
+        a->right->parent = a;
     if (distance(a->right) > distance(a->left))
     {
         LNode *temp = a->right;
@@ -133,7 +135,7 @@ LNode *insert_lheap(LNode *root, int val, Node *copy)
 }
 LNode *pop(LNode *root)
 {
-    printf("deleted element is %d\n", root->value);
+    // printf("deleted element is %d\n", root->value);
     LNode *temp = root;
     root = merge_lheap(root->right, root->left);
     free(temp);
@@ -152,7 +154,6 @@ int disjoint_set_merged[MAX] = {0};
 
 int main()
 {
-
     int T, num_of_packages, num_of_operations, num_of_lines;
     T = ReadInt();
     char str[5];
@@ -178,8 +179,8 @@ int main()
             else
                 operations[i][0] = MERGE;
         }
-        for (int i = 0; i < num_of_operations; ++i)
-            printf("%d %d %d\n", operations[i][0], operations[i][1], operations[i][2]);
+        // for (int i = 0; i < num_of_operations; ++i)
+        //     printf("%d %d %d\n", operations[i][0], operations[i][1], operations[i][2]);
         for (int i = 0; i < num_of_packages; i++)
             target_line[i] = ReadInt();
 
@@ -190,10 +191,12 @@ int main()
         while (true)
         {
 
+            int target = target_line[tar_index];
+
+            if (status[target] == -1)
+                impossible = true;
             if (impossible)
                 break;
-
-            int target = target_line[tar_index];
 
             while (status[target] == 1)
             {
@@ -210,94 +213,91 @@ int main()
                     heap[pid] = NULL;
                     prod_lines[pid]->head = prod_lines[pid]->tail = NULL;
                 }
-
-                // product line 有兩個以上 node
-                Node *node = heap_node[target]->copy;
-                if (heap[pid]->value == target) //剛好在 root
-                {
-                    assert(heap[pid]->copy == node);
-                    status[heap[pid]->value] = -1;
-                    heap[pid] = pop(heap[pid]);
-                    status[heap[pid]->value] = 1;
-                }
                 else
-                {
-                    //非 root
-                    assert((prod_lines[pid]->head->value == target) || (prod_lines[pid]->tail->value == target));
-                    int isleft = true;
-                    LNode *prnt = heap_node[target]->parent;
-                    if (prnt->right == heap_node[target])
+                { // product line 有兩個以上 node
+                    Node *node = heap_node[target]->copy;
+                    if (heap[pid]->value == target) //剛好在 root
                     {
-                        assert(prnt->left != heap_node[target]);
-                        isleft == false;
+                        assert(heap[pid]->copy == node);
+                        status[heap[pid]->value] = -1;
+                        heap[pid] = pop(heap[pid]);
+                        status[heap[pid]->value] = 1;
                     }
-                    LNode *root = pop(heap_node[target]);
-                    heap_node[target] = NULL;
-
-                    root->parent = prnt;
-                    if (isleft)
-                        prnt->left = root;
                     else
-                        prnt->right = root;
-                    if (distance(prnt->right) > distance(prnt->left))
                     {
-                        LNode *temp = prnt->right;
-                        prnt->right = prnt->left;
-                        prnt->left = temp;
+                        //非 root
+                        assert((prod_lines[pid]->head->value == target) || (prod_lines[pid]->tail->value == target));
+                        int isleft = true;
+                        LNode *prnt = heap_node[target]->parent;
+                        if (prnt->right == heap_node[target])
+                        {
+                            assert(prnt->left != heap_node[target]);
+                            isleft == false;
+                        }
+                        LNode *root = pop(heap_node[target]);
+                        heap_node[target] = NULL;
+
+                        if (root != NULL)
+                        {
+                            root->parent = prnt;
+                            if (isleft)
+                                prnt->left = root;
+                            else
+                                prnt->right = root;
+                        }
+                        if (distance(prnt->right) > distance(prnt->left))
+                        {
+                            LNode *temp = prnt->right;
+                            prnt->right = prnt->left;
+                            prnt->left = temp;
+                        }
                     }
-                }
-                //去生產線刪掉
-                if (prod_lines[pid]->head == node) //剛好也是頭
-                {
-                    prod_lines[pid]->head = prod_lines[pid]->head->next; //把頭刪掉
-                    prod_lines[pid]->head->prev = NULL;
-                    status[prod_lines[pid]->head->value] = 1;
-                }
-                else if (prod_lines[pid]->tail == node)
-                {
-                    prod_lines[pid]->tail = prod_lines[pid]->tail->prev;
-                    prod_lines[pid]->tail->next = NULL;
-                    status[prod_lines[pid]->tail->value] = 1;
-                }
-                else
-                {
-                    node->prev->next = node->next;
-                    node->next->prev = node->prev;
+                    //去生產線刪掉
+                    if (prod_lines[pid]->head == node) //剛好也是頭
+                    {
+                        prod_lines[pid]->head = prod_lines[pid]->head->next; //把頭刪掉
+                        prod_lines[pid]->head->prev = NULL;
+                        status[prod_lines[pid]->head->value] = 1;
+                    }
+                    else if (prod_lines[pid]->tail == node)
+                    {
+                        prod_lines[pid]->tail = prod_lines[pid]->tail->prev;
+                        prod_lines[pid]->tail->next = NULL;
+                        status[prod_lines[pid]->tail->value] = 1;
+                    }
+                    else
+                    {
+                        node->prev->next = node->next;
+                        node->next->prev = node->prev;
+                    }
                 }
                 ++tar_index;
                 target = target_line[tar_index];
             }
 
-            int isPush = true;
+            // int isPush = true;
             if (operations[op_index][0] == PUSH)
             {
                 int height = operations[op_index][1];
                 // 如果進來的包裹跟 target 一樣就直接 pop，也不用真的 push 進來
-                while (height == target)
+                if (height == target)
                 {
-                    printf("push %d %d\n", operations[op_index][1], operations[op_index][2]);
+                    // printf("push %d %d\n", operations[op_index][1], operations[op_index][2]);
                     status[height] = -2;
                     ++tar_index;
                     target = target_line[tar_index];
-
-                    if (op_index + 1 < num_of_operations)
-                    {
-                        ++op_index;
-                        if (operations[op_index][0] == MERGE) // 如果下一個操作不是push
-                        {
-                            isPush = false;
-                            break;
-                        }
-                    }
                 }
-                if (isPush == true)
+                else
                 {
-                    printf("push %d %d\n", operations[op_index][1], operations[op_index][2]);
-
+                    // printf("push %d %d\n", operations[op_index][1], operations[op_index][2]);
                     //push 進去
+
                     int line_index = operations[op_index][2];
-                    status[height] = 1;
+                    if (prod_lines[line_index]->tail != NULL)
+                        status[prod_lines[line_index]->tail->value] = -1;
+
                     insert_list(prod_lines[line_index], height, line_index);
+                    status[prod_lines[line_index]->head->value] = 1;
 
                     // 處理 heap
                     // if (heap[line_index] == NULL)
@@ -305,11 +305,18 @@ int main()
                     //     heap[line_index] = create_LNode(height, prod_lines[line_index]->tail);
                     // }
                     // else
+
+                    if (heap[line_index] != NULL)
+                        status[heap[line_index]->value] = -1;
                     heap[line_index] = insert_lheap(heap[line_index], height, prod_lines[line_index]->tail);
+                    status[heap[line_index]->value] = 1;
+
+                    status[height] = 1;
+                    status[prod_lines[line_index]->head->value] = 1;
                 }
             }
 
-            if (operations[op_index][0] == MERGE)
+            else if (operations[op_index][0] == MERGE)
             {
                 // printf("merge %d %d\n", operations[op_index][1], operations[op_index][2]);
 
@@ -340,16 +347,20 @@ int main()
                         prod_lines[destination]->tail->next = prod_lines[broken]->head;
                         prod_lines[broken]->head->prev = prod_lines[destination]->tail;
                         prod_lines[destination]->tail = prod_lines[broken]->tail;
+
+                        status[prod_lines[destination]->head->value] = 1;
+                        status[prod_lines[destination]->tail->value] = 1;
                     }
                 }
+
                 prod_lines[broken]->head = prod_lines[broken]->tail = NULL;
 
                 if (heap[destination] != NULL || heap[broken] != NULL)
                 {
                     if (heap[destination] != NULL)
                         status[heap[destination]->value] = -1;
-                    if (heap[broken] != NULL)
-                        status[heap[broken]->value] = -1;
+                    // if (heap[broken] != NULL)
+                    //     status[heap[broken]->value] = -1;
 
                     heap[destination] = merge_lheap(heap[broken], heap[destination]);
                     status[heap[destination]->value] = 1;
@@ -357,8 +368,8 @@ int main()
                 }
             }
             ++op_index;
-            if (op_index == num_of_operations - 1)
-                impossible = 1;
+            if (tar_index >= num_of_packages)
+                break;
         }
         if (impossible == 0)
         {
@@ -367,17 +378,22 @@ int main()
         else
             printf("impossible\n");
 
+        // for (int i = 0; i < num_of_lines; i++)
+        // {
+        //     printf("line %d:", i);
+        //     print_list(prod_lines[i], 1);
+        // }
         for (int i = 0; i < num_of_lines; i++)
         {
-            printf("line %d:", i);
-            print_list(prod_lines[i], 1);
-        }
-        for (int i = 0; i < num_of_lines; i++)
             heap[i] = NULL;
+            disjoint_set_merged[i] = i;
+            target_line[i] = 0;
+        }
         for (int i = 0; i < num_of_packages; ++i)
         {
             heap_node[i] = NULL;
             list_node[i] = NULL;
+            status[i] = 0;
         }
     }
 }

@@ -216,6 +216,8 @@ int main()
                 else
                 { // product line 有兩個以上 node
                     Node *node = heap_node[target]->copy;
+                    while (status[heap[pid]->value] == -2)
+                        heap[pid] = pop(heap[pid]);
                     if (heap[pid]->value == target) //剛好在 root
                     {
                         assert(heap[pid]->copy == node);
@@ -227,30 +229,33 @@ int main()
                     {
                         //非 root
                         assert((prod_lines[pid]->head->value == target) || (prod_lines[pid]->tail->value == target));
-                        int isleft = true;
-                        LNode *prnt = heap_node[target]->parent;
-                        if (prnt->right == heap_node[target])
-                        {
-                            assert(prnt->left != heap_node[target]);
-                            isleft == false;
-                        }
-                        LNode *root = pop(heap_node[target]);
-                        heap_node[target] = NULL;
 
-                        if (root != NULL)
-                        {
-                            root->parent = prnt;
-                            if (isleft)
-                                prnt->left = root;
-                            else
-                                prnt->right = root;
-                        }
-                        if (distance(prnt->right) > distance(prnt->left))
-                        {
-                            LNode *temp = prnt->right;
-                            prnt->right = prnt->left;
-                            prnt->left = temp;
-                        }
+                        // 假裝我有刪掉
+
+                        // int isleft = true;
+                        // LNode *prnt = heap_node[target]->parent;
+                        // if (prnt->right == heap_node[target])
+                        // {
+                        //     assert(prnt->left != heap_node[target]);
+                        //     isleft == false;
+                        // }
+                        // LNode *root = pop(heap_node[target]);
+                        // heap_node[target] = NULL;
+
+                        // if (root != NULL)
+                        // {
+                        //     root->parent = prnt;
+                        //     if (isleft)
+                        //         prnt->left = root;
+                        //     else
+                        //         prnt->right = root;
+                        // }
+                        // if (distance(prnt->right) > distance(prnt->left))
+                        // {
+                        //     LNode *temp = prnt->right;
+                        //     prnt->right = prnt->left;
+                        //     prnt->left = temp;
+                        // }
                     }
                     //去生產線刪掉
                     if (prod_lines[pid]->head == node) //剛好也是頭
@@ -307,7 +312,11 @@ int main()
                     // else
 
                     if (heap[line_index] != NULL)
+                    {
+                        while (status[heap[line_index]->value] == -2)
+                            heap[line_index] = pop(heap[line_index]);
                         status[heap[line_index]->value] = -1;
+                    }
                     heap[line_index] = insert_lheap(heap[line_index], height, prod_lines[line_index]->tail);
                     status[heap[line_index]->value] = 1;
 
@@ -358,10 +367,18 @@ int main()
                 if (heap[destination] != NULL || heap[broken] != NULL)
                 {
                     if (heap[destination] != NULL)
+                    {
+                        while (status[heap[destination]->value] == -2)
+                            heap[destination] = pop(heap[destination]);
                         status[heap[destination]->value] = -1;
+                    }
                     // if (heap[broken] != NULL)
                     //     status[heap[broken]->value] = -1;
-
+                    if (heap[destination] != NULL)
+                    {
+                        while (status[heap[destination]->value] == -2)
+                            heap[destination] = pop(heap[destination]);
+                    }
                     heap[destination] = merge_lheap(heap[broken], heap[destination]);
                     status[heap[destination]->value] = 1;
                     heap[broken] = NULL;

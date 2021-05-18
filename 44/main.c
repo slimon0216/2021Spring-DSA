@@ -202,6 +202,7 @@ int main()
                 int pid = list_node[target]->prod_id;
                 while (disjoint_set_merged[pid] != pid)
                     pid = disjoint_set_merged[pid];
+                disjoint_set_merged[list_node[target]->prod_id] = pid;
 
                 if (prod_lines[pid]->head == prod_lines[pid]->tail) //只有一個node
                 {

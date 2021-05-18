@@ -385,6 +385,8 @@ int main()
                     heap[destination] = merge_lheap(heap[broken], heap[destination]);
                     status[heap[destination]->value] = 1;
                     heap[broken] = NULL;
+                    status[prod_lines[destination]->head->value] = 1;
+                    status[prod_lines[destination]->tail->value] = 1;
                 }
             }
             ++op_index;

@@ -151,10 +151,10 @@ List *prod_lines[MAX] = {NULL};
 LNode *heap[MAX] = {NULL};
 int disjoint_set_merged[MAX] = {0};
 // int disjoint_set_origin[MAX] = {0};
+int T, num_of_packages, num_of_operations, num_of_lines;
 
 int main()
 {
-    int T, num_of_packages, num_of_operations, num_of_lines;
     T = ReadInt();
     char str[5];
     int a, b, target;
@@ -171,28 +171,25 @@ int main()
         }
         for (int i = 0; i < num_of_operations; ++i)
         {
-            sc = scanf("%s %d %d", &str, &a, &b);
-            operations[i][1] = a;
-            operations[i][2] = b;
+            sc = scanf("%s", &str);
+            operations[i][1] = ReadInt();
+            operations[i][2] = ReadInt();
             if (str[0] == 'p')
                 operations[i][0] = PUSH;
             else
                 operations[i][0] = MERGE;
         }
-        // for (int i = 0; i < num_of_operations; ++i)
-        //     printf("%d %d %d\n", operations[i][0], operations[i][1], operations[i][2]);
+
         for (int i = 0; i < num_of_packages; i++)
             target_line[i] = ReadInt();
 
         int tar_index = 0;
         int op_index = 0;
         int impossible = false;
-        int flag_merge = false;
         while (true)
         {
 
             int target = target_line[tar_index];
-
             if (status[target] == -1)
                 impossible = true;
             if (impossible)
@@ -230,33 +227,6 @@ int main()
                     {
                         //非 root
                         assert((prod_lines[pid]->head->value == target) || (prod_lines[pid]->tail->value == target));
-
-                        // 假裝我有刪掉
-
-                        // int isleft = true;
-                        // LNode *prnt = heap_node[target]->parent;
-                        // if (prnt->right == heap_node[target])
-                        // {
-                        //     assert(prnt->left != heap_node[target]);
-                        //     isleft == false;
-                        // }
-                        // LNode *root = pop(heap_node[target]);
-                        // heap_node[target] = NULL;
-
-                        // if (root != NULL)
-                        // {
-                        //     root->parent = prnt;
-                        //     if (isleft)
-                        //         prnt->left = root;
-                        //     else
-                        //         prnt->right = root;
-                        // }
-                        // if (distance(prnt->right) > distance(prnt->left))
-                        // {
-                        //     LNode *temp = prnt->right;
-                        //     prnt->right = prnt->left;
-                        //     prnt->left = temp;
-                        // }
                     }
                     //去生產線刪掉
                     if (prod_lines[pid]->head == node) //剛好也是頭
@@ -409,7 +379,7 @@ int main()
         {
             heap[i] = NULL;
             disjoint_set_merged[i] = i;
-            target_line[i] = 0;
+            // target_line[i] = 0;
         }
         for (int i = 0; i < num_of_packages; ++i)
         {

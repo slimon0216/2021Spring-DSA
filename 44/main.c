@@ -40,14 +40,23 @@ inline LNode *merge_lheap(LNode *a, LNode *b);
 inline LNode *insert_lheap(LNode *root, int val, Node *copy);
 inline LNode *pop(LNode *root);
 
-int ReadInt();
+inline int ReadInt();
 
 int operations[MAX * 2 + 2][3];
+int disjoint_set_merged[MAX] = {0};
+
+int find_set(int pid)
+{
+    if (pid != disjoint_set_merged[pid])
+    {
+        disjoint_set_merged[pid] = find_set(disjoint_set_merged[pid]);
+    }
+    return disjoint_set_merged[pid];
+}
 int target_line[MAX] = {0};
 int status[MAX] = {0}; // -2 已經pop, -1 存在但pop不出來, 0 還沒進來, 1 代表可以pop
 List *prod_lines[MAX] = {NULL};
 LNode *heap[MAX] = {NULL};
-int disjoint_set_merged[MAX] = {0};
 int T, num_of_packages, num_of_operations, num_of_lines;
 
 int compression[MAX] = {0};
@@ -98,16 +107,16 @@ int main()
             {
                 //pop
                 status[target] = -2;
-                int pid = list_node[target]->prod_id;
-                int cnt = 0;
-                while (disjoint_set_merged[pid] != pid)
-                {
-                    compression[cnt] = pid;
-                    ++cnt;
-                    pid = disjoint_set_merged[pid];
-                }
-                for (int i = 0; i < cnt; ++i)
-                    disjoint_set_merged[compression[i]] = pid;
+                int pid = find_set(list_node[target]->prod_id);
+                // int cnt = 0;
+                // while (disjoint_set_merged[pid] != pid)
+                // {
+                //     compression[cnt] = pid;
+                //     ++cnt;
+                //     pid = disjoint_set_merged[pid];
+                // }
+                // for (int i = 0; i < cnt; ++i)
+                //     disjoint_set_merged[compression[i]] = pid;
 
                 if (prod_lines[pid]->head == prod_lines[pid]->tail) //只有一個node
                 {

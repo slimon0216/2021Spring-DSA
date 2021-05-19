@@ -42,7 +42,7 @@ inline LNode *pop(LNode *root);
 
 inline int ReadInt();
 
-int operations[3][MAX * 2 + 2];
+int operations[MAX * 2 + 2][3];
 int target_line[MAX] = {0};
 int status[MAX] = {0}; // -2 已經pop, -1 存在但pop不出來, 0 還沒進來, 1 代表可以pop
 List *prod_lines[MAX] = {NULL};
@@ -71,12 +71,12 @@ int main()
         for (int i = 0; i < num_of_operations; ++i)
         {
             sc = getchar();
-            operations[1][i] = ReadInt();
-            operations[2][i] = ReadInt();
+            operations[i][1] = ReadInt();
+            operations[i][2] = ReadInt();
             if (sc == 'p')
-                operations[0][i] = PUSH;
+                operations[i][0] = PUSH;
             else
-                operations[0][i] = MERGE;
+                operations[i][0] = MERGE;
         }
 
         for (int i = 0; i < num_of_packages; i++)
@@ -85,10 +85,11 @@ int main()
         int tar_index = 0;
         int op_index = 0;
         int impossible = false;
+        int target;
         while (true)
         {
 
-            int target = target_line[tar_index];
+            target = target_line[tar_index];
             if (status[target] == -1)
                 impossible = true;
             if (impossible)
@@ -156,9 +157,9 @@ int main()
             }
 
             // int isPush = true;
-            if (operations[0][op_index] == PUSH)
+            if (operations[op_index][0] == PUSH)
             {
-                int height = operations[1][op_index];
+                int height = operations[op_index][1];
                 // 如果進來的包裹跟 target 一樣就直接 pop，也不用真的 push 進來
                 if (height == target)
                 {
@@ -172,7 +173,7 @@ int main()
                     // printf("push %d %d\n", operations[op_index][1], operations[op_index][2]);
                     //push 進去
 
-                    int line_index = operations[2][op_index];
+                    int line_index = operations[op_index][2];
                     if (prod_lines[line_index]->tail != NULL)
                         status[prod_lines[line_index]->tail->value] = -1;
 
@@ -200,12 +201,12 @@ int main()
                 }
             }
 
-            else if (operations[0][op_index] == MERGE)
+            else
             {
                 // printf("merge %d %d\n", operations[op_index][1], operations[op_index][2]);
 
-                int broken = operations[1][op_index];
-                int destination = operations[2][op_index];
+                int broken = operations[op_index][1];
+                int destination = operations[op_index][2];
 
                 disjoint_set_merged[broken] = destination;
                 int pid = destination;
@@ -407,6 +408,5 @@ LNode *pop(LNode *root)
 {
     LNode *temp = root;
     root = merge_lheap(root->right, root->left);
-    // free(temp);
     return root;
 }

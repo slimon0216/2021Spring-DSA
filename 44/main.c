@@ -271,21 +271,43 @@ int main()
         }
         if (impossible == 0)
         {
-            printf("possible\n");
+            puts("possible");
         }
         else
-            printf("impossible\n");
+            puts("impossible");
 
-        for (int i = 0; i < num_of_lines; i++)
+        if (num_of_packages > num_of_lines)
         {
-            heap[i] = NULL;
-            disjoint_set_merged[i] = i;
+            for (int i = 0; i < num_of_lines; i++)
+            {
+                heap[i] = NULL;
+                disjoint_set_merged[i] = i;
+                heap_node[i] = NULL;
+                list_node[i] = NULL;
+                status[i] = 0;
+            }
+            for (int i = num_of_lines; i < num_of_packages; ++i)
+            {
+                heap_node[i] = NULL;
+                list_node[i] = NULL;
+                status[i] = 0;
+            }
         }
-        for (int i = 0; i < num_of_packages; ++i)
+        else
         {
-            heap_node[i] = NULL;
-            list_node[i] = NULL;
-            status[i] = 0;
+            for (int i = num_of_packages; i < num_of_lines; i++)
+            {
+                heap[i] = NULL;
+                disjoint_set_merged[i] = i;
+            }
+            for (int i = 0; i < num_of_packages; ++i)
+            {
+                heap_node[i] = NULL;
+                list_node[i] = NULL;
+                status[i] = 0;
+                heap[i] = NULL;
+                disjoint_set_merged[i] = i;
+            }
         }
     }
 }

@@ -42,21 +42,12 @@ inline LNode *pop(LNode *root);
 
 inline int ReadInt();
 
-int operations[MAX * 2 + 2][3];
-int disjoint_set_merged[MAX] = {0};
-
-int find_set(int pid)
-{
-    if (pid != disjoint_set_merged[pid])
-    {
-        disjoint_set_merged[pid] = find_set(disjoint_set_merged[pid]);
-    }
-    return disjoint_set_merged[pid];
-}
+int operations[3][MAX * 2 + 2];
 int target_line[MAX] = {0};
 int status[MAX] = {0}; // -2 已經pop, -1 存在但pop不出來, 0 還沒進來, 1 代表可以pop
 List *prod_lines[MAX] = {NULL};
 LNode *heap[MAX] = {NULL};
+int disjoint_set_merged[MAX] = {0};
 int T, num_of_packages, num_of_operations, num_of_lines;
 
 int compression[MAX] = {0};
@@ -80,12 +71,12 @@ int main()
         for (int i = 0; i < num_of_operations; ++i)
         {
             sc = getchar();
-            operations[i][1] = ReadInt();
-            operations[i][2] = ReadInt();
+            operations[1][i] = ReadInt();
+            operations[2][i] = ReadInt();
             if (sc == 'p')
-                operations[i][0] = PUSH;
+                operations[0][i] = PUSH;
             else
-                operations[i][0] = MERGE;
+                operations[0][i] = MERGE;
         }
 
         for (int i = 0; i < num_of_packages; i++)
@@ -107,16 +98,16 @@ int main()
             {
                 //pop
                 status[target] = -2;
-                int pid = find_set(list_node[target]->prod_id);
-                // int cnt = 0;
-                // while (disjoint_set_merged[pid] != pid)
-                // {
-                //     compression[cnt] = pid;
-                //     ++cnt;
-                //     pid = disjoint_set_merged[pid];
-                // }
-                // for (int i = 0; i < cnt; ++i)
-                //     disjoint_set_merged[compression[i]] = pid;
+                int pid = list_node[target]->prod_id;
+                int cnt = 0;
+                while (disjoint_set_merged[pid] != pid)
+                {
+                    compression[cnt] = pid;
+                    ++cnt;
+                    pid = disjoint_set_merged[pid];
+                }
+                for (int i = 0; i < cnt; ++i)
+                    disjoint_set_merged[compression[i]] = pid;
 
                 if (prod_lines[pid]->head == prod_lines[pid]->tail) //只有一個node
                 {
@@ -165,9 +156,9 @@ int main()
             }
 
             // int isPush = true;
-            if (operations[op_index][0] == PUSH)
+            if (operations[0][op_index] == PUSH)
             {
-                int height = operations[op_index][1];
+                int height = operations[1][op_index];
                 // 如果進來的包裹跟 target 一樣就直接 pop，也不用真的 push 進來
                 if (height == target)
                 {
@@ -181,7 +172,7 @@ int main()
                     // printf("push %d %d\n", operations[op_index][1], operations[op_index][2]);
                     //push 進去
 
-                    int line_index = operations[op_index][2];
+                    int line_index = operations[2][op_index];
                     if (prod_lines[line_index]->tail != NULL)
                         status[prod_lines[line_index]->tail->value] = -1;
 
@@ -209,12 +200,12 @@ int main()
                 }
             }
 
-            else if (operations[op_index][0] == MERGE)
+            else if (operations[0][op_index] == MERGE)
             {
                 // printf("merge %d %d\n", operations[op_index][1], operations[op_index][2]);
 
-                int broken = operations[op_index][1];
-                int destination = operations[op_index][2];
+                int broken = operations[1][op_index];
+                int destination = operations[2][op_index];
 
                 disjoint_set_merged[broken] = destination;
                 int pid = destination;

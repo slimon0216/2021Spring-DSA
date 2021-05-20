@@ -51,7 +51,8 @@ int disjoint_set_merged[MAX] = {0};
 int T, num_of_packages, num_of_operations, num_of_lines;
 
 int compression[MAX] = {0};
-
+int cnt, pid, broken, destination;
+Node *node;
 int main()
 {
     T = ReadInt();
@@ -99,8 +100,8 @@ int main()
             {
                 //pop
                 status[target] = -2;
-                int pid = list_node[target]->prod_id;
-                int cnt = 0;
+                pid = list_node[target]->prod_id;
+                cnt = 0;
                 while (disjoint_set_merged[pid] != pid)
                 {
                     compression[cnt] = pid;
@@ -117,7 +118,7 @@ int main()
                 }
                 else
                 { // product line 有兩個以上 node
-                    Node *node = heap_node[target]->copy;
+                    node = heap_node[target]->copy;
                     while (status[heap[pid]->value] == -2)
                         heap[pid] = pop(heap[pid]);
                     status[heap[pid]->value] = 1;
@@ -205,12 +206,12 @@ int main()
             {
                 // printf("merge %d %d\n", operations[op_index][1], operations[op_index][2]);
 
-                int broken = operations[op_index][1];
-                int destination = operations[op_index][2];
+                broken = operations[op_index][1];
+                destination = operations[op_index][2];
 
                 disjoint_set_merged[broken] = destination;
-                int pid = destination;
-                int cnt = 0;
+                pid = destination;
+                cnt = 0;
                 while (disjoint_set_merged[pid] != pid)
                 {
                     compression[cnt] = pid;

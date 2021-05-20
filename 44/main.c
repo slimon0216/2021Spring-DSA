@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <stdbool.h>
-#define true 1
-#define false 0
-typedef int bool ;
+#include <stdbool.h>
+
 #define MAX 100005
 #define PUSH 0
 #define MERGE 1
@@ -42,7 +40,7 @@ inline LNode *merge_lheap(LNode *a, LNode *b);
 inline LNode *insert_lheap(LNode *root, int val, Node *copy);
 inline LNode *pop(LNode *root);
 
-int ReadInt();
+inline int ReadInt();
 
 int operations[MAX * 2 + 2][3];
 int target_line[MAX] = {0};
@@ -87,10 +85,11 @@ int main()
         int tar_index = 0;
         int op_index = 0;
         int impossible = false;
+        int target;
         while (true)
         {
 
-            int target = target_line[tar_index];
+            target = target_line[tar_index];
             if (status[target] == -1)
                 impossible = true;
             if (impossible)
@@ -202,7 +201,7 @@ int main()
                 }
             }
 
-            else if (operations[op_index][0] == MERGE)
+            else
             {
                 // printf("merge %d %d\n", operations[op_index][1], operations[op_index][2]);
 
@@ -273,21 +272,43 @@ int main()
         }
         if (impossible == 0)
         {
-            printf("possible\n");
+            puts("possible");
         }
         else
-            printf("impossible\n");
+            puts("impossible");
 
-        for (int i = 0; i < num_of_lines; i++)
+        if (num_of_packages > num_of_lines)
         {
-            heap[i] = NULL;
-            disjoint_set_merged[i] = i;
+            for (int i = 0; i < num_of_lines; i++)
+            {
+                heap[i] = NULL;
+                disjoint_set_merged[i] = i;
+                heap_node[i] = NULL;
+                list_node[i] = NULL;
+                status[i] = 0;
+            }
+            for (int i = num_of_lines; i < num_of_packages; ++i)
+            {
+                heap_node[i] = NULL;
+                list_node[i] = NULL;
+                status[i] = 0;
+            }
         }
-        for (int i = 0; i < num_of_packages; ++i)
+        else
         {
-            heap_node[i] = NULL;
-            list_node[i] = NULL;
-            status[i] = 0;
+            for (int i = num_of_packages; i < num_of_lines; i++)
+            {
+                heap[i] = NULL;
+                disjoint_set_merged[i] = i;
+            }
+            for (int i = 0; i < num_of_packages; ++i)
+            {
+                heap_node[i] = NULL;
+                list_node[i] = NULL;
+                status[i] = 0;
+                heap[i] = NULL;
+                disjoint_set_merged[i] = i;
+            }
         }
     }
 }
@@ -387,6 +408,5 @@ LNode *pop(LNode *root)
 {
     LNode *temp = root;
     root = merge_lheap(root->right, root->left);
-    // free(temp);
     return root;
 }

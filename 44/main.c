@@ -329,7 +329,7 @@ Node *createNode(int val)
 {
     Node *node = malloc(sizeof(Node));
     node->value = node->prod_id = val;
-    node->next = node->prev = NULL;
+    node->next = node->prev = NULL; 
     return node;
 }
 

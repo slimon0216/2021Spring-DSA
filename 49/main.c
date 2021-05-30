@@ -143,7 +143,7 @@ int main()
         }
     }
     printf("Yes\n");
-    printf("%d\n", len_ans);
+    // printf("%d\n", len_ans);
     for (int i = 0; i < len_ans; i = i + 2)
     {
         printf("%d %d\n", ans[i], ans[i + 1]);

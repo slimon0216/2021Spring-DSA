@@ -94,8 +94,8 @@ Queue *q[MAX];
 int temp;
 int main()
 {
-    char buffer[1000000];
-    setvbuf(stdout, buffer, _IOFBF, sizeof(buffer));
+    setvbuf(stdin, calloc(1 << 20, sizeof(char)), _IOFBF, 1 << 20);
+    setvbuf(stdout, calloc(1 << 20, sizeof(char)), _IOFBF, 1 << 20);
     N = readInt();
     Stack *stack = createStack();
     for (int i = 0; i < N + 1; i++)

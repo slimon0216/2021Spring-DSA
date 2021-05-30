@@ -131,7 +131,7 @@ int main()
         // printf("empty %d\n", queue_isEmpty(q[i]));
         // printf("empty %d\n", stack_isEmpty(stack));
         // printf("empty %d\n", stack->size);
-
+        int flag = false;
         while (stack_isEmpty(stack) == false)
         {
             // assert(1 == 2);
@@ -146,6 +146,13 @@ int main()
                     //真的去pop
                     pop_front(q[q[top(stack)]->head->data]);
                     pop_front(q[top(stack)]);
+                    if (!stack_isEmpty(stack))
+                    {
+                        table[top(stack)] = false;
+                        pop(stack);
+                        flag = true;
+                        break;
+                    }
                 }
                 else if (table[q[top(stack)]->head->data] == true)
                 {
@@ -158,8 +165,12 @@ int main()
                     push(stack, q[top(stack)]->head->data);
                 }
             }
-            table[top(stack)] = false;
-            pop(stack);
+
+            if (flag == false)
+            {
+                table[top(stack)] = false;
+                pop(stack);
+            }
         }
     }
     printf("Yes\n");

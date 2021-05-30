@@ -96,7 +96,7 @@ int main()
     N = readInt();
     Stack *stack = createStack();
     Queue **q = malloc(MAX * sizeof(Queue *));
-    for (int i = 1; i < N + 1; i++)
+    for (int i = 0; i < N + 1; i++)
     {
         q[i] = malloc(sizeof(Queue));
         q[i]->head = q[i]->tail = NULL;
@@ -154,6 +154,7 @@ int main()
                 }
                 else
                 {
+                    table[q[top(stack)]->head->data] = true;
                     push(stack, q[top(stack)]->head->data);
                 }
             }

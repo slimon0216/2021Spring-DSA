@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <stdbool.h>
+#include <stdbool.h>
 #include <assert.h>
 #define MAX 100005
 
-#define true 1
-#define false 0
 typedef struct Node
 {
     int data;
@@ -46,7 +44,7 @@ void pop_front(Queue *q)
         q->head = q->head->next;
 }
 
-int queue_isEmpty(Queue *q)
+bool queue_isEmpty(Queue *q)
 {
     if (q->head == NULL)
         return true;
@@ -88,7 +86,7 @@ int *adj_list[MAX];
 int N;
 int len;
 int readInt();
-int table[MAX] = {false};
+bool table[MAX] = {0};
 int ans[50 * MAX] = {0};
 int len_ans = 0;
 Queue *q[MAX];
@@ -112,8 +110,7 @@ int main()
         }
     }
 
-    int i = 1;
-    while (i <= N)
+    for (int i = 1; i < N + 1; ++i)
     {
         if (queue_isEmpty(q[i]) == false)
         {
@@ -123,37 +120,26 @@ int main()
         // printf("empty %d\n", queue_isEmpty(q[i]));
         // printf("empty %d\n", stack_isEmpty(stack));
         // printf("empty %d\n", stack->size);
+        int flag = false;
         while (stack_isEmpty(stack) == false)
         {
-            // printf("1");
             // assert(1 == 2);
             while (queue_isEmpty(q[top(stack)]) == false)
             {
-                // printf("3");
 
-                // if (table[2002] == true)
-                // {
-                //     printf("index %d\n", i);
-                //     printf("stack top %d\n", top(stack));
-                //     // print());
-                // }
-                // assert(stack_isEmpty(stack) == false);
-                // assert(q[top(stack)]->head != NULL);
                 if (q[q[top(stack)]->head->data]->head->data == top(stack))
                 {
                     ans[len_ans++] = top(stack);
                     ans[len_ans++] = q[top(stack)]->head->data;
 
-                    // printf("%d %d\n", top(stack), q[top(stack)]->head->data);
                     //真的去pop
                     pop_front(q[q[top(stack)]->head->data]);
                     pop_front(q[top(stack)]);
-
                     if (!stack_isEmpty(stack))
                     {
                         table[top(stack)] = false;
                         pop(stack);
-                        // flag = true;
+                        flag = true;
                         break;
                     }
                 }
@@ -167,12 +153,15 @@ int main()
                     table[q[top(stack)]->head->data] = true;
                     push(stack, q[top(stack)]->head->data);
                 }
-                if (queue_isEmpty(q[top(stack)]) == true)
-                    break;
+            }
+
+            if (flag == false)
+            {
+                if (stack_isEmpty(stack) == false)
+                    table[top(stack)] = false;
+                pop(stack);
             }
         }
-        if (queue_isEmpty(q[i]))
-            i++;
     }
     printf("Yes\n");
     // printf("%d\n", len_ans);

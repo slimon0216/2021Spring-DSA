@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <assert.h>
 #define MAX 100005
 
 typedef struct Node
@@ -15,6 +16,7 @@ Node *createNode(int data)
     Node *newNode = malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = newNode->prev = NULL;
+    return newNode;
 }
 
 typedef struct Queue
@@ -71,7 +73,7 @@ void pop(Stack *stack)
 {
     --stack->size;
 }
-bool stack_isEmpty(Stack *stack)
+int stack_isEmpty(Stack *stack)
 {
     return stack->size == -1;
 }
@@ -96,18 +98,29 @@ int main()
     Queue **q = malloc(MAX * sizeof(Queue *));
     for (int i = 1; i < N + 1; i++)
     {
-        q[i] = malloc(sizeof(Queue *));
+        q[i] = malloc(sizeof(Queue));
         q[i]->head = q[i]->tail = NULL;
     }
     bool stop = false;
     for (int i = 1; i < N + 1; ++i)
     {
         len = readInt();
+
         for (int j = 1; j < len + 1; ++j)
             push_back(q[i], readInt());
         // temp_table[q[i]->head->data]++;
     }
-    // printf("sdf");
+    // for (int i = 1; i < N + 1; i++)
+    // {
+    //     Node *ptr = q[i]->head;
+    //     while (ptr != q[i]->tail->next)
+    //     {
+    //         printf("%d ", ptr->data);
+    //         ptr = ptr->next;
+    //     }
+    //     printf("\n");
+    // }
+
     for (int i = 1; i < N + 1; ++i)
     {
         if (queue_isEmpty(q[i]) == false)
@@ -115,10 +128,16 @@ int main()
             push(stack, i);
             table[i] = true;
         }
+        // printf("empty %d\n", queue_isEmpty(q[i]));
+        // printf("empty %d\n", stack_isEmpty(stack));
+        // printf("empty %d\n", stack->size);
+
         while (stack_isEmpty(stack) == false)
         {
+            // assert(1 == 2);
             while (queue_isEmpty(q[top(stack)]) == false)
             {
+
                 if (q[q[top(stack)]->head->data]->head->data == top(stack))
                 {
                     ans[len_ans++] = top(stack);
@@ -130,7 +149,7 @@ int main()
                 }
                 else if (table[q[top(stack)]->head->data] == true)
                 {
-                    printf("No");
+                    printf("No\n");
                     return 0;
                 }
                 else

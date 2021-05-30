@@ -85,7 +85,7 @@ int N;
 int len;
 inline int readInt();
 
-int temp_table[MAX] = {0};
+// int temp_table[MAX] = {0};
 bool table[MAX] = {0};
 int ans[MAX] = {0};
 int len_ans = 0;
@@ -105,7 +105,7 @@ int main()
         len = readInt();
         for (int j = 1; j < len + 1; ++j)
             push_back(q[i], readInt());
-        temp_table[q[i]->head->data]++;
+        // temp_table[q[i]->head->data]++;
     }
     // printf("sdf");
     for (int i = 1; i < N + 1; ++i)
@@ -143,6 +143,7 @@ int main()
         }
     }
     printf("Yes\n");
+    printf("%d\n", len_ans);
     for (int i = 0; i < len_ans; i = i + 2)
     {
         printf("%d %d\n", ans[i], ans[i + 1]);

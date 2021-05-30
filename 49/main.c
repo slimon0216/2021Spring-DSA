@@ -92,10 +92,10 @@ int ans[50 * MAX] = {0};
 int len_ans = 0;
 Queue *q[MAX];
 int temp;
-char buffer[10000];
 int main()
 {
-    setvbuf(stdout, buffer, _IONBF, sizeof(buffer));
+    char buffer[1000000];
+    setvbuf(stdout, buffer, _IOFBF, sizeof(buffer));
     N = readInt();
     Stack *stack = createStack();
     for (int i = 0; i < N + 1; i++)

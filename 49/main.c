@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 // #include <stdbool.h>
+#include <string.h>
 #include <assert.h>
 #define MAX 100005
 
@@ -89,13 +90,15 @@ int N;
 int len;
 int readInt();
 int table[MAX] = {false};
-int ans[50 * MAX] = {0};
+char *ans;
 int len_ans = 0;
 Queue *q[MAX];
 int temp;
+char buffer[100];
 int main()
 {
     N = readInt();
+    ans = malloc(sizeof(char) * 1000000000);
     Stack *stack = createStack();
     for (int i = 0; i < N + 1; i++)
     {
@@ -129,23 +132,19 @@ int main()
             // assert(1 == 2);
             while (queue_isEmpty(q[top(stack)]) == false)
             {
-                // printf("3");
-
-                // if (table[2002] == true)
-                // {
-                //     printf("index %d\n", i);
-                //     printf("stack top %d\n", top(stack));
-                //     // print());
-                // }
-                // assert(stack_isEmpty(stack) == false);
-                // assert(q[top(stack)]->head != NULL);
                 if (q[q[top(stack)]->head->data]->head->data == top(stack))
                 {
-                    ans[len_ans++] = top(stack);
-                    ans[len_ans++] = q[top(stack)]->head->data;
+                    sprintf(buffer, "%d ", top(stack));
+                    strcat(ans, buffer);
+                    sprintf(buffer, "%d\n", q[top(stack)]->head->data);
+                    // strcat(ans, " ");
+                    strcat(ans, buffer);
+                    // printf("%s\n", ans);
+                    // strcat(ans, "\n");
+                    // printf("%s\n", ans);
+                    // ans[len_ans++] = top(stack);
+                    // ans[len_ans++] = q[top(stack)]->head->data;
 
-                    // printf("%d %d\n", top(stack), q[top(stack)]->head->data);
-                    //真的去pop
                     pop_front(q[q[top(stack)]->head->data]);
                     pop_front(q[top(stack)]);
 
@@ -174,12 +173,12 @@ int main()
         if (queue_isEmpty(q[i]))
             i++;
     }
-    printf("Yes\n");
+    printf("Yes\n%s", ans);
     // printf("%d\n", len_ans);
-    for (int i = 0; i < len_ans; i = i + 2)
-    {
-        printf("%d %d\n", ans[i], ans[i + 1]);
-    }
+    // for (int i = 0; i < len_ans; i = i + 2)
+    // {
+    //     printf("%d %d\n", ans[i], ans[i + 1]);
+    // }
     return 0;
 }
 

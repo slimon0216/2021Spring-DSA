@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <stdbool.h>
-#include <string.h>
 #include <assert.h>
+// #include <time.h>
 #define MAX 100005
 
 #define true 1
@@ -11,14 +10,14 @@ typedef struct Node
 {
     int data;
     struct Node *next;
-    struct Node *prev;
+
 } Node;
 
 Node *createNode(int data)
 {
     Node *newNode = malloc(sizeof(Node));
     newNode->data = data;
-    newNode->next = newNode->prev = NULL;
+    newNode->next = NULL;
     return newNode;
 }
 
@@ -36,7 +35,6 @@ void push_back(Queue *q, int data)
     else
     {
         q->tail->next = newNode;
-        newNode->prev = q->tail;
         q->tail = newNode;
     }
 }
@@ -90,15 +88,16 @@ int N;
 int len;
 int readInt();
 int table[MAX] = {false};
-char *ans;
+int ans[50 * MAX] = {0};
 int len_ans = 0;
 Queue *q[MAX];
 int temp;
-char buffer[100];
 int main()
 {
+    // double begin = clock();
+    setvbuf(stdin, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
+    setvbuf(stdout, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
     N = readInt();
-    ans = malloc(sizeof(char) * 1000000000);
     Stack *stack = createStack();
     for (int i = 0; i < N + 1; i++)
     {
@@ -123,28 +122,20 @@ int main()
             push(stack, i);
             table[i] = true;
         }
-        // printf("empty %d\n", queue_isEmpty(q[i]));
-        // printf("empty %d\n", stack_isEmpty(stack));
-        // printf("empty %d\n", stack->size);
+
         while (stack_isEmpty(stack) == false)
         {
-            // printf("1");
-            // assert(1 == 2);
+
             while (queue_isEmpty(q[top(stack)]) == false)
             {
+
                 if (q[q[top(stack)]->head->data]->head->data == top(stack))
                 {
-                    sprintf(buffer, "%d ", top(stack));
-                    strcat(ans, buffer);
-                    sprintf(buffer, "%d\n", q[top(stack)]->head->data);
-                    // strcat(ans, " ");
-                    strcat(ans, buffer);
-                    // printf("%s\n", ans);
-                    // strcat(ans, "\n");
-                    // printf("%s\n", ans);
-                    // ans[len_ans++] = top(stack);
-                    // ans[len_ans++] = q[top(stack)]->head->data;
+                    ans[len_ans++] = top(stack);
+                    ans[len_ans++] = q[top(stack)]->head->data;
 
+                    // printf("%d %d\n", top(stack), q[top(stack)]->head->data);
+                    //真的去pop
                     pop_front(q[q[top(stack)]->head->data]);
                     pop_front(q[top(stack)]);
 
@@ -173,25 +164,31 @@ int main()
         if (queue_isEmpty(q[i]))
             i++;
     }
-    printf("Yes\n%s", ans);
-    // printf("%d\n", len_ans);
-    // for (int i = 0; i < len_ans; i = i + 2)
-    // {
-    //     printf("%d %d\n", ans[i], ans[i + 1]);
-    // }
+    printf("Yes\n");
+    for (int i = 0; i < len_ans; i = i + 2)
+    {
+        printf("%d %d\n", ans[i], ans[i + 1]);
+    }
+    // double end = clock();
+    // printf("%f\n", end - begin);
     return 0;
 }
 
 int readInt()
 {
     int num = 0;
+    // int flag = 0;
     char c = getchar();
     while ((c < '0' || c > '9'))
     {
+        // if (c == '-')
+        //     flag = 1;
         c = getchar();
     }
     while (c > ('0' - 1) && c < ('9' + 1))
         num = num * 10 + (c - '0'), c = getchar();
-
+    // if (flag == 0)
     return num;
+    // else
+    //     return num * (-1);
 }

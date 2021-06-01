@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-// #include <time.h>
+#include <time.h>
 #define MAX 100005
 
 #define true 1
@@ -56,7 +56,7 @@ Queue *q[MAX];
 int temp;
 int main()
 {
-    // double begin = clock();
+    double begin = clock();
     setvbuf(stdin, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
     setvbuf(stdout, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
     N = readInt();
@@ -74,6 +74,7 @@ int main()
     }
 
     int i = 1;
+    int from, to;
     while (i <= N)
     {
         if (queue_isEmpty(q[i]) == false)
@@ -87,41 +88,42 @@ int main()
 
             while (queue_isEmpty(q[top(stack)]) == false)
             {
-
-                if (q[q[top(stack)]->head->data]->head->data == top(stack))
+                from = top(stack);
+                to = q[from]->head->data;
+                if (q[to]->head->data == from)
                 {
-                    ans[len_ans++] = top(stack);
-                    ans[len_ans++] = q[top(stack)]->head->data;
+                    ans[len_ans++] = from;
+                    ans[len_ans++] = to;
 
-                    // printf("%d %d\n", top(stack), q[top(stack)]->head->data);
+                    // printf("%d %d\n", from, to);
                     //真的去pop
-                    pop_front(q[q[top(stack)]->head->data]);
-                    pop_front(q[top(stack)]);
+                    pop_front(q[to]);
+                    pop_front(q[from]);
 
                     if (!stack_isEmpty(stack))
                     {
-                        table[top(stack)] = false;
+                        table[from] = false;
                         pop(stack);
                         // flag = true;
                         break;
                     }
                 }
-                else if (table[q[top(stack)]->head->data] == true)
+                else if (table[to] == true)
                 {
                     printf("No\n");
                     return 0;
                 }
                 else
                 {
-                    table[q[top(stack)]->head->data] = true;
-                    push(stack, q[top(stack)]->head->data);
+                    table[to] = true;
+                    push(stack, to);
                 }
                 if (queue_isEmpty(q[top(stack)]) == true)
                     break;
             }
         }
         if (queue_isEmpty(q[i]))
-            i++;
+            ++i;
     }
     // printf("Yes\n");
     puts("Yes");
@@ -129,8 +131,8 @@ int main()
     {
         printf("%d %d\n", ans[i], ans[i + 1]);
     }
-    // double end = clock();
-    // printf("%f\n", (end - begin) / CLOCKS_PER_SEC);
+    double end = clock();
+    printf("%f\n", (end - begin) / CLOCKS_PER_SEC);
     return 0;
 }
 

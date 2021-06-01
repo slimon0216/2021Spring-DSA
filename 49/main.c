@@ -46,16 +46,16 @@ inline unsigned int stack_isEmpty(const Stack *stack);
 
 inline unsigned int top(const Stack *stack);
 inline unsigned int readInt();
+unsigned int *adj_list[MAX];
+unsigned int N;
+unsigned int len;
+unsigned int table[MAX] = {false};
+unsigned int ans[15 * MAX] = {0};
+unsigned int len_ans = 0;
+Queue *q[MAX];
+unsigned int temp;
 int main()
 {
-    unsigned int *adj_list[MAX];
-    unsigned int N;
-    unsigned int len;
-    unsigned int table[MAX] = {false};
-    unsigned int ans[15 * MAX] = {0};
-    unsigned int len_ans = 0;
-    Queue *q[MAX];
-    unsigned int temp;
     // double begin = clock();
     setvbuf(stdin, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
     setvbuf(stdout, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
@@ -126,9 +126,9 @@ int main()
     // printf("Yes\n");
     puts("Yes");
     i = 0;
-    for (; i + 100 < len_ans; i += 100)
+    for (; i + 200 < len_ans; i += 200)
     {
-        printf("%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n",
+        printf("%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n%d %d\n",
                ans[i], ans[i + 1],
                ans[i + 2], ans[i + 3],
                ans[i + 4], ans[i + 5],
@@ -178,7 +178,57 @@ int main()
                ans[i + 92], ans[i + 93],
                ans[i + 94], ans[i + 95],
                ans[i + 96], ans[i + 97],
-               ans[i + 98], ans[i + 99]);
+               ans[i + 98], ans[i + 99],
+               ans[i + 100], ans[i + 101],
+               ans[i + 102], ans[i + 103],
+               ans[i + 104], ans[i + 105],
+               ans[i + 106], ans[i + 107],
+               ans[i + 108], ans[i + 109],
+               ans[i + 110], ans[i + 111],
+               ans[i + 112], ans[i + 113],
+               ans[i + 114], ans[i + 115],
+               ans[i + 116], ans[i + 117],
+               ans[i + 118], ans[i + 119],
+               ans[i + 120], ans[i + 121],
+               ans[i + 122], ans[i + 123],
+               ans[i + 124], ans[i + 125],
+               ans[i + 126], ans[i + 127],
+               ans[i + 128], ans[i + 129],
+               ans[i + 130], ans[i + 131],
+               ans[i + 132], ans[i + 133],
+               ans[i + 134], ans[i + 135],
+               ans[i + 136], ans[i + 137],
+               ans[i + 138], ans[i + 139],
+               ans[i + 140], ans[i + 141],
+               ans[i + 142], ans[i + 143],
+               ans[i + 144], ans[i + 145],
+               ans[i + 146], ans[i + 147],
+               ans[i + 148], ans[i + 149],
+               ans[i + 150], ans[i + 151],
+               ans[i + 152], ans[i + 153],
+               ans[i + 154], ans[i + 155],
+               ans[i + 156], ans[i + 157],
+               ans[i + 158], ans[i + 159],
+               ans[i + 160], ans[i + 161],
+               ans[i + 162], ans[i + 163],
+               ans[i + 164], ans[i + 165],
+               ans[i + 166], ans[i + 167],
+               ans[i + 168], ans[i + 169],
+               ans[i + 170], ans[i + 171],
+               ans[i + 172], ans[i + 173],
+               ans[i + 174], ans[i + 175],
+               ans[i + 176], ans[i + 177],
+               ans[i + 178], ans[i + 179],
+               ans[i + 180], ans[i + 181],
+               ans[i + 182], ans[i + 183],
+               ans[i + 184], ans[i + 185],
+               ans[i + 186], ans[i + 187],
+               ans[i + 188], ans[i + 189],
+               ans[i + 190], ans[i + 191],
+               ans[i + 192], ans[i + 193],
+               ans[i + 194], ans[i + 195],
+               ans[i + 196], ans[i + 197],
+               ans[i + 198], ans[i + 199]);
     }
     for (; i + 20 < len_ans; i += 20)
     {

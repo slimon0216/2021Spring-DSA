@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+// #include <stdbool.h>
 #include <assert.h>
 #define MAX 100005
 
@@ -94,8 +95,6 @@ Queue *q[MAX];
 int temp;
 int main()
 {
-    setvbuf(stdin, calloc(1 << 20, sizeof(char)), _IOFBF, 1 << 20);
-    setvbuf(stdout, calloc(1 << 20, sizeof(char)), _IOFBF, 1 << 20);
     N = readInt();
     Stack *stack = createStack();
     for (int i = 0; i < N + 1; i++)
@@ -121,13 +120,25 @@ int main()
             push(stack, i);
             table[i] = true;
         }
-
+        // printf("empty %d\n", queue_isEmpty(q[i]));
+        // printf("empty %d\n", stack_isEmpty(stack));
+        // printf("empty %d\n", stack->size);
         while (stack_isEmpty(stack) == false)
         {
-
+            // printf("1");
+            // assert(1 == 2);
             while (queue_isEmpty(q[top(stack)]) == false)
             {
+                // printf("3");
 
+                // if (table[2002] == true)
+                // {
+                //     printf("index %d\n", i);
+                //     printf("stack top %d\n", top(stack));
+                //     // print());
+                // }
+                // assert(stack_isEmpty(stack) == false);
+                // assert(q[top(stack)]->head != NULL);
                 if (q[q[top(stack)]->head->data]->head->data == top(stack))
                 {
                     ans[len_ans++] = top(stack);
@@ -164,6 +175,7 @@ int main()
             i++;
     }
     printf("Yes\n");
+    // printf("%d\n", len_ans);
     for (int i = 0; i < len_ans; i = i + 2)
     {
         printf("%d %d\n", ans[i], ans[i + 1]);
@@ -174,18 +186,13 @@ int main()
 int readInt()
 {
     int num = 0;
-    // int flag = 0;
     char c = getchar();
     while ((c < '0' || c > '9'))
     {
-        // if (c == '-')
-        //     flag = 1;
         c = getchar();
     }
     while (c > ('0' - 1) && c < ('9' + 1))
         num = num * 10 + (c - '0'), c = getchar();
-    // if (flag == 0)
+
     return num;
-    // else
-    //     return num * (-1);
 }

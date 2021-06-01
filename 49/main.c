@@ -13,13 +13,7 @@ typedef struct Node
 
 } Node;
 
-Node *createNode(int data)
-{
-    Node *newNode = malloc(sizeof(Node));
-    newNode->data = data;
-    newNode->next = NULL;
-    return newNode;
-}
+inline Node *createNode(int data);
 
 typedef struct Queue
 {
@@ -27,30 +21,11 @@ typedef struct Queue
     Node *tail;
 } Queue;
 
-void push_back(Queue *q, int data)
-{
-    Node *newNode = createNode(data);
-    if (q->head == NULL)
-        q->head = q->tail = newNode;
-    else
-    {
-        q->tail->next = newNode;
-        q->tail = newNode;
-    }
-}
+inline void push_back(Queue *q, int data);
 
-void pop_front(Queue *q)
-{
-    if (q->head != NULL)
-        q->head = q->head->next;
-}
+inline void pop_front(Queue *q);
 
-int queue_isEmpty(Queue *q)
-{
-    if (q->head == NULL)
-        return true;
-    return false;
-}
+inline int queue_isEmpty(Queue *q);
 
 typedef struct Stack
 {
@@ -65,28 +40,15 @@ Stack *createStack()
     return stack;
 }
 
-void push(Stack *stack, int value)
-{
-    stack->size++;
-    stack->array[stack->size] = value;
-}
-void pop(Stack *stack)
-{
-    --stack->size;
-}
-int stack_isEmpty(Stack *stack)
-{
-    return stack->size == -1;
-}
+inline void push(Stack *stack, int value);
+inline void pop(Stack *stack);
+inline int stack_isEmpty(Stack *stack);
 
-int top(Stack *stack)
-{
-    return stack->array[stack->size];
-}
+inline int top(Stack *stack);
+inline int readInt();
 int *adj_list[MAX];
 int N;
 int len;
-int readInt();
 int table[MAX] = {false};
 int ans[50 * MAX] = {0};
 int len_ans = 0;
@@ -99,18 +61,15 @@ int main()
     setvbuf(stdout, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
     N = readInt();
     Stack *stack = createStack();
-    for (int i = 0; i < N + 1; i++)
+    for (int i = 1; i < N + 1; ++i)
     {
         q[i] = malloc(sizeof(Queue));
         q[i]->head = q[i]->tail = NULL;
-    }
-    for (int i = 1; i < N + 1; ++i)
-    {
         len = readInt();
         for (int j = 1; j < len + 1; ++j)
         {
-            temp = readInt();
-            push_back(q[i], temp);
+            // temp = readInt();
+            push_back(q[i], readInt());
         }
     }
 
@@ -164,13 +123,14 @@ int main()
         if (queue_isEmpty(q[i]))
             i++;
     }
-    printf("Yes\n");
+    // printf("Yes\n");
+    puts("Yes");
     for (int i = 0; i < len_ans; i = i + 2)
     {
         printf("%d %d\n", ans[i], ans[i + 1]);
     }
     // double end = clock();
-    // printf("%f\n", end - begin);
+    // printf("%f\n", (end - begin) / CLOCKS_PER_SEC);
     return 0;
 }
 
@@ -191,4 +151,57 @@ int readInt()
     return num;
     // else
     //     return num * (-1);
+}
+
+void push_back(Queue *q, int data)
+{
+    Node *newNode = createNode(data);
+    if (q->head == NULL)
+        q->head = q->tail = newNode;
+    else
+    {
+        q->tail->next = newNode;
+        q->tail = newNode;
+    }
+}
+
+void pop_front(Queue *q)
+{
+    if (q->head != NULL)
+        q->head = q->head->next;
+}
+
+Node *createNode(int data)
+{
+    Node *newNode = malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+int queue_isEmpty(Queue *q)
+{
+    if (q->head == NULL)
+        return true;
+    return false;
+}
+
+void push(Stack *stack, int value)
+{
+    stack->size++;
+    stack->array[stack->size] = value;
+}
+
+void pop(Stack *stack)
+{
+    --stack->size;
+}
+
+int stack_isEmpty(Stack *stack)
+{
+    return stack->size == -1;
+}
+int top(Stack *stack)
+{
+    return stack->array[stack->size];
 }

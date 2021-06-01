@@ -46,16 +46,16 @@ inline unsigned int stack_isEmpty(const Stack *stack);
 
 inline unsigned int top(const Stack *stack);
 inline unsigned int readInt();
-unsigned int *adj_list[MAX];
-unsigned int N;
-unsigned int len;
-unsigned int table[MAX] = {false};
-unsigned int ans[15 * MAX] = {0};
-unsigned int len_ans = 0;
-Queue *q[MAX];
-unsigned int temp;
 int main()
 {
+    unsigned int *adj_list[MAX];
+    unsigned int N;
+    unsigned int len;
+    unsigned int table[MAX] = {false};
+    unsigned int ans[15 * MAX] = {0};
+    unsigned int len_ans = 0;
+    Queue *q[MAX];
+    unsigned int temp;
     // double begin = clock();
     setvbuf(stdin, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
     setvbuf(stdout, calloc(1 << 26, sizeof(char)), _IOFBF, 1 << 26);
